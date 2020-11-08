@@ -5,15 +5,19 @@ using System.Text;
 
 namespace ExcelSharp.NPOI
 {
-    public class ExcelArea : IDisposable
+    public class ExcelArea : Scope<ExcelArea>
     {
-        public (int row, int col) Start { get; private set; }
-        public (int row, int col) End { get; private set; }
+        public ExcelSheet Sheet { get; private set; }
+        public Cursor Start { get; private set; }
+        public Cursor End { get; private set; }
 
         public ExcelArea(ExcelSheet sheet)
         {
-
+            Sheet = sheet;
+            Start = sheet.Cursor;
         }
+
+        public SheetRange GetRange() => new SheetRange(Sheet, Start, Sheet.Cursor);
 
         public void Dispose() { }
     }

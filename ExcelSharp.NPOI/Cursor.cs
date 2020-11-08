@@ -5,16 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace ExcelSharp.NPOI
 {
-    public class Cursor
+    public struct Cursor
     {
         public int Row { get; set; }
         public int Col { get; set; }
-
-        public Cursor()
-        {
-            Row = 0;
-            Col = 0;
-        }
 
         public Cursor(string cellName)
         {
@@ -28,6 +22,12 @@ namespace ExcelSharp.NPOI
             else throw new FormatException($"Illegal cell format：{cellName}。");
         }
 
+        public Cursor(int row, int col)
+        {
+            Row = row;
+            Col = col;
+        }
+
         public Cursor((int row, int col) cell)
         {
             Row = cell.row;
@@ -38,7 +38,5 @@ namespace ExcelSharp.NPOI
 
         public static implicit operator Cursor(string cellName) => new Cursor(cellName);
         public static implicit operator Cursor((int row, int col) cell) => new Cursor(cell);
-
-
     }
 }

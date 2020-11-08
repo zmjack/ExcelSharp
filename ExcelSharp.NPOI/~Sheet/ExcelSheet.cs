@@ -52,6 +52,18 @@ namespace ExcelSharp.NPOI
         }
         public SheetRange this[Cursor start, Cursor end] => new SheetRange(this, start, end);
 
+        public SheetRange Print(object[] values)
+        {
+            var startRow = Cursor.Row;
+            for (int col = 0; col < values.Length; col++)
+            {
+                var valueObj = values[col];
+                if (valueObj is null) continue;
+
+                this[(Cursor.Row, Cursor.Col + col)].SetValue(valueObj);
+            }
+            return new SheetRange(this, (startRow, Cursor.Col), (startRow, Cursor.Col + values.Length - 1));
+        }
         public SheetRange Print(object[,] values, bool reserveCursor = false)
         {
             var startRow = Cursor.Row;
@@ -80,8 +92,7 @@ namespace ExcelSharp.NPOI
                 (startRow, Cursor.Col),
                 (startRow + rowLength - 1, Cursor.Col + colLength - 1));
         }
-
-        public SheetRange Print(object[][] values, bool reserveCursor = false)
+        public SheetRange Print(object[][] values)
         {
             var startRow = Cursor.Row;
             var rowLength = values.Length;
@@ -98,41 +109,25 @@ namespace ExcelSharp.NPOI
                 }
             }
 
-            if (!reserveCursor)
-                Cursor.Row += values.Length;
+            Cursor.Row += values.Length;
 
             return new SheetRange(this,
                 (startRow, Cursor.Col),
                 (startRow + rowLength - 1, Cursor.Col + colLength - 1));
         }
 
-        public SheetRange PrintLine(params object[] values) => Print(values, false);
-        public SheetRange Print(object[] values, bool reserveCursor)
+        public SheetRange PrintLine(params object[] values)
         {
-            var startRow = Cursor.Row;
-
-            for (int col = 0; col < values.Length; col++)
-            {
-                var valueObj = values[col];
-                if (valueObj is null) continue;
-
-                this[(Cursor.Row, Cursor.Col + col)].SetValue(valueObj);
-            }
-
-            if (!reserveCursor)
-                Cursor.Row++;
-
-            return new SheetRange(this, (startRow, Cursor.Col), (startRow, Cursor.Col + values.Length - 1));
+            return Print(values).Then(range => Cursor.Row++);
         }
-
-        public SheetRange Print(DataTable table, bool reserveCursor = false)
+        public SheetRange PrintDataTable(DataTable table)
         {
-            var range1 = Print(table.Columns.Cast<DataColumn>().Select(a => a.ColumnName).ToArray(), reserveCursor);
+            var range1 = Print(table.Columns.Cast<DataColumn>().Select(a => a.ColumnName).ToArray());
             var range2 = Print((from DataRow row in table.Select()
-                                select row.ItemArray.ToArray()).ToArray(), reserveCursor);
-
+                                select row.ItemArray.ToArray()).ToArray());
             return new SheetRange(this, range1.Start, range2.End);
         }
+        public SheetRange PrintSnippet(ExcelSnippet snippet) => snippet.Print();
 
         public TModel[] Fetch<TModel>(Cursor startCell, Expression<Func<TModel, object>> includes = null, Predicate<int> rowSelector = null)
             where TModel : new()
