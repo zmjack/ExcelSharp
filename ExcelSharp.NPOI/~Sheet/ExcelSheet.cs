@@ -52,21 +52,32 @@ namespace ExcelSharp.NPOI
         }
         public SheetRange this[Cursor start, Cursor end] => new SheetRange(this, start, end);
 
-        public SheetRange Print(object[] values)
+        public void ResetCursorColumn()
+        {
+            if (ExcelArea.Current is not null) Cursor.Col = ExcelArea.Current.Start.Col;
+        }
+
+        public SheetRange Print(params object[] values)
         {
             var startRow = Cursor.Row;
+            var startCol = Cursor.Col;
+            var colLength = values.Length;
+
             for (int col = 0; col < values.Length; col++)
             {
                 var valueObj = values[col];
                 if (valueObj is null) continue;
 
-                this[(Cursor.Row, Cursor.Col + col)].SetValue(valueObj);
+                this[(startRow, startCol + col)].SetValue(valueObj);
             }
-            return new SheetRange(this, (startRow, Cursor.Col), (startRow, Cursor.Col + values.Length - 1));
+            Cursor.Col = startCol + values.Length;
+
+            return new SheetRange(this, (startRow, startCol), (startRow, startCol + colLength - 1));
         }
-        public SheetRange Print(object[,] values, bool reserveCursor = false)
+        public SheetRange Print(object[,] values)
         {
             var startRow = Cursor.Row;
+            var startCol = Cursor.Col;
             var rowLength = values.GetLength(0);
             var colLength = values.GetLength(1);
 
@@ -80,21 +91,19 @@ namespace ExcelSharp.NPOI
                     if (valueObj is string && (valueObj as string).StartsWith("="))
                     {
                         //TODO: Analysis formula in same row
-                        this[(Cursor.Row + row, Cursor.Col + col)].SetValue(valueObj);
+                        this[(startRow + row, startCol + col)].SetValue(valueObj);
                     }
-                    else this[(Cursor.Row + row, Cursor.Col + col)].SetValue(valueObj);
+                    else this[(startRow + row, startCol + col)].SetValue(valueObj);
                 }
             }
+            Cursor.Col = startCol + colLength;
 
-            if (!reserveCursor) Cursor.Row += values.GetLength(0);
-
-            return new SheetRange(this,
-                (startRow, Cursor.Col),
-                (startRow + rowLength - 1, Cursor.Col + colLength - 1));
+            return new SheetRange(this, (startRow, startCol), (startRow + rowLength - 1, startCol + colLength - 1));
         }
         public SheetRange Print(object[][] values)
         {
             var startRow = Cursor.Row;
+            var startCol = Cursor.Col;
             var rowLength = values.Length;
             var colLength = values.Any() ? values.Max(values1 => values1.Length) : 0;
 
@@ -105,26 +114,31 @@ namespace ExcelSharp.NPOI
                     var valueObj = values[row][col];
                     if (valueObj is null) continue;
 
-                    this[(Cursor.Row + row, Cursor.Col + col)].SetValue(valueObj);
+                    this[(startRow + row, startCol + col)].SetValue(valueObj);
                 }
             }
+            Cursor.Col = startCol + colLength;
 
-            Cursor.Row += values.Length;
-
-            return new SheetRange(this,
-                (startRow, Cursor.Col),
-                (startRow + rowLength - 1, Cursor.Col + colLength - 1));
+            return new SheetRange(this, (startRow, startCol), (startRow + rowLength - 1, startCol + colLength - 1));
         }
 
-        public SheetRange PrintLine(params object[] values)
+        public void PrintLine() { Cursor.Row++; ResetCursorColumn(); }
+        public SheetRange PrintLine(params object[] values) => Print(values).Then(range => PrintLine());
+        public SheetRange PrintLine(object[,] values)
         {
-            return Print(values).Then(range => Cursor.Row++);
+            var rowLength = values.GetLength(0);
+            return Print(values).Then(range => { Cursor.Row += values.GetLength(0); ResetCursorColumn(); });
         }
+        public SheetRange PrintLine(object[][] values)
+        {
+            var rowLength = values.GetLength(0);
+            return Print(values).Then(range => { Cursor.Row += values.GetLength(0); ResetCursorColumn(); });
+        }
+
         public SheetRange PrintDataTable(DataTable table)
         {
-            var range1 = Print(table.Columns.Cast<DataColumn>().Select(a => a.ColumnName).ToArray());
-            var range2 = Print((from DataRow row in table.Select()
-                                select row.ItemArray.ToArray()).ToArray());
+            var range1 = PrintLine(table.Columns.Cast<DataColumn>().Select(a => a.ColumnName).ToArray());
+            var range2 = PrintLine((from DataRow row in table.Select() select row.ItemArray.ToArray()).ToArray());
             return new SheetRange(this, range1.Start, range2.End);
         }
         public SheetRange PrintSnippet(ExcelSnippet snippet) => snippet.Print();

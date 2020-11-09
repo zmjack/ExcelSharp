@@ -167,10 +167,11 @@ namespace ExcelSharp.NPOI
             set => MapedCell.CellStyle = value;
         }
 
-        public SheetRange Print(object[] values) => Sheet.Print(values);
-        public SheetRange Print(object[,] values) => Sheet.Print(values);
-        public SheetRange Print(object[][] values) => Sheet.Print(values);
+        //public SheetRange Print(object[] values) => Sheet.Print(values);
+        public SheetRange Print(object[,] values) => Sheet.PrintLine(values);
+        public SheetRange Print(object[][] values) => Sheet.PrintLine(values);
 
+        public void PrintLine() => Sheet.PrintLine();
         public SheetRange PrintLine(params object[] values) => Sheet.PrintLine(values);
         public SheetRange PrintDataTable(DataTable table) => Sheet.PrintDataTable(table);
         public SheetRange PrintSnippet(ExcelSnippet snippet) => Sheet.PrintSnippet(snippet);

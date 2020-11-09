@@ -19,6 +19,9 @@ namespace ExcelSharp.NPOI
 
         public SheetRange GetRange() => new SheetRange(Sheet, Start, Sheet.Cursor);
 
-        public void Dispose() { }
+        public override void Disposing()
+        {
+            Sheet.Cursor = new Cursor(End.Row + 1, Start.Col);
+        }
     }
 }
