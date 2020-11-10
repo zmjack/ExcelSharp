@@ -3,7 +3,6 @@ using NStandard;
 using System;
 using System.Data;
 using System.Linq;
-using System.Net.Http.Headers;
 
 namespace ExcelSharp.NPOI
 {

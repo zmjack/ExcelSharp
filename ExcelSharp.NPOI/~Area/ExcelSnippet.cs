@@ -6,7 +6,8 @@ namespace ExcelSharp.NPOI
 {
     public abstract class ExcelSnippet
     {
-        public abstract SheetRange Print();
+        public static TemporaryExcelSnippet Create(Func<SheetRange> print) => new TemporaryExcelSnippet(print);
 
+        public abstract SheetRange Print();
     }
 }

@@ -56,23 +56,48 @@ namespace ExcelSharp.NPOI
         {
             if (ExcelArea.Current is not null) Cursor.Col = ExcelArea.Current.Start.Col;
         }
+        private void RecalculateArea(Cursor start, Cursor end)
+        {
+            var current = ExcelArea.Current;
+            if (current is not null) current.Update(start, end);
+        }
 
-        public SheetRange Print(params object[] values)
+        public SheetRange Print(params object[] values) => Print(PrintDirection.Horizontal, values);
+        public SheetRange Print(PrintDirection direction, params object[] values)
         {
             var startRow = Cursor.Row;
             var startCol = Cursor.Col;
-            var colLength = values.Length;
+            var length = values.Length;
+            var rangeStart = new Cursor { Row = startRow, Col = startCol };
+            Cursor rangeEnd;
 
-            for (int col = 0; col < values.Length; col++)
+            if (direction == PrintDirection.Horizontal)
             {
-                var valueObj = values[col];
-                if (valueObj is null) continue;
-
-                this[(startRow, startCol + col)].SetValue(valueObj);
+                for (int col = 0; col < values.Length; col++)
+                {
+                    var valueObj = values[col];
+                    if (valueObj is null) continue;
+                    this[(startRow, startCol + col)].SetValue(valueObj);
+                }
+                Cursor.Col = startCol + values.Length;
+                rangeEnd = new Cursor { Row = startRow, Col = startCol + length - 1 };
             }
-            Cursor.Col = startCol + values.Length;
+            else if (direction == PrintDirection.Vertical)
+            {
+                for (int row = 0; row < values.Length; row++)
+                {
+                    var valueObj = values[row];
+                    if (valueObj is null) continue;
+                    this[(startRow + row, startCol)].SetValue(valueObj);
+                }
+                Cursor.Col = startCol + 1;
+                rangeEnd = new Cursor { Row = startRow + length - 1, Col = startCol };
+            }
+            else throw new NotSupportedException();
 
-            return new SheetRange(this, (startRow, startCol), (startRow, startCol + colLength - 1));
+            RecalculateArea(rangeStart, rangeEnd);
+
+            return new SheetRange(this, rangeStart, rangeEnd);
         }
         public SheetRange Print(object[,] values)
         {
@@ -98,7 +123,11 @@ namespace ExcelSharp.NPOI
             }
             Cursor.Col = startCol + colLength;
 
-            return new SheetRange(this, (startRow, startCol), (startRow + rowLength - 1, startCol + colLength - 1));
+            var rangeStart = (startRow, startCol);
+            var rangeEnd = (startRow + rowLength - 1, startCol + colLength - 1);
+            RecalculateArea(rangeStart, rangeEnd);
+
+            return new SheetRange(this, rangeStart, rangeEnd);
         }
         public SheetRange Print(object[][] values)
         {
@@ -113,17 +142,29 @@ namespace ExcelSharp.NPOI
                 {
                     var valueObj = values[row][col];
                     if (valueObj is null) continue;
-
                     this[(startRow + row, startCol + col)].SetValue(valueObj);
                 }
             }
             Cursor.Col = startCol + colLength;
 
-            return new SheetRange(this, (startRow, startCol), (startRow + rowLength - 1, startCol + colLength - 1));
+            var rangeStart = (startRow, startCol);
+            var rangeEnd = (startRow + rowLength - 1, startCol + colLength - 1);
+            RecalculateArea(rangeStart, rangeEnd);
+
+            return new SheetRange(this, rangeStart, rangeEnd);
         }
 
-        public void PrintLine() { Cursor.Row++; ResetCursorColumn(); }
-        public SheetRange PrintLine(params object[] values) => Print(values).Then(range => PrintLine());
+        public SheetRange PrintLine(params object[] values) => PrintLine(PrintDirection.Horizontal, values);
+        public SheetRange PrintLine(PrintDirection direction, params object[] values)
+        {
+            return Print(direction, values).Then(range =>
+            {
+                if (direction == PrintDirection.Horizontal) Cursor.Row++;
+                else if (direction == PrintDirection.Vertical) Cursor.Row += values.Length;
+                else throw new NotSupportedException();
+                ResetCursorColumn();
+            });
+        }
         public SheetRange PrintLine(object[,] values)
         {
             var rowLength = values.GetLength(0);
