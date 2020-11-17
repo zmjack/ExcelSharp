@@ -55,6 +55,7 @@ namespace ExcelSharp.NPOI
         public void ResetCursorColumn()
         {
             if (ExcelArea.Current is not null) Cursor.Col = ExcelArea.Current.Start.Col;
+            else Cursor.Col = 0;
         }
         private void RecalculateArea(Cursor start, Cursor end)
         {
