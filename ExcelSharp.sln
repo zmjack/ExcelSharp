@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelSharp.Test", "ExcelSha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelSharp.NPOI", "ExcelSharp.NPOI\ExcelSharp.NPOI.csproj", "{C952B0F9-961C-424F-8890-94870D5E9916}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ExcelSharp.Shared", "ExcelSharp.Shared\ExcelSharp.Shared.shproj", "{1D1E0DC8-61F7-4D7C-81A1-6127D29907C8}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ExcelSharp.Shared\ExcelSharp.Shared.projitems*{1d1e0dc8-61f7-4d7c-81a1-6127d29907c8}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64

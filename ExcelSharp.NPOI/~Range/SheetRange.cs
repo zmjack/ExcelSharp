@@ -22,19 +22,19 @@ namespace ExcelSharp.NPOI
         public bool IsSingleRow => RowLength == 1;
         public bool IsSingleColumn => ColumnLengh == 1;
 
+        internal SheetRange(ExcelSheet sheet, Cursor start, Cursor end)
+        {
+            Sheet = sheet;
+            Start = start;
+            End = end;
+        }
+
         public bool IsInRange(SheetCell cell)
         {
             return Start.Row <= cell.RowIndex && cell.RowIndex <= End.Row
                 && Start.Col <= cell.ColumnIndex && cell.ColumnIndex <= End.Col;
         }
         public bool IsDefinitionCell(SheetCell cell) => cell.RowIndex == Start.Row && cell.ColumnIndex == Start.Col;
-
-        public SheetRange(ExcelSheet sheet, Cursor start, Cursor end)
-        {
-            Sheet = sheet;
-            Start = start;
-            End = end;
-        }
 
         public void SetCellStyle(ICellStyle style)
         {

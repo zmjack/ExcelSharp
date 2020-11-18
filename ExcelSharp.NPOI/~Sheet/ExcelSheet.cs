@@ -22,7 +22,7 @@ namespace ExcelSharp.NPOI
         public ExcelBook Book { get; private set; }
         public Cursor Cursor;
 
-        public ExcelSheet(ExcelBook excel, ISheet sheet)
+        internal ExcelSheet(ExcelBook excel, ISheet sheet)
         {
             if (sheet is null)
                 throw new ArgumentException("Cannot find sheet.");
@@ -30,6 +30,13 @@ namespace ExcelSharp.NPOI
             Book = excel;
             MapedSheet = sheet;
             Cursor = (0, 0);
+        }
+
+        public ExcelArea BeginArea() => new ExcelArea(this);
+        public ExcelArea BeginArea(Cursor cursor)
+        {
+            Cursor = cursor;
+            return new ExcelArea(this);
         }
 
         public void SetCursor(string cell) => Cursor = cell;
@@ -63,8 +70,9 @@ namespace ExcelSharp.NPOI
             if (current is not null) current.Update(start, end);
         }
 
-        public SheetRange Print(params object[] values) => Print(PrintDirection.Horizontal, values);
-        public SheetRange Print(PrintDirection direction, params object[] values)
+        public SheetRange Print(object value) => Print(PrintDirection.Horizontal, new object[] { value });
+        public SheetRange Print(object[] values) => Print(PrintDirection.Horizontal, values);
+        public SheetRange Print(PrintDirection direction, object[] values)
         {
             var startRow = Cursor.Row;
             var startCol = Cursor.Col;
@@ -155,7 +163,9 @@ namespace ExcelSharp.NPOI
             return new SheetRange(this, rangeStart, rangeEnd);
         }
 
-        public SheetRange PrintLine(params object[] values) => PrintLine(PrintDirection.Horizontal, values);
+        public void PrintLine() { Cursor.Row++; ResetCursorColumn(); }
+        public SheetRange PrintLine(object value) => PrintLine(PrintDirection.Horizontal, new[] { value });
+        public SheetRange PrintLine(object[] values) => PrintLine(PrintDirection.Horizontal, values);
         public SheetRange PrintLine(PrintDirection direction, params object[] values)
         {
             return Print(direction, values).Then(range =>

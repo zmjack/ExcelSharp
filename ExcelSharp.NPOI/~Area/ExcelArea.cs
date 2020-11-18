@@ -14,7 +14,7 @@ namespace ExcelSharp.NPOI
         public Cursor Start { get => _start; }
         public Cursor End { get => _end; }
 
-        public ExcelArea(ExcelSheet sheet)
+        internal ExcelArea(ExcelSheet sheet)
         {
             Sheet = sheet;
             _start = _end = sheet.Cursor;

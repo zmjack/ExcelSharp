@@ -10,7 +10,8 @@ namespace ExcelSharp.NPOI
     {
         public ExcelSheet Sheet { get; private set; }
         public ICell MapedCell { get; private set; }
-        public SheetCell(ExcelSheet sheet, ICell cell)
+
+        internal SheetCell(ExcelSheet sheet, ICell cell)
         {
             Sheet = sheet;
             MapedCell = cell;
