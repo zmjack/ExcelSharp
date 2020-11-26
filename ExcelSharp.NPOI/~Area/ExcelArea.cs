@@ -1,6 +1,7 @@
 ﻿using NStandard;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ExcelSharp.NPOI
@@ -22,15 +23,11 @@ namespace ExcelSharp.NPOI
 
         public void Update(Cursor start, Cursor end)
         {
-            var current = Current;
-            if (current is not null)
-            {
-                if (current._start.Row > start.Row) current._start.Row = start.Row;
-                if (current._start.Col > start.Col) current._start.Col = start.Col;
+            if (_start.Row > start.Row) _start.Row = start.Row;
+            if (_start.Col > start.Col) _start.Col = start.Col;
 
-                if (current._end.Row < end.Row) current._end.Row = end.Row;
-                if (current._end.Col < end.Col) current._end.Col = end.Col;
-            }
+            if (_end.Row < end.Row) _end.Row = end.Row;
+            if (_end.Col < end.Col) _end.Col = end.Col;
         }
 
         public SheetRange GetRange() => new SheetRange(Sheet, _start, _end);
@@ -38,6 +35,8 @@ namespace ExcelSharp.NPOI
         public override void Disposing()
         {
             Sheet.Cursor = new Cursor(End.Row + 1, Start.Col);
+            var outterArea = Scopes.Skip(1).FirstOrDefault();
+            if (outterArea is not null) outterArea.Update(_start, _end);
         }
     }
 }

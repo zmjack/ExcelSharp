@@ -61,8 +61,8 @@ namespace ExcelSharp.NPOI
 
                 case CValue v:
                     SetValue(v.Value);
-                    if (!(v.Style is null)) SetCStyle(v.Style);
-                    if (!(v.DataFormat is null)) SetCStyle(x => x.DataFormat = v.DataFormat);
+                    if (v.Style is not null) SetCStyle(v.Style);
+                    if (v.DataFormat is not null) UpdateCStyle(x => x.DataFormat = v.DataFormat);
                     break;
 
                 case object v: String = v.ToString(); break;
