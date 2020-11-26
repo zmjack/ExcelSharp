@@ -70,8 +70,9 @@ namespace ExcelSharp.NPOI
             if (current is not null) current.Update(start, end);
         }
 
-        public SheetRange Print(object value) => Print(PrintDirection.Horizontal, new object[] { value });
+        public SheetRange Print(IEnumerable<object> values) => Print(PrintDirection.Horizontal, values.ToArray());
         public SheetRange Print(object[] values) => Print(PrintDirection.Horizontal, values);
+        public SheetRange Print(PrintDirection direction, IEnumerable<object> values) => Print(direction, values.ToArray());
         public SheetRange Print(PrintDirection direction, object[] values)
         {
             var startRow = Cursor.Row;
@@ -164,9 +165,10 @@ namespace ExcelSharp.NPOI
         }
 
         public void PrintLine() { Cursor.Row++; ResetCursorColumn(); }
-        public SheetRange PrintLine(object value) => PrintLine(PrintDirection.Horizontal, new[] { value });
+        public SheetRange PrintLine(IEnumerable<object> values) => PrintLine(PrintDirection.Horizontal, values.ToArray());
         public SheetRange PrintLine(object[] values) => PrintLine(PrintDirection.Horizontal, values);
-        public SheetRange PrintLine(PrintDirection direction, params object[] values)
+        public SheetRange PrintLine(PrintDirection direction, IEnumerable<object> values) => PrintLine(direction, values.ToArray());
+        public SheetRange PrintLine(PrintDirection direction, object[] values)
         {
             return Print(direction, values).Then(range =>
             {
