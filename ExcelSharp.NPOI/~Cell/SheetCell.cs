@@ -167,17 +167,34 @@ namespace ExcelSharp.NPOI
             set => MapedCell.CellStyle = value;
         }
 
-        //public SheetRange Print(object[] values) => Sheet.Print(values);
-        public SheetRange Print(object[,] values) => Sheet.PrintLine(values);
-        public SheetRange Print(object[][] values) => Sheet.PrintLine(values);
-
-        public void PrintLine() => Sheet.PrintLine();
-        public SheetRange PrintLine(params object[] values) => Sheet.PrintLine(values);
-        public SheetRange PrintDataTable(DataTable table) => Sheet.PrintDataTable(table);
-        public SheetRange PrintSnippet(ExcelSnippet snippet) => Sheet.PrintSnippet(snippet);
-
         public void SetWidth(double width) => Sheet.SetWidth(ColumnIndex, width);
         public void SetHeight(float height) => Sheet.GetRow(RowIndex).HeightInPoints = height;
+
+        public bool IsMergedDefinitionCell
+        {
+            get
+            {
+                return IsMergedCell && RowIndex == MergedRange.Start.Row && ColumnIndex == MergedRange.Start.Col;
+            }
+        }
+
+        public int RowSpan
+        {
+            get
+            {
+                if (IsMergedCell) return MergedRange.End.Row - MergedRange.Start.Row + 1;
+                else return 1;
+            }
+        }
+
+        public int ColSpan
+        {
+            get
+            {
+                if (IsMergedCell) return MergedRange.End.Col - MergedRange.Start.Col + 1;
+                else return 1;
+            }
+        }
 
         public SheetRange MergedRange
         {

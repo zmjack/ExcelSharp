@@ -38,6 +38,16 @@ namespace ExcelSharp.NPOI
             Cursor = cursor;
             return new ExcelArea(this);
         }
+        public ExcelArea BeginDefaultArea()
+        {
+            int lastCol = 0;
+            for (int row = 0; row < MapedSheet.LastRowNum; row++)
+            {
+                var rowLastCol = MapedSheet.GetRow(row)?.LastCellNum ?? 0;
+                if (lastCol < rowLastCol) lastCol = rowLastCol;
+            }
+            return new ExcelArea(this, (0, 0), (MapedSheet.LastRowNum, lastCol));
+        }
 
         public void SetCursor(string cell) => Cursor = cell;
 
@@ -61,13 +71,14 @@ namespace ExcelSharp.NPOI
 
         public void ResetCursorColumn()
         {
-            if (ExcelArea.Current is not null) Cursor.Col = ExcelArea.Current.Start.Col;
+            var recent = ExcelArea.Scopes.FirstOrDefault(x => x.Sheet == this);
+            if (recent is not null) Cursor.Col = ExcelArea.Current.Start.Col;
             else Cursor.Col = 0;
         }
         private void RecalculateArea(Cursor start, Cursor end)
         {
-            var current = ExcelArea.Current;
-            if (current is not null) current.Update(start, end);
+            var recent = ExcelArea.Scopes.FirstOrDefault(x => x.Sheet == this);
+            if (recent is not null) recent.Update(start, end);
         }
 
         public SheetRange Print(IEnumerable<object> values) => Print(PrintDirection.Horizontal, values.ToArray());
