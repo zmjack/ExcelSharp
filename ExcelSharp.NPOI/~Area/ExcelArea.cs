@@ -60,6 +60,8 @@ namespace ExcelSharp.NPOI
                             ColSpan = cell.ColSpan,
                             BackgroundColor = cstyle.FillPattern != FillPattern.NoFill ? (int?)cstyle.FillForegroundColor.Value : null,
                             Color = cstyle.Font.FontColor.Value,
+                            Bold = cstyle.Font.IsBold,
+                            FontSize = cstyle.Font.FontSize,
                             BorderTop = cstyle.BorderTop != BorderStyle.None,
                             BorderBottom = cstyle.BorderBottom != BorderStyle.None,
                             BorderLeft = cstyle.BorderLeft != BorderStyle.None,
@@ -69,6 +71,13 @@ namespace ExcelSharp.NPOI
                                 HorizontalAlignment.Left => "left",
                                 HorizontalAlignment.Center => "center",
                                 HorizontalAlignment.Right => "right",
+                                _ => "",
+                            },
+                            VerticalAlign = cstyle.VerticalAlignment switch
+                            {
+                                VerticalAlignment.Top => "top",
+                                VerticalAlignment.Center => "middle",
+                                VerticalAlignment.Bottom => "bottom",
                                 _ => "",
                             },
                             Text = cell.GetValue()?.For(value =>

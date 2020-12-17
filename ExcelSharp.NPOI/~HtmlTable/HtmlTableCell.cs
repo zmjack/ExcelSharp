@@ -19,6 +19,7 @@ namespace ExcelSharp.Abstract
         public int? FontSize { get; set; }
         public bool? Bold { get; set; }
         public string TextAlign { get; set; }
+        public string VerticalAlign { get; set; }
 
         public string Text { get; set; }
         public bool? BorderTop { get; set; }
@@ -45,6 +46,7 @@ namespace ExcelSharp.Abstract
                 if (BorderRight.HasValue && BorderRight.Value) dict.Add("border-right", $"1px solid #000000");
 
                 if (!TextAlign.IsNullOrWhiteSpace()) dict.Add("text-align", $"{TextAlign}");
+                if (!VerticalAlign.IsNullOrWhiteSpace()) dict.Add("vertical-align", $"{VerticalAlign}");
 
                 return $@"style=""{dict.Select(pair => $"{pair.Key}:{pair.Value}").Join(";")}""";
             }
