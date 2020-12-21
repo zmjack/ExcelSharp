@@ -110,8 +110,7 @@ namespace ExcelSharp.NPOI
                 var value = Sheet[(takeRow, col)].GetValue()?.ToString();
                 if (value != take)
                 {
-                    if (takeRow - mergeStart > 1)
-                        SmartMergeVertical(mergeStart, takeRow - 1, col, offsetCols);
+                    if (takeRow - mergeStart > 1) SmartMergeVertical(mergeStart, takeRow - 1, col, offsetCols);
 
                     mergeStart = takeRow;
                     take = value;
@@ -119,8 +118,7 @@ namespace ExcelSharp.NPOI
                 else continue;
             }
 
-            if (End.Row > mergeStart)
-                SmartMergeVertical(mergeStart, End.Row, col, offsetCols);
+            if (End.Row > mergeStart) SmartMergeVertical(mergeStart, End.Row, col, offsetCols);
 
             //TODO: Remove identifier(type will be changed -> unchange)
             var regex_matchId = new Regex(@"^\[\[.+?\]\](.*)$");

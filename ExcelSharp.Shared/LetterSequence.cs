@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ExcelSharp.NPOI
+namespace ExcelSharp
 {
     public static class LetterSequence
     {

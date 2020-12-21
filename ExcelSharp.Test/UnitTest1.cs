@@ -9,14 +9,14 @@ namespace ExcelSharp.Test
         [Fact]
         public void Test1()
         {
-            if (File.Exists("test.xlsx")) File.Delete("test.xlsx");
+            //if (File.Exists("test.xlsx")) File.Delete("test.xlsx");
 
-            using (var book = new ExcelBook("test.xlsx"))
-            {
-                book.CreateSheet("sheet1");
+            //using (var book = new ExcelBook("test.xlsx"))
+            //{
+            //    book.CreateSheet("sheet1");
 
-                book.CreateSheet("sheet2");
-            }
+            //    book.CreateSheet("sheet2");
+            //}
 
         }
     }

@@ -2,7 +2,7 @@
 using NStandard;
 using NStandard.Flows;
 
-namespace ExcelSharp.NPOI
+namespace ExcelSharp
 {
     public partial class RGBColor
     {

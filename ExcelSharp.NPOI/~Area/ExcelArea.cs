@@ -1,5 +1,4 @@
-﻿using ExcelSharp.Abstract;
-using NPOI.SS.UserModel;
+﻿using NPOI.SS.UserModel;
 using NStandard;
 using System;
 using System.Collections.Generic;
@@ -42,22 +41,34 @@ namespace ExcelSharp.NPOI
 
         public HtmlTable ToHtmlTable()
         {
-            var table = new HtmlTable();
+            var uniTable = new RichTable();
             for (int row = _start.Row; row <= _end.Row; row++)
             {
-                var htmlRow = new HtmlTableRow();
+                var rowOffset = row - _start.Row;
+                var uniRow = uniTable.Row(rowOffset);
+
                 for (int col = _start.Col; col <= _end.Col; col++)
                 {
+                    var colOffset = col - _start.Col;
+                    var uniCell = uniRow.Cell(colOffset);
+
                     var cell = Sheet[(row, col)];
                     var cstyle = cell.GetCStyle();
 
-                    HtmlTableCell tableCell;
                     if (!cell.IsMergedCell || cell.IsMergedDefinitionCell)
                     {
-                        tableCell = new HtmlTableCell
+                        uniCell.Value = cell.GetValue()?.For(value =>
                         {
-                            RowSpan = cell.RowSpan,
-                            ColSpan = cell.ColSpan,
+                            var format = cstyle.DataFormat;
+                            if (cell.CellType == CellType.Numeric && format != "General") return ((double)value).ToString(format);
+                            else return value?.ToString();
+                        });
+                        uniCell.Comment = cell.CellComment?.String.String;
+                        uniCell.RowSpan = cell.RowSpan;
+                        uniCell.ColSpan = cell.ColSpan;
+
+                        uniCell.Style = new RichStyle
+                        {
                             BackgroundColor = cstyle.FillPattern != FillPattern.NoFill ? (int?)cstyle.FillForegroundColor.Value : null,
                             Color = cstyle.Font.FontColor.Value,
                             Bold = cstyle.Font.IsBold,
@@ -80,21 +91,13 @@ namespace ExcelSharp.NPOI
                                 VerticalAlignment.Bottom => "bottom",
                                 _ => "",
                             },
-                            Text = cell.GetValue()?.For(value =>
-                            {
-                                var format = cstyle.DataFormat;
-                                if (cell.CellType == CellType.Numeric && format != "General") return ((double)value).ToString(format);
-                                else return value?.ToString();
-                            }),
                         };
                     }
-                    else tableCell = new HtmlTableCell { Hidden = true };
-
-                    htmlRow.Cells.Add(tableCell);
+                    else uniCell.Ignored = true;
                 }
-                table.Rows.Add(htmlRow);
             }
-            return table;
+
+            return new HtmlTable(uniTable);
         }
 
         public override void Disposing()

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExcelSharp.NPOI
+namespace ExcelSharp
 {
     public enum PrintDirection
     {

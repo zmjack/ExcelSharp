@@ -1,5 +1,5 @@
 ﻿
-namespace ExcelSharp.NPOI
+namespace ExcelSharp
 {
     public partial class RGBColor
     {

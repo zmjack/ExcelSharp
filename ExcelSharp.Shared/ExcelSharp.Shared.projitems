@@ -9,8 +9,18 @@
     <Import_RootNamespace>ExcelSharp.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)IArea.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ICell.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IRange.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HtmlTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LetterSequence.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PrintDirection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RGBColor - static.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RGBColor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RichValue.cs" />
+    <Compile Include="..\ExcelSharp.Shared\RichTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RichArea.cs" />
+    <Compile Include="..\ExcelSharp.Shared\RichBrush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RichStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RichRow.cs" />
+    <Compile Include="..\ExcelSharp.Shared\RichCell.cs" />
   </ItemGroup>
 </Project>

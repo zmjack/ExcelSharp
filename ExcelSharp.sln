@@ -14,6 +14,7 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ExcelSharp.Shared\ExcelSharp.Shared.projitems*{1d1e0dc8-61f7-4d7c-81a1-6127d29907c8}*SharedItemsImports = 13
+		ExcelSharp.Shared\ExcelSharp.Shared.projitems*{c952b0f9-961c-424f-8890-94870d5e9916}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
