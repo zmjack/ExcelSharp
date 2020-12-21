@@ -9,6 +9,7 @@ namespace ExcelSharp
     public class RichCell
     {
         public RichRow Row { get; private set; }
+        public int RowIndex => Row.Index;
         public int Index { get; internal set; }
         public RichStyle Style { get; set; } = new RichStyle();
         public object _innerValue;

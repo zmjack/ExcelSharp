@@ -124,8 +124,7 @@ namespace ExcelSharp.Test
             }
             excel.SaveAs("D:\\tmp\\11.xlsx");
 
-            var hh = new HtmlTable(uniTable).ToHtml();
-            var h = sheet.BeginDefaultArea().ToHtmlTable().ToHtml();
+            var html = new HtmlTable(uniTable).ToHtml();
         }
 
     }
