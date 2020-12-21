@@ -47,7 +47,7 @@ namespace ExcelSharp
             if (_innerRows.ContainsKey(index)) return _innerRows[index];
             else
             {
-                var row = new RichRow(this);
+                var row = new RichRow(this, index);
                 _innerRows.Add(index, row);
                 if (MaxRowIndex < index) MaxRowIndex = index;
                 return row;

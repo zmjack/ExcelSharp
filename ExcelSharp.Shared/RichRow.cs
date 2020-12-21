@@ -9,11 +9,13 @@ namespace ExcelSharp
     public class RichRow
     {
         public RichTable Table { get; private set; }
+        public int Index { get; internal set; }
         private Dictionary<int, RichCell> _innerCells = new Dictionary<int, RichCell>();
 
-        internal RichRow(RichTable table)
+        internal RichRow(RichTable table, int index)
         {
             Table = table;
+            Index = index;
         }
 
         public IEnumerable<RichCell> Cells
@@ -32,7 +34,7 @@ namespace ExcelSharp
             if (_innerCells.ContainsKey(index)) return _innerCells[index];
             else
             {
-                var cell = new RichCell(this);
+                var cell = new RichCell(this, index);
                 _innerCells.Add(index, cell);
                 if (Table.MaxColumnIndex < index) Table.MaxColumnIndex = index;
                 return cell;

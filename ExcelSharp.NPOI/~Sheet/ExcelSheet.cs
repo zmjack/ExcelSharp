@@ -127,7 +127,7 @@ namespace ExcelSharp.NPOI
                                     }
                                 }
 
-                                x.DataFormat = cell.Format;
+                                x.DataFormat = cell.Format ?? "General";
                             })),
                         }
                     });

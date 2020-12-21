@@ -9,12 +9,14 @@ namespace ExcelSharp
     public class RichCell
     {
         public RichRow Row { get; private set; }
+        public int Index { get; internal set; }
         public RichStyle Style { get; set; } = new RichStyle();
         public object _innerValue;
 
-        internal RichCell(RichRow row)
+        internal RichCell(RichRow row, int index)
         {
             Row = row;
+            Index = index;
         }
 
         public bool Merged
