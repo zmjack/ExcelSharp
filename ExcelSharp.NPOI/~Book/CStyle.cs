@@ -178,7 +178,7 @@ namespace ExcelSharp.NPOI
         public string DataFormat
         {
             get => CellStyle.GetDataFormatString();
-            set => CellStyle.DataFormat = Book.GetDataFormat(value);
+            set => CellStyle.DataFormat = value is null ? 0 : Book.GetDataFormat(value);
         }
         #endregion
 

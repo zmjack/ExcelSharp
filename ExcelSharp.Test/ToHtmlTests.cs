@@ -53,7 +53,7 @@ namespace ExcelSharp.Test
                     BorderLeft = true,
                     BorderRight = true,
 
-                    TextAlign = "center",
+                    TextAlign = RichTextAlignment.Center,
                 };
             }
 
@@ -67,8 +67,8 @@ namespace ExcelSharp.Test
         {
             var mainTitleStyle = new RichStyle
             {
-                TextAlign = "center",
-                VerticalAlign = "center",
+                TextAlign = RichTextAlignment.Center,
+                VerticalAlign = RichVerticalAlignment.Middle,
                 BackgroundColor = 0x538DE7,
                 FontFamily = "Microsoft YaHei",
                 FontSize = 24,
@@ -81,8 +81,8 @@ namespace ExcelSharp.Test
             };
             var titleStyle = new RichStyle
             {
-                TextAlign = "center",
-                VerticalAlign = "center",
+                TextAlign = RichTextAlignment.Center,
+                VerticalAlign = RichVerticalAlignment.Middle,
                 BackgroundColor = 0x538DE7,
                 FontFamily = "Microsoft YaHei",
                 FontSize = 12,
@@ -95,8 +95,8 @@ namespace ExcelSharp.Test
             };
             var dateStyle = new RichStyle
             {
-                TextAlign = "right",
-                VerticalAlign = "center",
+                TextAlign = RichTextAlignment.Right,
+                VerticalAlign = RichVerticalAlignment.Middle,
                 FontFamily = "Microsoft YaHei",
                 FontSize = 9,
                 Bold = true,

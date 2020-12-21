@@ -73,7 +73,7 @@ namespace ExcelSharp
                     {
                         sb.AppendLine($@"
 <span class=""excel-sharp"">
-    <div class=""excel-comment"" style=""width:{cellWidth}"">
+    <div class=""excel-comment"" style=""width:{cellWidth}px"">
         {cell.Comment.Flow(StringFlow.HtmlEncode).Replace("\r\n", "<br/>")}
     </div>
     <span class=""excel-text"">{cell.Text}</span>
