@@ -44,8 +44,8 @@ namespace ExcelSharp
             if (style.BorderBottom.HasValue && style.BorderBottom.Value) dict.Add("border-bottom", $"1px solid #000000");
             if (style.BorderLeft.HasValue && style.BorderLeft.Value) dict.Add("border-left", $"1px solid #000000");
             if (style.BorderRight.HasValue && style.BorderRight.Value) dict.Add("border-right", $"1px solid #000000");
-            if (!style.TextAlign.IsNullOrWhiteSpace()) dict.Add("text-align", $"{style.TextAlign}");
-            if (!style.VerticalAlign.IsNullOrWhiteSpace()) dict.Add("vertical-align", $"{style.VerticalAlign}");
+            if (style.TextAlign != RichTextAlignment.Preserve) dict.Add("text-align", $"{style.TextAlign.ToString().ToLower()}");
+            if (style.VerticalAlign != RichVerticalAlignment.Preserve) dict.Add("vertical-align", $"{style.VerticalAlign.ToString().ToLower()}");
 
             return $@"style=""{dict.Select(pair => $"{pair.Key}:{pair.Value}").Join(";")}""";
         }

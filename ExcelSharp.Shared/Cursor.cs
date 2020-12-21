@@ -34,7 +34,7 @@ namespace ExcelSharp
             Col = cell.col;
         }
 
-        public override string ToString() => $"{LetterSequence.GetLetter(Col)}{Row + 1}";
+        public override string ToString() => $"{LetterSequence.GetLetter(Col)}{Row + 1}, ({Row}, {Col})";
 
         public static implicit operator Cursor(string cellName) => new Cursor(cellName);
         public static implicit operator Cursor((int row, int col) cell) => new Cursor(cell);

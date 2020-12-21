@@ -10,12 +10,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Cursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CursorPosition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HtmlTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LetterSequence.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PrintDirection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RGBColor - static.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RGBColor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RichValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RichVerticalAlignment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RichTextAlignment.cs" />
     <Compile Include="..\ExcelSharp.Shared\RichTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RichArea.cs" />
     <Compile Include="..\ExcelSharp.Shared\RichBrush.cs" />

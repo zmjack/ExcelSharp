@@ -79,17 +79,17 @@ namespace ExcelSharp.NPOI
                             BorderRight = cstyle.BorderRight != BorderStyle.None,
                             TextAlign = cstyle.Alignment switch
                             {
-                                HorizontalAlignment.Left => "left",
-                                HorizontalAlignment.Center => "center",
-                                HorizontalAlignment.Right => "right",
-                                _ => "",
+                                HorizontalAlignment.Left => RichTextAlignment.Left,
+                                HorizontalAlignment.Center => RichTextAlignment.Center,
+                                HorizontalAlignment.Right => RichTextAlignment.Right,
+                                _ => RichTextAlignment.Preserve,
                             },
                             VerticalAlign = cstyle.VerticalAlignment switch
                             {
-                                VerticalAlignment.Top => "top",
-                                VerticalAlignment.Center => "middle",
-                                VerticalAlignment.Bottom => "bottom",
-                                _ => "",
+                                VerticalAlignment.Top => RichVerticalAlignment.Top,
+                                VerticalAlignment.Center => RichVerticalAlignment.Middle,
+                                VerticalAlignment.Bottom => RichVerticalAlignment.Bottom,
+                                _ => RichVerticalAlignment.Preserve,
                             },
                         };
                     }

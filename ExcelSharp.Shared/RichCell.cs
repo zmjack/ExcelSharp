@@ -17,6 +17,15 @@ namespace ExcelSharp
             Row = row;
         }
 
+        public bool Merged
+        {
+            get
+            {
+                if (Ignored) return true;
+                else if (RowSpan > 1 || ColSpan > 1) return true;
+                else return false;
+            }
+        }
         public bool Ignored { get; internal set; }
         public int RowSpan { get; internal set; } = 1;
         public int RowOffset { get; internal set; }
@@ -32,7 +41,8 @@ namespace ExcelSharp
                 if (value is RichValue richValue)
                 {
                     _innerValue = richValue.Value;
-                    Style = richValue.Style;
+                    if (richValue.Style is not null) Style = richValue.Style;
+                    if (richValue.Format is not null) Format = richValue.Format;
                 }
                 else _innerValue = value;
             }
@@ -42,21 +52,24 @@ namespace ExcelSharp
         {
             get
             {
-                var str = Value switch
+                if (Format is not null)
                 {
-                    short v => v.ToString(Format),
-                    int v => v.ToString(Format),
-                    long v => v.ToString(Format),
-                    ushort v => v.ToString(Format),
-                    uint v => v.ToString(Format),
-                    ulong v => v.ToString(Format),
-                    float v => v.ToString(Format),
-                    double v => v.ToString(Format),
-                    DateTime v => v.ToString(Format),
-                    decimal v => v.ToString(Format),
-                    _ => Value?.ToString(),
-                };
-                return str;
+                    return Value switch
+                    {
+                        short v => v.ToString(Format),
+                        int v => v.ToString(Format),
+                        long v => v.ToString(Format),
+                        ushort v => v.ToString(Format),
+                        uint v => v.ToString(Format),
+                        ulong v => v.ToString(Format),
+                        float v => v.ToString(Format),
+                        double v => v.ToString(Format),
+                        DateTime v => v.ToString(Format),
+                        decimal v => v.ToString(Format),
+                        _ => Value?.ToString(),
+                    };
+                }
+                else return Value?.ToString();
             }
         }
 

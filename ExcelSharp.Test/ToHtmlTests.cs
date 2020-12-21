@@ -34,7 +34,7 @@ namespace ExcelSharp.Test
             table[(0, 0), (1, 0)].Merge();
             table[(1, 1), (2, 4)].SmartMerge(0, 1, 2, 3);
 
-            var brush = table.GetBrush((5, 0));
+            var brush = table.BeginBrush((5, 0));
             brush.PrintLine(new object[] { 1, 2, null, "", 5, 6 });
             foreach (var cell in brush.Area.Cells)
             {

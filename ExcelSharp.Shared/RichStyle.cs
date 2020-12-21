@@ -16,8 +16,8 @@ namespace ExcelSharp
         public int? FontSize { get; set; }
         public string FontFamily { get; set; }
         public bool? Bold { get; set; }
-        public string TextAlign { get; set; }
-        public string VerticalAlign { get; set; }
+        public RichTextAlignment TextAlign { get; set; }
+        public RichVerticalAlignment VerticalAlign { get; set; }
 
         public bool? BorderTop { get; set; }
         public bool? BorderBottom { get; set; }

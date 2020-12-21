@@ -7,7 +7,7 @@ namespace ExcelSharp
     public class RichValue
     {
         public object Value { get; set; }
+        public string Format { get; set; }
         public RichStyle Style { get; set; }
-        public string DataFormat { get; set; }
     }
 }

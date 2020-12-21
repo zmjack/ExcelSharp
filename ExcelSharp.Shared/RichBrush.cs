@@ -9,15 +9,47 @@ namespace ExcelSharp
 {
     public class RichBrush : IDisposable
     {
+        public RichBrush Parent { get; private set; }
         public RichTable Table { get; private set; }
         public RichArea Area { get; private set; }
         public Cursor Cursor;
 
-        public RichBrush(RichTable table, Cursor start, Cursor end)
+        internal RichBrush(RichTable table, Cursor start, Cursor end)
         {
             Table = table;
             Cursor = start;
             Area = new RichArea(table, start, end);
+        }
+
+        private RichBrush(RichBrush parent)
+        {
+            Parent = parent;
+            Table = parent.Table;
+            Cursor = parent.Cursor;
+            Area = new RichArea(parent.Table, Cursor, Cursor);
+        }
+
+        private RichBrush(RichBrush parent, Cursor cursor)
+        {
+            Parent = parent;
+            Table = parent.Table;
+            Cursor = cursor;
+            Area = new RichArea(parent.Table, Cursor, Cursor);
+        }
+
+        public void SetCursor(CursorPosition position)
+        {
+            Cursor = position switch
+            {
+                CursorPosition.RowStart => new Cursor { Row = Area.Start.Row, Col = Cursor.Col },
+                CursorPosition.RowEnd => new Cursor { Row = Area.End.Row, Col = Cursor.Col },
+                CursorPosition.ColStart => new Cursor { Row = Cursor.Row, Col = Area.Start.Col },
+                CursorPosition.ColEnd => new Cursor { Row = Cursor.Row, Col = Area.End.Col },
+                CursorPosition.AreaStart => Area.Start,
+                CursorPosition.AreaEnd => Area.End,
+                CursorPosition.AfterAreaEnd => new Cursor { Row = Area.End.Row + 1, Col = Area.Start.Col },
+                _ => Cursor,
+            };
         }
 
         public RichBrush ResetCursorColumn()
@@ -146,10 +178,15 @@ namespace ExcelSharp
             return this;
         }
 
-        public RichBrush CreateViceBrush() => Table.GetBrush(Cursor);
+        public RichBrush BeginViceBrush() => new RichBrush(this);
+        public RichBrush BeginViceBrush(Cursor cursor) => new RichBrush(this, cursor);
 
         public void Dispose()
         {
+            if (Parent is not null)
+            {
+                Parent.Area.Extend(Area);
+            }
         }
 
     }

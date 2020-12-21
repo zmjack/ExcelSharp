@@ -16,7 +16,7 @@ namespace ExcelSharp
         public Cursor Start { get => _start; }
         public Cursor End { get => _end; }
 
-        public RichArea(RichTable table, Cursor start, Cursor end)
+        internal RichArea(RichTable table, Cursor start, Cursor end)
         {
             Table = table;
             _start = start;

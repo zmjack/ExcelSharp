@@ -87,41 +87,53 @@ namespace ExcelSharp.NPOI
             {
                 foreach (var cell in row.Cells)
                 {
-                    if (cell.Ignored) Cursor.Col++;
-                    else
+                    var range = Print(new object[]
                     {
-                        var range = Print(new object[]
+                        new CValue
                         {
-                            new CValue
+                            Value = cell.Ignored ? null : cell.Value,
+                            Style = cell.Style.For(uniStyle => Book.CStyle(x =>
                             {
-                                Value = cell.Value,
-                                Style = cell.Style.For(uniStyle => Book.CStyle(x =>
+                                if (uniStyle.BackgroundColor.HasValue) x.CellColor(new RGBColor( uniStyle.BackgroundColor.Value));
+                                if (uniStyle.Color.HasValue || uniStyle.FontSize.HasValue || uniStyle.FontFamily is not null)
                                 {
-                                    if (uniStyle.BackgroundColor.HasValue) x.CellColor(new RGBColor( uniStyle.BackgroundColor.Value));
-                                    if (uniStyle.Color.HasValue || uniStyle.FontSize.HasValue || uniStyle.FontFamily is not null)
+                                    var color = new RGBColor( uniStyle.Color ?? 0);
+                                    var fontFamily = uniStyle.FontFamily;
+                                    var fontSize = (short?)uniStyle.FontSize ?? 11;
+                                    if (uniStyle.Color.HasValue) x.SetFont(fontFamily, fontSize, color);
+                                    else x.SetFont(fontFamily, fontSize);
+                                }
+                                if (uniStyle.Bold.HasValue && uniStyle.Bold.Value) x.Bold();
+                                if (uniStyle.BorderTop.HasValue && uniStyle.BorderTop.Value) x.BorderTop = BorderStyle.Thin;
+                                if (uniStyle.BorderBottom.HasValue && uniStyle.BorderBottom.Value) x.BorderBottom = BorderStyle.Thin;
+                                if (uniStyle.BorderLeft.HasValue && uniStyle.BorderLeft.Value) x.BorderLeft = BorderStyle.Thin;
+                                if (uniStyle.BorderRight.HasValue && uniStyle.BorderRight.Value) x.BorderRight = BorderStyle.Thin;
+                                if (uniStyle.TextAlign != RichTextAlignment.Preserve)
+                                {
+                                    switch(uniStyle.TextAlign)
                                     {
-                                        var color = new RGBColor( uniStyle.Color ?? 0);
-                                        var fontFamily = uniStyle.FontFamily;
-                                        var fontSize = (short?)uniStyle.FontSize ?? 11;
-                                        if (uniStyle.Color.HasValue) x.SetFont(fontFamily, fontSize, color);
-                                        else x.SetFont(fontFamily, fontSize);
+                                        case RichTextAlignment.Left: x.HLeft(); break;
+                                        case RichTextAlignment.Center: x.HCenter(); break;
+                                        case RichTextAlignment.Right: x.HRight(); break;
                                     }
-                                    if (uniStyle.Bold.HasValue && uniStyle.Bold.Value) x.Bold();
-                                    if (uniStyle.BorderTop.HasValue && uniStyle.BorderTop.Value) x.BorderTop = BorderStyle.Thin;
-                                    if (uniStyle.BorderBottom.HasValue && uniStyle.BorderBottom.Value) x.BorderBottom = BorderStyle.Thin;
-                                    if (uniStyle.BorderLeft.HasValue && uniStyle.BorderLeft.Value) x.BorderLeft = BorderStyle.Thin;
-                                    if (uniStyle.BorderRight.HasValue && uniStyle.BorderRight.Value) x.BorderRight = BorderStyle.Thin;
-                                    if (!uniStyle.TextAlign.IsNullOrWhiteSpace()) x.HCenter();
-                                    if (!uniStyle.VerticalAlign.IsNullOrWhiteSpace()) x.VCenter();
-                                })),
-                            }
-                        });
-                        if (cell.RowSpan > 1 || cell.ColSpan > 1)
-                        {
-                            var endRow = range.Start.Row + cell.RowSpan - 1;
-                            var endCol = range.Start.Col + cell.ColSpan - 1;
-                            new SheetRange(this, range.Start, (endRow, endCol)).Merge();
+                                }
+                                if (uniStyle.VerticalAlign != RichVerticalAlignment.Preserve)
+                                {
+                                    switch(uniStyle.VerticalAlign)
+                                    {
+                                        case RichVerticalAlignment.Top: x.VTop(); break;
+                                        case RichVerticalAlignment.Middle: x.VCenter(); break;
+                                        case RichVerticalAlignment.Bottom: x.VBottom(); break;
+                                    }
+                                }
+                            })),
                         }
+                    });
+                    if (cell.RowSpan > 1 || cell.ColSpan > 1)
+                    {
+                        var endRow = range.Start.Row + cell.RowSpan - 1;
+                        var endCol = range.Start.Col + cell.ColSpan - 1;
+                        new SheetRange(this, range.Start, (endRow, endCol)).Merge();
                     }
                 }
                 PrintLine();

@@ -11,7 +11,11 @@ namespace ExcelSharp
     public class RichTable
     {
         private Dictionary<int, RichRow> _innerRows = new Dictionary<int, RichRow>();
-        internal int MaxColumnIndex = -1;
+        public int MaxRowIndex { get; internal set; } = -1;
+        public int MaxColumnIndex { get; internal set; } = -1;
+
+        public int RowLength => MaxRowIndex + 1;
+        public int ColumnLength => MaxColumnIndex + 1;
 
         public IEnumerable<RichRow> Rows
         {
@@ -45,20 +49,22 @@ namespace ExcelSharp
             {
                 var row = new RichRow(this);
                 _innerRows.Add(index, row);
+                if (MaxRowIndex < index) MaxRowIndex = index;
                 return row;
             }
         }
 
         public RichCell Cell(Cursor cursor) => Row(cursor.Row).Cell(cursor.Col);
 
-        public RichBrush GetBrush() => new RichBrush(this, (0, 0), (0, 0));
-        public RichBrush GetBrush(Cursor cursor) => new RichBrush(this, cursor, cursor);
-        public RichBrush GetBrush(Cursor start, Cursor end) => new RichBrush(this, start, end);
+        public RichBrush BeginBrush() => new RichBrush(this, (0, 0), (0, 0));
+        public RichBrush BeginBrush(Cursor cursor) => new RichBrush(this, cursor, cursor);
+        public RichBrush BeginBrush(Cursor start, Cursor end) => new RichBrush(this, start, end);
 
         public RichTable Merge(Cursor start, Cursor end)
         {
             var rowSpan = end.Row - start.Row + 1;
             var colSpan = end.Col - start.Col + 1;
+            var startCell = Cell(start);
 
             for (int row = start.Row; row <= end.Row; row++)
             {
@@ -69,15 +75,20 @@ namespace ExcelSharp
                     cell.RowSpan = cell.ColSpan = 0;
                     cell.RowOffset = row - start.Row;
                     cell.ColOffset = col - start.Col;
+                    cell.Style = startCell.Style;
                 }
             }
 
-            var startCell = Cell(start);
             startCell.Ignored = false;
             startCell.RowSpan = rowSpan;
             startCell.ColSpan = colSpan;
 
             return this;
+        }
+
+        public RichTable Unmerge(Cursor cursor)
+        {
+            throw new NotImplementedException();
         }
 
     }
