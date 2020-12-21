@@ -41,8 +41,9 @@ namespace ExcelSharp
                 if (value is RichValue richValue)
                 {
                     _innerValue = richValue.Value;
+                    Comment = richValue.Comment;
+                    Format = richValue.Format;
                     if (richValue.Style is not null) Style = richValue.Style;
-                    if (richValue.Format is not null) Format = richValue.Format;
                 }
                 else _innerValue = value;
             }

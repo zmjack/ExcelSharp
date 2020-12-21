@@ -92,40 +92,42 @@ namespace ExcelSharp.NPOI
                         new CValue
                         {
                             Value = cell.Ignored ? null : cell.Value,
-                            Style = cell.Style.For(uniStyle => Book.CStyle(x =>
+                            Style = cell.Style.For(richStyle => Book.CStyle(x =>
                             {
-                                if (uniStyle.BackgroundColor.HasValue) x.CellColor(new RGBColor( uniStyle.BackgroundColor.Value));
-                                if (uniStyle.Color.HasValue || uniStyle.FontSize.HasValue || uniStyle.FontFamily is not null)
+                                if (richStyle.BackgroundColor.HasValue) x.CellColor(new RGBColor( richStyle.BackgroundColor.Value));
+                                if (richStyle.Color.HasValue || richStyle.FontSize.HasValue || richStyle.FontFamily is not null)
                                 {
-                                    var color = new RGBColor( uniStyle.Color ?? 0);
-                                    var fontFamily = uniStyle.FontFamily;
-                                    var fontSize = (short?)uniStyle.FontSize ?? 11;
-                                    if (uniStyle.Color.HasValue) x.SetFont(fontFamily, fontSize, color);
+                                    var color = new RGBColor( richStyle.Color ?? 0);
+                                    var fontFamily = richStyle.FontFamily;
+                                    var fontSize = (short?)richStyle.FontSize ?? 11;
+                                    if (richStyle.Color.HasValue) x.SetFont(fontFamily, fontSize, color);
                                     else x.SetFont(fontFamily, fontSize);
                                 }
-                                if (uniStyle.Bold.HasValue && uniStyle.Bold.Value) x.Bold();
-                                if (uniStyle.BorderTop.HasValue && uniStyle.BorderTop.Value) x.BorderTop = BorderStyle.Thin;
-                                if (uniStyle.BorderBottom.HasValue && uniStyle.BorderBottom.Value) x.BorderBottom = BorderStyle.Thin;
-                                if (uniStyle.BorderLeft.HasValue && uniStyle.BorderLeft.Value) x.BorderLeft = BorderStyle.Thin;
-                                if (uniStyle.BorderRight.HasValue && uniStyle.BorderRight.Value) x.BorderRight = BorderStyle.Thin;
-                                if (uniStyle.TextAlign != RichTextAlignment.Preserve)
+                                if (richStyle.Bold.HasValue && richStyle.Bold.Value) x.Bold();
+                                if (richStyle.BorderTop.HasValue && richStyle.BorderTop.Value) x.BorderTop = BorderStyle.Thin;
+                                if (richStyle.BorderBottom.HasValue && richStyle.BorderBottom.Value) x.BorderBottom = BorderStyle.Thin;
+                                if (richStyle.BorderLeft.HasValue && richStyle.BorderLeft.Value) x.BorderLeft = BorderStyle.Thin;
+                                if (richStyle.BorderRight.HasValue && richStyle.BorderRight.Value) x.BorderRight = BorderStyle.Thin;
+                                if (richStyle.TextAlign != RichTextAlignment.Preserve)
                                 {
-                                    switch(uniStyle.TextAlign)
+                                    switch(richStyle.TextAlign)
                                     {
                                         case RichTextAlignment.Left: x.HLeft(); break;
                                         case RichTextAlignment.Center: x.HCenter(); break;
                                         case RichTextAlignment.Right: x.HRight(); break;
                                     }
                                 }
-                                if (uniStyle.VerticalAlign != RichVerticalAlignment.Preserve)
+                                if (richStyle.VerticalAlign != RichVerticalAlignment.Preserve)
                                 {
-                                    switch(uniStyle.VerticalAlign)
+                                    switch(richStyle.VerticalAlign)
                                     {
                                         case RichVerticalAlignment.Top: x.VTop(); break;
                                         case RichVerticalAlignment.Middle: x.VCenter(); break;
                                         case RichVerticalAlignment.Bottom: x.VBottom(); break;
                                     }
                                 }
+
+                                x.DataFormat = cell.Format;
                             })),
                         }
                     });

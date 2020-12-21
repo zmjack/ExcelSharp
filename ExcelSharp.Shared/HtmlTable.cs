@@ -61,12 +61,19 @@ namespace ExcelSharp
                 sb.AppendLine(@"<tr>");
                 foreach (var cell in row.Cells.Where(x => !x.Ignored))
                 {
+                    //TODO: Auto calculate width
+                    var cellWidth = cell.Comment.GetPureLines().For(lines =>
+                    {
+                        if (lines.Any()) return 10 + lines.Max(x => (cell.Style.FontSize ?? 12) * x.Length);
+                        else return 10;
+                    });
+
                     sb.AppendLine($@"<td{Props(RowSpanProp(cell), ColSpanProp(cell), StyleProp(cell))}>");
                     if (!cell.Comment.IsNullOrWhiteSpace())
                     {
                         sb.AppendLine($@"
-<span class=""excel-comment"">
-    <div class=""excel-content"">
+<span class=""excel-sharp"">
+    <div class=""excel-comment"" style=""width:{cellWidth}"">
         {cell.Comment.Flow(StringFlow.HtmlEncode).Replace("\r\n", "<br/>")}
     </div>
     <span class=""excel-text"">{cell.Text}</span>
