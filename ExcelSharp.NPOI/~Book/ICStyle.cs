@@ -1,4 +1,5 @@
 ﻿using NPOI.SS.UserModel;
+using Richx;
 
 namespace ExcelSharp.NPOI
 {
@@ -11,26 +12,26 @@ namespace ExcelSharp.NPOI
 
         #region Border
         BorderStyle BorderLeft { get; set; }
-        RGBColor LeftBorderColor { get; set; }
+        RgbColor LeftBorderColor { get; set; }
 
         BorderStyle BorderRight { get; set; }
-        RGBColor RightBorderColor { get; set; }
+        RgbColor RightBorderColor { get; set; }
 
         BorderStyle BorderTop { get; set; }
-        RGBColor TopBorderColor { get; set; }
+        RgbColor TopBorderColor { get; set; }
 
         BorderStyle BorderBottom { get; set; }
-        RGBColor BottomBorderColor { get; set; }
+        RgbColor BottomBorderColor { get; set; }
 
         BorderStyle BorderDiagonalLineStyle { get; set; }
-        RGBColor BorderDiagonalColor { get; set; }
+        RgbColor BorderDiagonalColor { get; set; }
         BorderDiagonal BorderDiagonal { get; set; }
         #endregion
 
         #region Fill
         FillPattern FillPattern { get; set; }
-        RGBColor FillBackgroundColor { get; set; }
-        RGBColor FillForegroundColor { get; set; }
+        RgbColor FillBackgroundColor { get; set; }
+        RgbColor FillForegroundColor { get; set; }
         #endregion
 
         #region Font

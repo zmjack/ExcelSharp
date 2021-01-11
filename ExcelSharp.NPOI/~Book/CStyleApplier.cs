@@ -1,5 +1,6 @@
 ﻿using NPOI.SS.UserModel;
 using NStandard;
+using Richx;
 using System;
 using System.Linq;
 
@@ -18,26 +19,26 @@ namespace ExcelSharp.NPOI
 
         #region Border
         public BorderStyle BorderLeft { get; set; } = BorderStyle.None;
-        public RGBColor LeftBorderColor { get; set; } = RGBColor.Black;
+        public RgbColor LeftBorderColor { get; set; } = ExcelColor.Black;
 
         public BorderStyle BorderRight { get; set; } = BorderStyle.None;
-        public RGBColor RightBorderColor { get; set; } = RGBColor.Black;
+        public RgbColor RightBorderColor { get; set; } = ExcelColor.Black;
 
         public BorderStyle BorderTop { get; set; } = BorderStyle.None;
-        public RGBColor TopBorderColor { get; set; } = RGBColor.Black;
+        public RgbColor TopBorderColor { get; set; } = ExcelColor.Black;
 
         public BorderStyle BorderBottom { get; set; } = BorderStyle.None;
-        public RGBColor BottomBorderColor { get; set; } = RGBColor.Black;
+        public RgbColor BottomBorderColor { get; set; } = ExcelColor.Black;
 
         public BorderStyle BorderDiagonalLineStyle { get; set; } = BorderStyle.None;
-        public RGBColor BorderDiagonalColor { get; set; } = RGBColor.Black;
+        public RgbColor BorderDiagonalColor { get; set; } = ExcelColor.Black;
         public BorderDiagonal BorderDiagonal { get; set; } = BorderDiagonal.None;
         #endregion
 
         #region Fill
         public FillPattern FillPattern { get; set; } = FillPattern.NoFill;
-        public RGBColor FillBackgroundColor { get; set; } = RGBColor.Automatic;
-        public RGBColor FillForegroundColor { get; set; } = RGBColor.Automatic;
+        public RgbColor FillBackgroundColor { get; set; } = ExcelColor.Automatic;
+        public RgbColor FillForegroundColor { get; set; } = ExcelColor.Automatic;
         #endregion
 
         #region Font
@@ -78,14 +79,16 @@ namespace ExcelSharp.NPOI
         public CStyleApplier TopBorder(BorderStyle borderStyle = BorderStyle.Thin) { BorderTop = borderStyle; return this; }
         public CStyleApplier BottomBorder(BorderStyle borderStyle = BorderStyle.Thin) { BorderBottom = borderStyle; return this; }
 
-        public CStyleApplier CellColor(RGBColor foregroundColor)
-            => CellColor(foregroundColor, RGBColor.Automatic, FillPattern.SolidForeground);
-        public CStyleApplier CellColor(RGBColor foregroundColor, RGBColor backgroundColor, FillPattern pattern)
+        public CStyleApplier CellColor(RgbColor foregroundColor)
+            => CellColor(foregroundColor, ExcelColor.Automatic, FillPattern.SolidForeground);
+        public CStyleApplier CellColor(RgbColor foregroundColor, RgbColor backgroundColor, FillPattern pattern)
         {
             FillForegroundColor = foregroundColor;
             FillBackgroundColor = backgroundColor;
 
-            if (foregroundColor.Index == RGBColor.AutomaticIndex && backgroundColor.Index == RGBColor.AutomaticIndex)
+            var foregroundColorIndex = ExcelColor.GetIndex(foregroundColor);
+            var backgroundColorIndex = ExcelColor.GetIndex(backgroundColor);
+            if (foregroundColorIndex == ExcelColor.AutomaticIndex && backgroundColorIndex == ExcelColor.AutomaticIndex)
                 FillPattern = FillPattern.NoFill;
             else FillPattern = pattern;
 
@@ -108,9 +111,9 @@ namespace ExcelSharp.NPOI
         public CStyleApplier Underline(FontUnderlineType value = FontUnderlineType.Single) { Font.Underline = value; return this; }
         public CStyleApplier TypeOffset(FontSuperScript value) { Font.TypeOffset = value; return this; }
 
-        public CStyleApplier SetFont(string fontName, short size) => SetFont(fontName, size, RGBColor.Automatic);
-        public CStyleApplier SetFont(string fontName, short size, int rgbValue) => SetFont(fontName, size, new RGBColor(rgbValue));
-        public CStyleApplier SetFont(string fontName, short size, RGBColor color)
+        public CStyleApplier SetFont(string fontName, short size) => SetFont(fontName, size, ExcelColor.Automatic);
+        public CStyleApplier SetFont(string fontName, short size, uint rgbValue) => SetFont(fontName, size, new RgbColor { Value = rgbValue });
+        public CStyleApplier SetFont(string fontName, short size, RgbColor color)
         {
             Font.FontName = fontName;
             Font.FontSize = size;

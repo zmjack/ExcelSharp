@@ -1,7 +1,7 @@
 ﻿using NPOI.SS.UserModel;
 using NStandard;
+using Richx;
 using System;
-using System.Data;
 using System.Linq;
 
 namespace ExcelSharp.NPOI

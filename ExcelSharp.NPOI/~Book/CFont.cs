@@ -1,6 +1,8 @@
-﻿using NPOI.SS.UserModel;
+﻿using ExcelSharp.NPOI.Utils;
+using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using NStandard;
+using Richx;
 using System.Linq;
 
 namespace ExcelSharp.NPOI
@@ -60,16 +62,18 @@ namespace ExcelSharp.NPOI
             set => Font.TypeOffset = value;
         }
 
-        public RGBColor FontColor
+        public RgbColor FontColor
         {
-            get => Font.Color > 0 ? RGBColor.ParseIndexed(Font.Color)
-                : (Font as XSSFFont)?.GetXSSFColor()?.RGB?.For(_ => new RGBColor(_)) ?? RGBColor.Automatic;
+            get => Font.Color > 0 ? ExcelColor.GetColor(Font.Color)
+                : (Font as XSSFFont)?.GetXSSFColor()?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
             set
             {
-                Font.Color = value.Index;
+                var index = ExcelColor.GetIndex(value);
+                Font.Color = index;
                 if (Font is XSSFFont)
-                    (Font as XSSFFont).SetColor(
-                        value.Index == RGBColor.AutomaticIndex ? null : new XSSFColor(value.Bytes));
+                {
+                    (Font as XSSFFont).SetColor(index == ExcelColor.AutomaticIndex ? null : XSSFColorUtil.GetXSSFColor(value));
+                }
             }
         }
 

@@ -1,6 +1,8 @@
-﻿using NPOI.SS.UserModel;
+﻿using ExcelSharp.NPOI.Utils;
+using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using NStandard;
+using Richx;
 using System.Linq;
 
 namespace ExcelSharp.NPOI
@@ -41,16 +43,18 @@ namespace ExcelSharp.NPOI
             get => CellStyle.BorderLeft;
             set => CellStyle.BorderLeft = value;
         }
-        public RGBColor LeftBorderColor
+        public RgbColor LeftBorderColor
         {
-            get => CellStyle.LeftBorderColor > 0 ? RGBColor.ParseIndexed(CellStyle.LeftBorderColor)
-                : (CellStyle as XSSFCellStyle)?.LeftBorderXSSFColor?.RGB?.For(_ => new RGBColor(_)) ?? RGBColor.Automatic;
+            get => CellStyle.LeftBorderColor > 0 ? ExcelColor.GetColor(CellStyle.LeftBorderColor)
+                : (CellStyle as XSSFCellStyle)?.LeftBorderXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
             set
             {
-                CellStyle.LeftBorderColor = value.Index;
+                var index = ExcelColor.GetIndex(value);
+                CellStyle.LeftBorderColor = index;
                 if (CellStyle is XSSFCellStyle)
-                    (CellStyle as XSSFCellStyle).SetLeftBorderColor(
-                        value.Index == RGBColor.AutomaticIndex ? null : new XSSFColor(value.Bytes));
+                {
+                    (CellStyle as XSSFCellStyle).SetLeftBorderColor(index == ExcelColor.AutomaticIndex ? null : XSSFColorUtil.GetXSSFColor(value));
+                }
             }
         }
 
@@ -59,16 +63,18 @@ namespace ExcelSharp.NPOI
             get => CellStyle.BorderRight;
             set => CellStyle.BorderRight = value;
         }
-        public RGBColor RightBorderColor
+        public RgbColor RightBorderColor
         {
-            get => CellStyle.RightBorderColor > 0 ? RGBColor.ParseIndexed(CellStyle.RightBorderColor)
-                : (CellStyle as XSSFCellStyle)?.RightBorderXSSFColor?.RGB?.For(_ => new RGBColor(_)) ?? RGBColor.Automatic;
+            get => CellStyle.RightBorderColor > 0 ? ExcelColor.GetColor(CellStyle.RightBorderColor)
+                : (CellStyle as XSSFCellStyle)?.RightBorderXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
             set
             {
-                CellStyle.RightBorderColor = value.Index;
+                var index = ExcelColor.GetIndex(value);
+                CellStyle.RightBorderColor = index;
                 if (CellStyle is XSSFCellStyle)
-                    (CellStyle as XSSFCellStyle).SetRightBorderColor(
-                        value.Index == RGBColor.AutomaticIndex ? null : new XSSFColor(value.Bytes));
+                {
+                    (CellStyle as XSSFCellStyle).SetRightBorderColor(index == ExcelColor.AutomaticIndex ? null : XSSFColorUtil.GetXSSFColor(value));
+                }
             }
         }
 
@@ -77,16 +83,18 @@ namespace ExcelSharp.NPOI
             get => CellStyle.BorderTop;
             set => CellStyle.BorderTop = value;
         }
-        public RGBColor TopBorderColor
+        public RgbColor TopBorderColor
         {
-            get => CellStyle.TopBorderColor > 0 ? RGBColor.ParseIndexed(CellStyle.TopBorderColor)
-                : (CellStyle as XSSFCellStyle)?.TopBorderXSSFColor?.RGB?.For(_ => new RGBColor(_)) ?? RGBColor.Automatic;
+            get => CellStyle.TopBorderColor > 0 ? ExcelColor.GetColor(CellStyle.TopBorderColor)
+                : (CellStyle as XSSFCellStyle)?.TopBorderXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
             set
             {
-                CellStyle.TopBorderColor = value.Index;
+                var index = ExcelColor.GetIndex(value);
+                CellStyle.TopBorderColor = index;
                 if (CellStyle is XSSFCellStyle)
-                    (CellStyle as XSSFCellStyle).SetTopBorderColor(
-                        value.Index == RGBColor.AutomaticIndex ? null : new XSSFColor(value.Bytes));
+                {
+                    (CellStyle as XSSFCellStyle).SetTopBorderColor(index == ExcelColor.AutomaticIndex ? null : XSSFColorUtil.GetXSSFColor(value));
+                }
             }
         }
 
@@ -95,16 +103,18 @@ namespace ExcelSharp.NPOI
             get => CellStyle.BorderBottom;
             set => CellStyle.BorderBottom = value;
         }
-        public RGBColor BottomBorderColor
+        public RgbColor BottomBorderColor
         {
-            get => CellStyle.BottomBorderColor > 0 ? RGBColor.ParseIndexed(CellStyle.BottomBorderColor)
-                : (CellStyle as XSSFCellStyle)?.BottomBorderXSSFColor?.RGB?.For(_ => new RGBColor(_)) ?? RGBColor.Automatic;
+            get => CellStyle.BottomBorderColor > 0 ? ExcelColor.GetColor(CellStyle.BottomBorderColor)
+                : (CellStyle as XSSFCellStyle)?.BottomBorderXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
             set
             {
-                CellStyle.BottomBorderColor = value.Index;
+                var index = ExcelColor.GetIndex(value);
+                CellStyle.BottomBorderColor = index;
                 if (CellStyle is XSSFCellStyle)
-                    (CellStyle as XSSFCellStyle).SetBottomBorderColor(
-                        value.Index == RGBColor.AutomaticIndex ? null : new XSSFColor(value.Bytes));
+                {
+                    (CellStyle as XSSFCellStyle).SetBottomBorderColor(index == ExcelColor.AutomaticIndex ? null : XSSFColorUtil.GetXSSFColor(value));
+                }
             }
         }
 
@@ -113,16 +123,18 @@ namespace ExcelSharp.NPOI
             get => CellStyle.BorderDiagonalLineStyle;
             set => CellStyle.BorderDiagonalLineStyle = value;
         }
-        public RGBColor BorderDiagonalColor
+        public RgbColor BorderDiagonalColor
         {
-            get => CellStyle.BorderDiagonalColor > 0 ? RGBColor.ParseIndexed(CellStyle.BorderDiagonalColor)
-                : (CellStyle as XSSFCellStyle)?.DiagonalBorderXSSFColor?.RGB?.For(_ => new RGBColor(_)) ?? RGBColor.Automatic;
+            get => CellStyle.BorderDiagonalColor > 0 ? ExcelColor.GetColor(CellStyle.BorderDiagonalColor)
+                : (CellStyle as XSSFCellStyle)?.DiagonalBorderXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
             set
             {
-                CellStyle.BorderDiagonalColor = value.Index;
+                var index = ExcelColor.GetIndex(value);
+                CellStyle.BorderDiagonalColor = index;
                 if (CellStyle is XSSFCellStyle)
-                    (CellStyle as XSSFCellStyle).SetDiagonalBorderColor(
-                        value.Index == RGBColor.AutomaticIndex ? null : new XSSFColor(value.Bytes));
+                {
+                    (CellStyle as XSSFCellStyle).SetDiagonalBorderColor(index == ExcelColor.AutomaticIndex ? null : XSSFColorUtil.GetXSSFColor(value));
+                }
             }
         }
         public BorderDiagonal BorderDiagonal
@@ -139,29 +151,33 @@ namespace ExcelSharp.NPOI
             set => CellStyle.FillPattern = value;
         }
 
-        public RGBColor FillBackgroundColor
+        public RgbColor FillBackgroundColor
         {
-            get => CellStyle.FillBackgroundColor > 0 ? RGBColor.ParseIndexed(CellStyle.FillBackgroundColor)
-                : (CellStyle as XSSFCellStyle)?.FillBackgroundXSSFColor?.RGB?.For(_ => new RGBColor(_)) ?? RGBColor.Automatic;
+            get => CellStyle.FillBackgroundColor > 0 ? ExcelColor.GetColor(CellStyle.FillBackgroundColor)
+                : (CellStyle as XSSFCellStyle)?.FillBackgroundXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
             set
             {
-                CellStyle.FillBackgroundColor = value.Index;
+                var index = ExcelColor.GetIndex(value);
+                CellStyle.FillBackgroundColor = index;
                 if (CellStyle is XSSFCellStyle)
-                    (CellStyle as XSSFCellStyle).FillBackgroundXSSFColor =
-                        value.Index == RGBColor.AutomaticIndex ? null : new XSSFColor(value.Bytes);
+                {
+                    (CellStyle as XSSFCellStyle).FillBackgroundXSSFColor = index == ExcelColor.AutomaticIndex ? null : XSSFColorUtil.GetXSSFColor(value);
+                }
             }
         }
 
-        public RGBColor FillForegroundColor
+        public RgbColor FillForegroundColor
         {
-            get => CellStyle.FillForegroundColor > 0 ? RGBColor.ParseIndexed(CellStyle.FillForegroundColor)
-                : (CellStyle as XSSFCellStyle)?.FillForegroundXSSFColor?.RGB?.For(_ => new RGBColor(_)) ?? RGBColor.Automatic;
+            get => CellStyle.FillForegroundColor > 0 ? ExcelColor.GetColor(CellStyle.FillForegroundColor)
+                : (CellStyle as XSSFCellStyle)?.FillForegroundXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
             set
             {
-                CellStyle.FillForegroundColor = value.Index;
+                var index = (short)ExcelColor.GetIndex(value);
+                CellStyle.FillForegroundColor = index;
                 if (CellStyle is XSSFCellStyle)
-                    (CellStyle as XSSFCellStyle).FillForegroundXSSFColor =
-                        value.Index == RGBColor.AutomaticIndex ? null : new XSSFColor(value.Bytes);
+                {
+                    (CellStyle as XSSFCellStyle).FillForegroundXSSFColor = index == ExcelColor.AutomaticIndex ? null : XSSFColorUtil.GetXSSFColor(value);
+                }
             }
         }
         #endregion

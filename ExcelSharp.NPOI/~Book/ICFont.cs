@@ -1,4 +1,5 @@
 ﻿using NPOI.SS.UserModel;
+using Richx;
 
 namespace ExcelSharp.NPOI
 {
@@ -14,7 +15,7 @@ namespace ExcelSharp.NPOI
         FontUnderlineType Underline { get; set; }
         FontSuperScript TypeOffset { get; set; }
 
-        RGBColor FontColor { get; set; }
+        RgbColor FontColor { get; set; }
 
         //short Charset { get; set; }
         //short Index { get; }

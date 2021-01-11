@@ -1,4 +1,5 @@
-﻿
+﻿using Richx;
+
 namespace ExcelSharp.NPOI
 {
     public partial class ExcelSheet

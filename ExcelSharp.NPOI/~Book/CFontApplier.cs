@@ -1,5 +1,6 @@
 ﻿using NPOI.SS.UserModel;
 using NStandard;
+using Richx;
 using System;
 using System.Linq;
 
@@ -22,7 +23,7 @@ namespace ExcelSharp.NPOI
         public FontUnderlineType Underline { get; set; } = FontUnderlineType.None;
         public FontSuperScript TypeOffset { get; set; } = FontSuperScript.None;
 
-        public RGBColor FontColor { get; set; } = RGBColor.Black;
+        public RgbColor FontColor { get; set; } = ExcelColor.Black;
 
         public void Apply(CFont style)
         {

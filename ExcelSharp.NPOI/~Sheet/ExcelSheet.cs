@@ -1,6 +1,7 @@
 ﻿using ExcelSharp.NPOI.Utils;
 using NPOI.SS.UserModel;
 using NStandard;
+using Richx;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,7 +9,6 @@ using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace ExcelSharp.NPOI
 {
@@ -95,10 +95,10 @@ namespace ExcelSharp.NPOI
                     var richStyle = cell.Style;
                     var style = Book.CStyle(x =>
                     {
-                        if (richStyle.BackgroundColor.HasValue) x.CellColor(new RGBColor(richStyle.BackgroundColor.Value));
+                        if (richStyle.BackgroundColor.HasValue) x.CellColor(new RgbColor { Value = richStyle.BackgroundColor.Value });
                         if (richStyle.Color.HasValue || richStyle.FontSize.HasValue || richStyle.FontFamily is not null)
                         {
-                            var color = new RGBColor(richStyle.Color ?? 0);
+                            var color = new RgbColor { Value = richStyle.Color ?? 0 };
                             var fontFamily = richStyle.FontFamily;
                             var fontSize = (short?)richStyle.FontSize ?? 11;
                             if (richStyle.Color.HasValue) x.SetFont(fontFamily, fontSize, color);

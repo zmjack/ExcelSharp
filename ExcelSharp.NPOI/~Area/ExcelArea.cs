@@ -1,9 +1,7 @@
 ﻿using NPOI.SS.UserModel;
 using NStandard;
-using System;
-using System.Collections.Generic;
+using Richx;
 using System.Linq;
-using System.Text;
 
 namespace ExcelSharp.NPOI
 {
@@ -69,7 +67,7 @@ namespace ExcelSharp.NPOI
 
                         uniCell.Style = new RichStyle
                         {
-                            BackgroundColor = cstyle.FillPattern != FillPattern.NoFill ? (int?)cstyle.FillForegroundColor.Value : null,
+                            BackgroundColor = cstyle.FillPattern != FillPattern.NoFill ? cstyle.FillForegroundColor.Value : null,
                             Color = cstyle.Font.FontColor.Value,
                             Bold = cstyle.Font.IsBold,
                             FontSize = cstyle.Font.FontSize,
