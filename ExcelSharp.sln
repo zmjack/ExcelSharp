@@ -11,6 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelSharp.NPOI", "ExcelSha
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ExcelSharp.Shared", "ExcelSharp.Shared\ExcelSharp.Shared.shproj", "{1D1E0DC8-61F7-4D7C-81A1-6127D29907C8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E94DC7E5-0F22-45AC-92E8-74D4E148EE67}"
+	ProjectSection(SolutionItems) = preProject
+		push.cmd = push.cmd
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ExcelSharp.Shared\ExcelSharp.Shared.projitems*{1d1e0dc8-61f7-4d7c-81a1-6127d29907c8}*SharedItemsImports = 13
