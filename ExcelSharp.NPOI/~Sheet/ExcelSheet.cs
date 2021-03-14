@@ -100,7 +100,7 @@ namespace ExcelSharp.NPOI
                         {
                             var color = new RgbColor { Value = richStyle.Color ?? 0 };
                             var fontFamily = richStyle.FontFamily;
-                            var fontSize = (short?)richStyle.FontSize ?? 11;
+                            var fontSize = (short)Math.Round((richStyle.FontSize ?? 14) * 0.75, 0, MidpointRounding.AwayFromZero);
                             if (richStyle.Color.HasValue) x.SetFont(fontFamily, fontSize, color);
                             else x.SetFont(fontFamily, fontSize);
                         }
