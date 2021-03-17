@@ -39,7 +39,7 @@ namespace ExcelSharp.Test
             {
                 cell.Style = cell.Style with
                 {
-                    BackgroundColor = 0x00ffff,
+                    BackgroundColor = RgbColor.Create(0x00ffff),
                 };
             }
 
@@ -68,10 +68,10 @@ namespace ExcelSharp.Test
             {
                 TextAlign = RichTextAlignment.Center,
                 VerticalAlign = RichVerticalAlignment.Middle,
-                BackgroundColor = 0x538DE7,
+                BackgroundColor = RgbColor.Create(0x538DE7),
                 FontFamily = "Microsoft YaHei",
                 FontSize = 24,
-                Color = 0xffffff,
+                Color = RgbColor.Create(0xffffff),
                 Bold = true,
                 BorderTop = true,
                 BorderBottom = true,
@@ -82,10 +82,10 @@ namespace ExcelSharp.Test
             {
                 TextAlign = RichTextAlignment.Center,
                 VerticalAlign = RichVerticalAlignment.Middle,
-                BackgroundColor = 0x538DE7,
+                BackgroundColor = RgbColor.Create(0x538DE7),
                 FontFamily = "Microsoft YaHei",
                 FontSize = 12,
-                Color = 0xffffff,
+                Color = RgbColor.Create(0xffffff),
                 Bold = true,
                 BorderTop = true,
                 BorderBottom = true,

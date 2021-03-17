@@ -32,7 +32,7 @@ namespace ExcelSharp.NPOI
             Cursor = (0, 0);
         }
 
-        public ExcelArea BeginArea() => new ExcelArea(this);
+        public ExcelArea BeginArea() => new(this);
         public ExcelArea BeginArea(Cursor cursor)
         {
             Cursor = cursor;
@@ -67,7 +67,7 @@ namespace ExcelSharp.NPOI
                 return new SheetCell(this, icol);
             }
         }
-        public SheetRange this[Cursor start, Cursor end] => new SheetRange(this, start, end);
+        public SheetRange this[Cursor start, Cursor end] => new(this, start, end);
 
         public void ResetCursorColumn()
         {
@@ -95,13 +95,13 @@ namespace ExcelSharp.NPOI
                     var richStyle = cell.Style;
                     var style = Book.CStyle(x =>
                     {
-                        if (richStyle.BackgroundColor.HasValue) x.CellColor(new RgbColor { Value = richStyle.BackgroundColor.Value });
-                        if (richStyle.Color.HasValue || richStyle.FontSize.HasValue || richStyle.FontFamily is not null)
+                        if (richStyle.BackgroundColor is not null) x.CellColor(ArgbColor.FromArgb(richStyle.BackgroundColor.ArgbValue));
+                        if (richStyle.Color is not null || richStyle.FontSize.HasValue || richStyle.FontFamily is not null)
                         {
-                            var color = new RgbColor { Value = richStyle.Color ?? 0 };
+                            var color = ArgbColor.FromArgb(richStyle.Color.ArgbValue);
                             var fontFamily = richStyle.FontFamily;
                             var fontSize = (short)Math.Round((richStyle.FontSize ?? 14) * 0.75, 0, MidpointRounding.AwayFromZero);
-                            if (richStyle.Color.HasValue) x.SetFont(fontFamily, fontSize, color);
+                            if (richStyle.Color is not null) x.SetFont(fontFamily, fontSize, color);
                             else x.SetFont(fontFamily, fontSize);
                         }
                         if (richStyle.Bold.HasValue && richStyle.Bold.Value) x.Bold();

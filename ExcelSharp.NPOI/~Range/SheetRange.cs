@@ -57,7 +57,7 @@ namespace ExcelSharp.NPOI
             }
         }
 
-        public SheetRangeColumnSelector Columns => new SheetRangeColumnSelector(this);
+        public SheetRangeColumnSelector Columns => new(this);
         public SheetRangeGroup Column(params int[] indexes)
         {
             IEnumerable<SheetRange> select()
@@ -68,7 +68,7 @@ namespace ExcelSharp.NPOI
             return new SheetRangeGroup(select());
         }
 
-        public SheetRangeRowSelector Rows => new SheetRangeRowSelector(this);
+        public SheetRangeRowSelector Rows => new(this);
         public SheetRangeGroup Row(params int[] indexes)
         {
             IEnumerable<SheetRange> select()

@@ -15,7 +15,7 @@ namespace ExcelSharp.NPOI
         FontUnderlineType Underline { get; set; }
         FontSuperScript TypeOffset { get; set; }
 
-        RgbColor FontColor { get; set; }
+        IArgbColor FontColor { get; set; }
 
         //short Charset { get; set; }
         //short Index { get; }

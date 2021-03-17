@@ -12,26 +12,26 @@ namespace ExcelSharp.NPOI
 
         #region Border
         BorderStyle BorderLeft { get; set; }
-        RgbColor LeftBorderColor { get; set; }
+        IArgbColor LeftBorderColor { get; set; }
 
         BorderStyle BorderRight { get; set; }
-        RgbColor RightBorderColor { get; set; }
+        IArgbColor RightBorderColor { get; set; }
 
         BorderStyle BorderTop { get; set; }
-        RgbColor TopBorderColor { get; set; }
+        IArgbColor TopBorderColor { get; set; }
 
         BorderStyle BorderBottom { get; set; }
-        RgbColor BottomBorderColor { get; set; }
+        IArgbColor BottomBorderColor { get; set; }
 
         BorderStyle BorderDiagonalLineStyle { get; set; }
-        RgbColor BorderDiagonalColor { get; set; }
+        IArgbColor BorderDiagonalColor { get; set; }
         BorderDiagonal BorderDiagonal { get; set; }
         #endregion
 
         #region Fill
         FillPattern FillPattern { get; set; }
-        RgbColor FillBackgroundColor { get; set; }
-        RgbColor FillForegroundColor { get; set; }
+        IArgbColor FillBackgroundColor { get; set; }
+        IArgbColor FillForegroundColor { get; set; }
         #endregion
 
         #region Font

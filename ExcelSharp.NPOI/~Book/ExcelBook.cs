@@ -63,7 +63,7 @@ namespace ExcelSharp.NPOI
 
         public IEnumerable<ICellStyle> CellStyles => new ICellStyle[NumCellStyles].Let(i => GetCellStyleAt((short)i));
         public IEnumerable<CStyle> CStyles => CellStyles.Select(x => new CStyle(this, x));
-        public CStyle CStyleAt(short index) => new CStyle(this, GetCellStyleAt(index));
+        public CStyle CStyleAt(short index) => new(this, GetCellStyleAt(index));
         public CStyle CStyle(Action<CStyleApplier> init) => CStyle(NPOI.CStyleApplier.Create(init));
         public CStyle CStyle(CStyleApplier applier)
         {
@@ -76,7 +76,7 @@ namespace ExcelSharp.NPOI
 
         public IEnumerable<IFont> Fonts => new IFont[NumberOfFonts].Let(i => GetFontAt((short)i));
         public IEnumerable<CFont> CFonts => Fonts.Select(x => new CFont(this, x));
-        public CFont CFontAt(short index) => new CFont(this, GetFontAt(index));
+        public CFont CFontAt(short index) => new(this, GetFontAt(index));
         public CFont CFont(Action<CFontApplier> init) => CFont(CFontApplier.Create(init));
         internal CFont CFont(CFontApplier applier)
         {
@@ -93,10 +93,8 @@ namespace ExcelSharp.NPOI
         {
             switch (version)
             {
-                case ExcelVersion.Excel2003:
-                    return new HSSFWorkbook(stream);
-                case ExcelVersion.Excel2007:
-                    return new XSSFWorkbook(stream);
+                case ExcelVersion.Excel2003: return new HSSFWorkbook(stream);
+                case ExcelVersion.Excel2007: return new XSSFWorkbook(stream);
                 default: throw new NotSupportedException();
             }
         }
@@ -138,14 +136,14 @@ namespace ExcelSharp.NPOI
                 Write(file);
         }
 
-        public ExcelSheet CreateSheet() => new ExcelSheet(this, MapedWorkbook.CreateSheet());
+        public ExcelSheet CreateSheet() => new(this, MapedWorkbook.CreateSheet());
         public ExcelSheet CloneSheet(string name) => CloneSheet(GetSheetIndex(name));
-        public ExcelSheet CloneSheet(int sheetNum) => new ExcelSheet(this, MapedWorkbook.CloneSheet(sheetNum));
+        public ExcelSheet CloneSheet(int sheetNum) => new(this, MapedWorkbook.CloneSheet(sheetNum));
 
-        public ExcelSheet CreateSheet(string sheetname) => new ExcelSheet(this, MapedWorkbook.CreateSheet(sheetname));
+        public ExcelSheet CreateSheet(string sheetname) => new(this, MapedWorkbook.CreateSheet(sheetname));
 
-        public ExcelSheet GetSheet(string name) => new ExcelSheet(this, MapedWorkbook.GetSheet(name));
-        public ExcelSheet GetSheetAt(int index) => new ExcelSheet(this, MapedWorkbook.GetSheetAt(index));
+        public ExcelSheet GetSheet(string name) => new(this, MapedWorkbook.GetSheet(name));
+        public ExcelSheet GetSheetAt(int index) => new(this, MapedWorkbook.GetSheetAt(index));
         public int GetSheetIndex(ExcelSheet sheet) => GetSheetIndex(sheet.SheetName);
 
         public byte[] GetBytes()

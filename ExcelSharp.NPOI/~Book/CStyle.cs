@@ -43,7 +43,7 @@ namespace ExcelSharp.NPOI
             get => CellStyle.BorderLeft;
             set => CellStyle.BorderLeft = value;
         }
-        public RgbColor LeftBorderColor
+        public IArgbColor LeftBorderColor
         {
             get => CellStyle.LeftBorderColor > 0 ? ExcelColor.GetColor(CellStyle.LeftBorderColor)
                 : (CellStyle as XSSFCellStyle)?.LeftBorderXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -63,7 +63,7 @@ namespace ExcelSharp.NPOI
             get => CellStyle.BorderRight;
             set => CellStyle.BorderRight = value;
         }
-        public RgbColor RightBorderColor
+        public IArgbColor RightBorderColor
         {
             get => CellStyle.RightBorderColor > 0 ? ExcelColor.GetColor(CellStyle.RightBorderColor)
                 : (CellStyle as XSSFCellStyle)?.RightBorderXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -83,7 +83,7 @@ namespace ExcelSharp.NPOI
             get => CellStyle.BorderTop;
             set => CellStyle.BorderTop = value;
         }
-        public RgbColor TopBorderColor
+        public IArgbColor TopBorderColor
         {
             get => CellStyle.TopBorderColor > 0 ? ExcelColor.GetColor(CellStyle.TopBorderColor)
                 : (CellStyle as XSSFCellStyle)?.TopBorderXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -103,7 +103,7 @@ namespace ExcelSharp.NPOI
             get => CellStyle.BorderBottom;
             set => CellStyle.BorderBottom = value;
         }
-        public RgbColor BottomBorderColor
+        public IArgbColor BottomBorderColor
         {
             get => CellStyle.BottomBorderColor > 0 ? ExcelColor.GetColor(CellStyle.BottomBorderColor)
                 : (CellStyle as XSSFCellStyle)?.BottomBorderXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -123,7 +123,7 @@ namespace ExcelSharp.NPOI
             get => CellStyle.BorderDiagonalLineStyle;
             set => CellStyle.BorderDiagonalLineStyle = value;
         }
-        public RgbColor BorderDiagonalColor
+        public IArgbColor BorderDiagonalColor
         {
             get => CellStyle.BorderDiagonalColor > 0 ? ExcelColor.GetColor(CellStyle.BorderDiagonalColor)
                 : (CellStyle as XSSFCellStyle)?.DiagonalBorderXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -151,7 +151,7 @@ namespace ExcelSharp.NPOI
             set => CellStyle.FillPattern = value;
         }
 
-        public RgbColor FillBackgroundColor
+        public IArgbColor FillBackgroundColor
         {
             get => CellStyle.FillBackgroundColor > 0 ? ExcelColor.GetColor(CellStyle.FillBackgroundColor)
                 : (CellStyle as XSSFCellStyle)?.FillBackgroundXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -166,7 +166,7 @@ namespace ExcelSharp.NPOI
             }
         }
 
-        public RgbColor FillForegroundColor
+        public IArgbColor FillForegroundColor
         {
             get => CellStyle.FillForegroundColor > 0 ? ExcelColor.GetColor(CellStyle.FillForegroundColor)
                 : (CellStyle as XSSFCellStyle)?.FillForegroundXSSFColor?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;

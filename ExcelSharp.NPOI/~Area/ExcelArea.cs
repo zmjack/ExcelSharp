@@ -35,7 +35,7 @@ namespace ExcelSharp.NPOI
             if (_end.Col < end.Col) _end.Col = end.Col;
         }
 
-        public SheetRange GetRange() => new SheetRange(Sheet, _start, _end);
+        public SheetRange GetRange() => new(Sheet, _start, _end);
 
         public HtmlTable ToHtmlTable()
         {
@@ -67,8 +67,8 @@ namespace ExcelSharp.NPOI
 
                         uniCell.Style = new RichStyle
                         {
-                            BackgroundColor = cstyle.FillPattern != FillPattern.NoFill ? cstyle.FillForegroundColor.Value : null,
-                            Color = cstyle.Font.FontColor.Value,
+                            BackgroundColor = cstyle.FillPattern != FillPattern.NoFill ? cstyle.FillForegroundColor : null,
+                            Color = cstyle.Font.FontColor,
                             Bold = cstyle.Font.IsBold,
                             FontSize = cstyle.Font.FontSize,
                             BorderTop = cstyle.BorderTop != BorderStyle.None,

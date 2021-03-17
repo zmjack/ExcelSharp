@@ -23,7 +23,7 @@ namespace ExcelSharp.NPOI
         public FontUnderlineType Underline { get; set; } = FontUnderlineType.None;
         public FontSuperScript TypeOffset { get; set; } = FontSuperScript.None;
 
-        public RgbColor FontColor { get; set; } = ExcelColor.Black;
+        public IArgbColor FontColor { get; set; } = ExcelColor.Black;
 
         public void Apply(CFont style)
         {

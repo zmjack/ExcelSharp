@@ -32,7 +32,7 @@ namespace ExcelSharp.NPOI
         public void SetCellStyle(ICellStyle style) => MapedCell.CellStyle = style;
         public void SetCStyle(CStyle style) => SetCellStyle(style.CellStyle);
         public void SetCStyle(Action<CStyleApplier> initApplier) => SetCellStyle(Sheet.Book.CStyle(initApplier).CellStyle);
-        public CStyle GetCStyle() => new CStyle(Sheet.Book, CellStyle);
+        public CStyle GetCStyle() => new(Sheet.Book, CellStyle);
         public void UpdateCStyle(Action<CStyleApplier> initApplier)
         {
             var applier = GetCStyle().GetApplier().Then(x => initApplier(x));

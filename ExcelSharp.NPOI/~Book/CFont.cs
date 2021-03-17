@@ -62,7 +62,7 @@ namespace ExcelSharp.NPOI
             set => Font.TypeOffset = value;
         }
 
-        public RgbColor FontColor
+        public IArgbColor FontColor
         {
             get => Font.Color > 0 ? ExcelColor.GetColor(Font.Color)
                 : (Font as XSSFFont)?.GetXSSFColor()?.For(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -79,8 +79,7 @@ namespace ExcelSharp.NPOI
 
         internal bool InterfaceValuesEqual(CFontApplier obj)
         {
-            var instance = obj as ICFont;
-            if (instance is null) return false;
+            if (obj is not ICFont instance) return false;
 
             //TODO: Use TypeReflectionCacheContainer to optimize it in the futrue.
             var props = typeof(ICFont).GetProperties().Where(prop => prop.CanWrite);
