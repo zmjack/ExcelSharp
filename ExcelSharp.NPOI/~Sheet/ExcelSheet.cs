@@ -98,10 +98,13 @@ namespace ExcelSharp.NPOI
                         if (richStyle.BackgroundColor is not null) x.CellColor(ArgbColor.FromArgb(richStyle.BackgroundColor.ArgbValue));
                         if (richStyle.Color is not null || richStyle.FontSize.HasValue || richStyle.FontFamily is not null)
                         {
-                            var color = ArgbColor.FromArgb(richStyle.Color.ArgbValue);
                             var fontFamily = richStyle.FontFamily;
                             var fontSize = (short)Math.Round((richStyle.FontSize ?? 14) * 0.75, 0, MidpointRounding.AwayFromZero);
-                            if (richStyle.Color is not null) x.SetFont(fontFamily, fontSize, color);
+                            if (richStyle.Color is not null)
+                            {
+                                var color = ArgbColor.FromArgb(richStyle.Color.ArgbValue);
+                                x.SetFont(fontFamily, fontSize, color);
+                            }
                             else x.SetFont(fontFamily, fontSize);
                         }
                         if (richStyle.Bold.HasValue && richStyle.Bold.Value) x.Bold();
@@ -129,6 +132,7 @@ namespace ExcelSharp.NPOI
                         }
 
                         x.DataFormat = cell.Format ?? "General";
+                        x.WordWrap();
                     });
 
                     ecell.SetCStyle(style);
