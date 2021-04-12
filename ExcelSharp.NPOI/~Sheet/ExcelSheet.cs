@@ -83,58 +83,57 @@ namespace ExcelSharp.NPOI
 
         public void ExtendPrintLine(RichTable table)
         {
-            var cellsByStyle = table.Cells.GroupBy(x => x.Style);
+            var cellsByStyleFormat = table.Cells.GroupBy(x => new { x.Style, x.Format });
 
-            foreach (var cells in cellsByStyle)
+            foreach (var cells in cellsByStyleFormat)
             {
+                var richStyle = cells.Key.Style;
+                var style = Book.CStyle(x =>
+                {
+                    if (richStyle.BackgroundColor is not null) x.CellColor(ArgbColor.FromArgb(richStyle.BackgroundColor.ArgbValue));
+                    if (richStyle.Color is not null || richStyle.FontSize.HasValue || richStyle.FontFamily is not null)
+                    {
+                        var fontFamily = richStyle.FontFamily;
+                        var fontSize = (short)Math.Round((richStyle.FontSize ?? 14) * 0.75, 0, MidpointRounding.AwayFromZero);
+                        if (richStyle.Color is not null)
+                        {
+                            var color = ArgbColor.FromArgb(richStyle.Color.ArgbValue);
+                            x.SetFont(fontFamily, fontSize, color);
+                        }
+                        else x.SetFont(fontFamily, fontSize);
+                    }
+                    if (richStyle.Bold.HasValue && richStyle.Bold.Value) x.Bold();
+                    if (richStyle.BorderTop.HasValue && richStyle.BorderTop.Value) x.BorderTop = BorderStyle.Thin;
+                    if (richStyle.BorderBottom.HasValue && richStyle.BorderBottom.Value) x.BorderBottom = BorderStyle.Thin;
+                    if (richStyle.BorderLeft.HasValue && richStyle.BorderLeft.Value) x.BorderLeft = BorderStyle.Thin;
+                    if (richStyle.BorderRight.HasValue && richStyle.BorderRight.Value) x.BorderRight = BorderStyle.Thin;
+                    if (richStyle.TextAlign != RichTextAlignment.Preserve)
+                    {
+                        switch (richStyle.TextAlign)
+                        {
+                            case RichTextAlignment.Left: x.HLeft(); break;
+                            case RichTextAlignment.Center: x.HCenter(); break;
+                            case RichTextAlignment.Right: x.HRight(); break;
+                        }
+                    }
+                    if (richStyle.VerticalAlign != RichVerticalAlignment.Preserve)
+                    {
+                        switch (richStyle.VerticalAlign)
+                        {
+                            case RichVerticalAlignment.Top: x.VTop(); break;
+                            case RichVerticalAlignment.Middle: x.VCenter(); break;
+                            case RichVerticalAlignment.Bottom: x.VBottom(); break;
+                        }
+                    }
+
+                    x.DataFormat = cells.Key.Format ?? "General";
+                    x.WordWrap();
+                });
+
                 foreach (var cell in cells)
                 {
                     var ecell = this[(Cursor.Row + cell.RowIndex, Cursor.Col + cell.Index)];
                     ecell.SetValue(cell.Ignored ? null : cell.Value);
-
-                    var richStyle = cell.Style;
-                    var style = Book.CStyle(x =>
-                    {
-                        if (richStyle.BackgroundColor is not null) x.CellColor(ArgbColor.FromArgb(richStyle.BackgroundColor.ArgbValue));
-                        if (richStyle.Color is not null || richStyle.FontSize.HasValue || richStyle.FontFamily is not null)
-                        {
-                            var fontFamily = richStyle.FontFamily;
-                            var fontSize = (short)Math.Round((richStyle.FontSize ?? 14) * 0.75, 0, MidpointRounding.AwayFromZero);
-                            if (richStyle.Color is not null)
-                            {
-                                var color = ArgbColor.FromArgb(richStyle.Color.ArgbValue);
-                                x.SetFont(fontFamily, fontSize, color);
-                            }
-                            else x.SetFont(fontFamily, fontSize);
-                        }
-                        if (richStyle.Bold.HasValue && richStyle.Bold.Value) x.Bold();
-                        if (richStyle.BorderTop.HasValue && richStyle.BorderTop.Value) x.BorderTop = BorderStyle.Thin;
-                        if (richStyle.BorderBottom.HasValue && richStyle.BorderBottom.Value) x.BorderBottom = BorderStyle.Thin;
-                        if (richStyle.BorderLeft.HasValue && richStyle.BorderLeft.Value) x.BorderLeft = BorderStyle.Thin;
-                        if (richStyle.BorderRight.HasValue && richStyle.BorderRight.Value) x.BorderRight = BorderStyle.Thin;
-                        if (richStyle.TextAlign != RichTextAlignment.Preserve)
-                        {
-                            switch (richStyle.TextAlign)
-                            {
-                                case RichTextAlignment.Left: x.HLeft(); break;
-                                case RichTextAlignment.Center: x.HCenter(); break;
-                                case RichTextAlignment.Right: x.HRight(); break;
-                            }
-                        }
-                        if (richStyle.VerticalAlign != RichVerticalAlignment.Preserve)
-                        {
-                            switch (richStyle.VerticalAlign)
-                            {
-                                case RichVerticalAlignment.Top: x.VTop(); break;
-                                case RichVerticalAlignment.Middle: x.VCenter(); break;
-                                case RichVerticalAlignment.Bottom: x.VBottom(); break;
-                            }
-                        }
-
-                        x.DataFormat = cell.Format ?? "General";
-                        x.WordWrap();
-                    });
-
                     ecell.SetCStyle(style);
 
                     if (cell.RowSpan > 1 || cell.ColSpan > 1)
