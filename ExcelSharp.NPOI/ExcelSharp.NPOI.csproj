@@ -12,7 +12,7 @@
     <Authors>zmjack</Authors>
     <Owners>zmjack</Owners>
     <Company>nstandard.net</Company>
-    <Version>0.0.13</Version>
+    <Version>0.1.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIconUrl>http://dawnx.net/logo32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/zmjack/ExcelSharp</PackageProjectUrl>
@@ -26,8 +26,8 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetCore.NPOI" Version="1.2.1" />
-    <PackageReference Include="NStandard" Version="0.6.13" />
-    <PackageReference Include="RichTable" Version="0.1.5" />
+    <PackageReference Include="NStandard" Version="0.8.1" />
+    <PackageReference Include="RichTable" Version="0.2.0" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
