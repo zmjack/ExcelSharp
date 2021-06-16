@@ -24,9 +24,7 @@ namespace ExcelSharp.NPOI
 
         internal ExcelSheet(ExcelBook excel, ISheet sheet)
         {
-            if (sheet is null)
-                throw new ArgumentException("Cannot find sheet.");
-
+            if (sheet is null) throw new ArgumentException("Cannot find sheet.");
             Book = excel;
             MapedSheet = sheet;
             Cursor = (0, 0);
@@ -288,16 +286,9 @@ namespace ExcelSharp.NPOI
             {
                 switch (includes.Body)
                 {
-                    case MemberExpression exp:
-                        propNames = new[] { exp.Member.Name };
-                        break;
-
-                    case NewExpression exp:
-                        propNames = exp.Members.Select(x => x.Name).ToArray();
-                        break;
-
-                    default:
-                        throw new NotSupportedException("This argument 'includes' must be MemberExpression or NewExpression.");
+                    case MemberExpression exp: propNames = new[] { exp.Member.Name }; break;
+                    case NewExpression exp: propNames = exp.Members.Select(x => x.Name).ToArray(); break;
+                    default: throw new NotSupportedException("This argument 'includes' must be MemberExpression or NewExpression.");
                 }
             }
 

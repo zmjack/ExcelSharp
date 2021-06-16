@@ -18,4 +18,10 @@
     <ProjectReference Include="..\ExcelSharp.NPOI\ExcelSharp.NPOI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="excel-sharp.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

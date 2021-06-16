@@ -124,8 +124,11 @@ namespace ExcelSharp.NPOI
                 case CellType.Boolean: return Boolean;
                 case CellType.Numeric: return Number;
                 case CellType.String:
-                case CellType.Formula: return String;
-
+                case CellType.Formula:
+                    try { return Number; } catch { }
+                    try { return String; } catch { }
+                    try { return Boolean; } catch { }
+                    return null;
                 default: return null;
             }
         }
@@ -142,7 +145,15 @@ namespace ExcelSharp.NPOI
         }
         public DateTime? DateTime
         {
-            get => MapedCell.DateCellValue;
+            get
+            {
+                if (MapedCell.CellType == CellType.String)
+                {
+                    if (System.DateTime.TryParse(MapedCell.StringCellValue, out var result)) return result;
+                    else return default;
+                }
+                else return MapedCell.DateCellValue;
+            }
             set => SetValue(value);
         }
         public double? Number
