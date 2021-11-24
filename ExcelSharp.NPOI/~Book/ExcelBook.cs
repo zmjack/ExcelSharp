@@ -113,7 +113,7 @@ namespace ExcelSharp.NPOI
 
         public static ExcelVersion GetVersion(string path)
         {
-            switch (Path.GetExtension(path))
+            switch (Path.GetExtension(path).ToLower())
             {
                 case ".xls": return ExcelVersion.Excel2003;
                 case ".xlsx": return ExcelVersion.Excel2007;
