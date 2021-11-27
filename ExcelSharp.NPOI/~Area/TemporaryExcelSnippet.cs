@@ -2,6 +2,7 @@
 
 namespace ExcelSharp.NPOI
 {
+    [Obsolete("Plan to delete.")]
     public class TemporaryExcelSnippet : ExcelSnippet
     {
         private Func<SheetRange> _print;
