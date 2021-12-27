@@ -134,7 +134,7 @@ namespace ExcelSharp.NPOI
                     ecell.SetValue(cell.Ignored ? null : cell.Value);
                     ecell.SetCStyle(style);
 
-                    if (cell.RowSpan > 1 || cell.ColSpan > 1)
+                    if (cell.Ignored == false && (cell.RowSpan > 1 || cell.ColSpan > 1))
                     {
                         var endRow = ecell.RowIndex + cell.RowSpan - 1;
                         var endCol = ecell.ColumnIndex + cell.ColSpan - 1;
