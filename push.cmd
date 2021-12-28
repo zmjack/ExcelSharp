@@ -1,2 +1,2 @@
-nuget push "ExcelSharp.NPOI/bin/Release/ExcelSharp.NPOI.0.1.17.nupkg" -source nuget.org
+nuget push "ExcelSharp.NPOI/bin/Release/ExcelSharp.NPOI.0.1.18.nupkg" -source nuget.org
 pause
