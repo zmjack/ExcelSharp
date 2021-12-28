@@ -57,7 +57,6 @@ namespace ExcelSharp.Test
             }
 
             var htmlTable = new HtmlTable(table);
-            htmlTable.Style += "width:100%";
             var html = htmlTable.ToHtml();
         }
 
