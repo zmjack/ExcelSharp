@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.11.0" />
-    <PackageReference Include="NStandard" Version="0.8.28" />
+    <PackageReference Include="NStandard" Version="0.9.10" />
   </ItemGroup>
 
 </Project>

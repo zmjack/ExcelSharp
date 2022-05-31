@@ -326,19 +326,23 @@ namespace ExcelSharp.NPOI
                     var propInfo = kv.Value;
                     var cell = this[(row + rowOffset, col + kv.Key)];
 
-                    if (propInfo.PropertyType == typeof(DateTime) || propInfo.PropertyType == typeof(DateTime?))
+                    if (cell.CellType == CellType.Blank)
                     {
-                        if (cell.CellType == CellType.Blank)
-                        {
-                            if (propInfo.PropertyType.IsNullable()) propInfo.SetValue(item, ConvertEx.ChangeType(null, propInfo.PropertyType));
-                            else propInfo.SetValue(item, ConvertEx.ChangeType(default(DateTime), propInfo.PropertyType));
-                        }
-                        else
-                        {
-                            var value = cell.IsMergedCell ? cell.MergedRange.Cell.DateTime : cell.DateTime;
-                            propInfo.SetValue(item, ConvertEx.ChangeType(value, propInfo.PropertyType));
-                        }
+                        if (propInfo.PropertyType.IsNullable()) propInfo.SetValue(item, ConvertEx.ChangeType(null, propInfo.PropertyType));
+                        else propInfo.SetValue(item, propInfo.PropertyType.CreateDefault());
                     }
+                    else if (propInfo.PropertyType == typeof(DateTime) || propInfo.PropertyType == typeof(DateTime?))
+                    {
+                        var value = cell.IsMergedCell ? cell.MergedRange.Cell.DateTime : cell.DateTime;
+                        propInfo.SetValue(item, ConvertEx.ChangeType(value, propInfo.PropertyType));
+                    }
+#if NET6_0_OR_GREATER
+                    else if (propInfo.PropertyType == typeof(DateOnly) || propInfo.PropertyType == typeof(DateOnly?))
+                    {
+                        var value = cell.IsMergedCell ? cell.MergedRange.Cell.DateTime : cell.DateTime;
+                        propInfo.SetValue(item, DateOnly.FromDateTime((DateTime)ConvertEx.ChangeType(value, typeof(DateTime))));
+                    }
+#endif
                     else
                     {
                         var value = cell.IsMergedCell ? cell.MergedRange.Cell.GetValue() : cell.GetValue();
@@ -407,9 +411,14 @@ namespace ExcelSharp.NPOI
                     {
                         var cell = this[(dataStart.row + rowOffset, col + i)];
 
-                        if (colType == typeof(DateTime))
-                            return cell.DateTime;
-                        else return cell.GetValue();
+                        return colType switch
+                        {
+                            Type type when type == typeof(DateTime) => cell.DateTime,
+#if NET6_0_OR_GREATER
+                            Type type when type == typeof(DateOnly) => cell.DateTime,
+#endif
+                            _ => cell.GetValue(),
+                        };
                     }).ToArray();
                     ret.Rows.Add(rowValues);
                 }
