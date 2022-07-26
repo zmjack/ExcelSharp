@@ -11,14 +11,14 @@ namespace ExcelSharp.NPOI.Utils
             {
                 double d => convertionType switch
                 {
-                    Type _ when convertionType == typeof(char) => (char)(int)d,
-                    Type _ when convertionType == typeof(char?) => (char?)(int)d,
+                    Type when convertionType == typeof(char) => (char)(int)d,
+                    Type when convertionType == typeof(char?) => (char?)(int)d,
                     _ => ConvertEx.ChangeType(obj, convertionType),
                 },
                 string s => convertionType switch
                 {
-                    Type _ when convertionType == typeof(Guid) => Guid.Parse(s),
-                    Type _ when convertionType == typeof(Guid?) => Guid.TryParse(s, out var guid) ? guid : null,
+                    Type when convertionType == typeof(Guid) => Guid.Parse(s),
+                    Type when convertionType == typeof(Guid?) => Guid.TryParse(s, out var guid) ? guid : null,
                     _ => ConvertEx.ChangeType(obj, convertionType),
                 },
                 _ => ConvertEx.ChangeType(obj, convertionType),

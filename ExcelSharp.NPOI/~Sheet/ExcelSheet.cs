@@ -273,9 +273,36 @@ namespace ExcelSharp.NPOI
         }
         public SheetRange PrintSnippet(ExcelSnippet snippet) => snippet.Print();
 
+        private object GetCellValue(SheetCell cell, Type type)
+        {
+            if (cell.CellType == CellType.Blank)
+            {
+                if (type.IsNullable()) return ConvertEx.ChangeType(null, type);
+                else return type.CreateDefault();
+            }
+            else if (type == typeof(DateTime) || type == typeof(DateTime?))
+            {
+                var value = cell.IsMergedCell ? cell.MergedRange.Cell.DateTime : cell.DateTime;
+                return ConvertEx.ChangeType(value, type);
+            }
+#if NET6_0_OR_GREATER
+            else if (type == typeof(DateOnly) || type == typeof(DateOnly?))
+            {
+                var value = cell.IsMergedCell ? cell.MergedRange.Cell.DateTime : cell.DateTime;
+                return DateOnly.FromDateTime((DateTime)ConvertEx.ChangeType(value, typeof(DateTime)));
+            }
+#endif
+            else
+            {
+                var value = cell.IsMergedCell ? cell.MergedRange.Cell.GetValue() : cell.GetValue();
+                return ConvertUtil.Convert(value, type);
+            }
+        }
+
         public TModel[] Fetch<TModel>(Cursor startCell, Expression<Func<TModel, object>> includes = null, Predicate<int> rowSelector = null)
             where TModel : new()
         {
+
             (int row, int col) = (startCell.Row, startCell.Col);
 
             var ret = new List<TModel>();
@@ -320,36 +347,43 @@ namespace ExcelSharp.NPOI
                 }
                 if (@break) break;
 
-                var item = new TModel();
+                var model = new TModel();
+                var colOffset = 0;
                 foreach (var kv in props.AsKvPairs())
                 {
-                    var propInfo = kv.Value;
-                    var cell = this[(row + rowOffset, col + kv.Key)];
+                    var property = kv.Value;
+                    var propertyType = property.PropertyType;
 
-                    if (cell.CellType == CellType.Blank)
+                    if (propertyType.IsArray)
                     {
-                        if (propInfo.PropertyType.IsNullable()) propInfo.SetValue(item, ConvertEx.ChangeType(null, propInfo.PropertyType));
-                        else propInfo.SetValue(item, propInfo.PropertyType.CreateDefault());
+                        var fetchAttribute = property.GetCustomAttribute<FetchAttribute>();
+                        if (fetchAttribute is null) continue;
+
+                        var fetchLength = fetchAttribute.Length;
+                        var elementType = propertyType.GetElementType();
+                        var array = Array.CreateInstance(elementType, fetchLength);
+
+                        for (var i = 0; i < fetchLength; i++)
+                        {
+                            var cell = this[(row + rowOffset, col + colOffset)];
+                            var cellValue = GetCellValue(cell, elementType);
+
+                            var value = property.GetValue(model);
+                            array.SetValue(cellValue, i);
+
+                            colOffset++;
+                        }
+                        property.SetValue(model, array);
                     }
-                    else if (propInfo.PropertyType == typeof(DateTime) || propInfo.PropertyType == typeof(DateTime?))
-                    {
-                        var value = cell.IsMergedCell ? cell.MergedRange.Cell.DateTime : cell.DateTime;
-                        propInfo.SetValue(item, ConvertEx.ChangeType(value, propInfo.PropertyType));
-                    }
-#if NET6_0_OR_GREATER
-                    else if (propInfo.PropertyType == typeof(DateOnly) || propInfo.PropertyType == typeof(DateOnly?))
-                    {
-                        var value = cell.IsMergedCell ? cell.MergedRange.Cell.DateTime : cell.DateTime;
-                        propInfo.SetValue(item, DateOnly.FromDateTime((DateTime)ConvertEx.ChangeType(value, typeof(DateTime))));
-                    }
-#endif
                     else
                     {
-                        var value = cell.IsMergedCell ? cell.MergedRange.Cell.GetValue() : cell.GetValue();
-                        propInfo.SetValue(item, ConvertUtil.Convert(value, propInfo.PropertyType));
+                        var cell = this[(row + rowOffset, col + colOffset)];
+                        var cellValue = GetCellValue(cell, property.PropertyType);
+                        property.SetValue(model, cellValue);
+                        colOffset++;
                     }
                 }
-                ret.Add(item);
+                ret.Add(model);
             }
 
             return ret.ToArray();

@@ -1,5 +1,6 @@
 ﻿using ExcelSharp.NPOI;
 using ExcelSharp.Test.Models;
+using NStandard;
 using System;
 using Xunit;
 
@@ -44,7 +45,6 @@ namespace ExcelSharp.Test
         {
             var book = new ExcelBook("excel-sharp.xlsx");
             var sheet = book.GetSheet("Fetch");
-
             var models = sheet.Fetch<NullableDateFetchModel>("A11", x => new { x.Name, x.Date, x.StringDate, x.NumberDate, x.FormulaDate });
             var date = new DateTime(2000, 1, 1);
 
@@ -66,7 +66,6 @@ namespace ExcelSharp.Test
         {
             var book = new ExcelBook("excel-sharp.xlsx");
             var sheet = book.GetSheet("Fetch");
-
             var models = sheet.Fetch<NumberFetchModel>("A16", x => new { x.Name, x.Byte, x.Char, x.Int16, x.UInt16, x.Int32, x.UInt32, x.Int64, x.UInt64, x.Single, x.Double, x.Decimal, x.Formula });
 
             var valueModel = models[0];
@@ -103,7 +102,6 @@ namespace ExcelSharp.Test
         {
             var book = new ExcelBook("excel-sharp.xlsx");
             var sheet = book.GetSheet("Fetch");
-
             var models = sheet.Fetch<NullableNumberFetchModel>("A21", x => new { x.Name, x.Byte, x.Char, x.Int16, x.UInt16, x.Int32, x.UInt32, x.Int64, x.UInt64, x.Single, x.Double, x.Decimal, x.Formula });
 
             var valueModel = models[0];
@@ -133,6 +131,23 @@ namespace ExcelSharp.Test
             Assert.Null(blankModel.Double);
             Assert.Null(blankModel.Decimal);
             Assert.Null(blankModel.Formula);
+        }
+
+        [Fact]
+        public void ArrayFetchTest()
+        {
+            var book = new ExcelBook("excel-sharp.xlsx");
+            var sheet = book.GetSheet("Fetch");
+
+            var models = sheet.Fetch<ArrayFetchModel>("A26", x => new { x.Name, x.Numbers, x.Total });
+
+            var valueModel = models[0];
+            Assert.Equal(new int?[] { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 }, valueModel.Numbers);
+            Assert.Equal(550, valueModel.Total);
+
+            var blankModel = models[1];
+            Assert.Equal(new int?[10].Let(() => null), blankModel.Numbers);
+            Assert.Null(blankModel.Total);
         }
 
     }
