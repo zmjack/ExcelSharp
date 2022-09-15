@@ -2,6 +2,7 @@
 using NPOI.SS.UserModel;
 using NStandard;
 using Richx;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -470,12 +471,12 @@ namespace ExcelSharp.NPOI
 
         public int GetWidth(int columnIndex) => (int)Math.Ceiling((MapedSheet.GetColumnWidth(columnIndex) - 184.27) / 255.86);
 
-        public void AutoSize(params string[] columns) => AutoSize(columns.Select(x => LetterSequence.GetNumber(x)).ToArray());
-        public void AutoSize(params int[] columns)
+        public void AutoSize(string[] columns, int maxWidth = 64) => AutoSize(columns.Select(LetterSequence.GetNumber).ToArray(), maxWidth);
+        public void AutoSize(int[] columns, int maxWidth = 64)
         {
             foreach (var col in columns)
             {
-                int defaultWidth = GetWidth(col);
+                int excelWidth = GetWidth(col);
                 var exceptRows = EnumerableEx.Concat(
                     MergedRanges
                         .Where(x => x.Start.Col < col && col <= x.End.Col)
@@ -488,31 +489,45 @@ namespace ExcelSharp.NPOI
                     .ToArray();
 
                 var rowNumbers = new int[LastRowNum + 1].Let(i => i).Where(row => !exceptRows.Contains(row));
-                var widths = rowNumbers.Select(row =>
+                var stringSet = new HashSet<string>();
+
+                foreach (var row in rowNumbers)
                 {
                     var cell = this[(row, col)];
-                    if (cell.MergedRange?.For(_ => !_.IsSingleColumn || !_.IsDefinitionCell(cell)) ?? false) return 0;
+                    var range = cell.MergedRange;
+                    if (range is not null && (!range.IsSingleColumn || !range.IsDefinitionCell(cell))) continue;
 
                     var cstyle = cell.GetCStyle();
                     var value = cell.GetValue();
 
                     string valueString;
-                    if (value is double)
-                        valueString = ((double)value).ToString(cstyle.DataFormat);
-                    else if (value is DateTime)
-                        valueString = ((DateTime)value).ToString(cstyle.DataFormat);
+                    if (value is double d) valueString = d.ToString(cstyle.DataFormat);
+                    else if (value is DateTime dt) valueString = dt.ToString(cstyle.DataFormat);
                     else valueString = value?.ToString() ?? "";
 
-                    using (var bitmap = new Bitmap(1, 1))
-                    using (var graphics = Graphics.FromImage(new Bitmap(1, 1)))
-                    {
-                        var fontSize = graphics.MeasureString(valueString, new Font(cstyle.Font.FontName, cstyle.Font.FontSize));
-                        var width = fontSize.Width > 0 ? (int)((COLUMN_BORDER_PX + AUTO_SIZE_PADDING_PX + fontSize.Width) / EXCEL_WIDTH_PER_PX) : 0;
-                        return width;
-                    }
-                });
+                    if (stringSet.Contains(valueString)) continue;
 
-                SetWidth(col, new[] { defaultWidth }.Concat(widths).Max());
+                    stringSet.Add(valueString);
+
+                    using (var face = SKTypeface.FromFamilyName(cstyle.Font.FontName))
+                    using (var paint = new SKPaint(new SKFont(face, FontSizeUtil.GetSKSize(cstyle.Font.FontSize))))
+                    {
+                        var rect = new SKRect();
+                        paint.MeasureText(valueString, ref rect);
+                        var width = rect.Width;
+                        var targetWidth = width > 0 ? (int)((COLUMN_BORDER_PX + AUTO_SIZE_PADDING_PX + width) / EXCEL_WIDTH_PER_PX) : 0;
+
+                        if (targetWidth >= maxWidth)
+                        {
+                            excelWidth = maxWidth;
+                            break;
+                        }
+
+                        if (targetWidth > excelWidth) excelWidth = targetWidth;
+                    }
+                }
+
+                SetWidth(col, excelWidth);
             }
         }
 

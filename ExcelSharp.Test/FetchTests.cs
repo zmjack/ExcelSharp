@@ -9,16 +9,6 @@ namespace ExcelSharp.Test
     public class FetchTests
     {
         [Fact]
-        public void NoRowsTest()
-        {
-            var book = new ExcelBook("excel-sharp.xlsx");
-            var sheet = book.GetSheet("Fetch");
-
-            var models = sheet.Fetch<DateFetchModel>("A2", x => new { x.Name, x.Date, x.StringDate, x.NumberDate, x.FormulaDate });
-            Assert.Empty(models);
-        }
-
-        [Fact]
         public void DateFetchTest()
         {
             var book = new ExcelBook("excel-sharp.xlsx");
