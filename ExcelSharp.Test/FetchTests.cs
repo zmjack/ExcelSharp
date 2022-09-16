@@ -140,5 +140,22 @@ namespace ExcelSharp.Test
             Assert.Null(blankModel.Total);
         }
 
+        [Fact]
+        public void MergedFetchTest()
+        {
+            var book = new ExcelBook("excel-sharp.xlsx");
+            var sheet = book.GetSheet("Fetch");
+
+            var models = sheet.Fetch<MergedFetchModel>("A31", x => new { x.Name, x.Number1, x.Number2 });
+
+            var model0 = models[0];
+            Assert.Equal(10, model0.Number1);
+            Assert.Equal(20, model0.Number2);
+
+            var model1 = models[1];
+            Assert.Equal(10, model1.Number1);
+            Assert.Equal(30, model1.Number2);
+        }
+
     }
 }

@@ -216,5 +216,10 @@ namespace ExcelSharp.NPOI
                 else return null;
             }
         }
+
+        public override string ToString()
+        {
+            return CellName;
+        }
     }
 }

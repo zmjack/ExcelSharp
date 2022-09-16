@@ -247,23 +247,30 @@ namespace ExcelSharp.NPOI
         public SheetRange PrintLine(PrintDirection direction, IEnumerable<object> values) => PrintLine(direction, values.ToArray());
         public SheetRange PrintLine(PrintDirection direction, object[] values)
         {
-            return Print(direction, values).Then(range =>
-            {
-                if (direction == PrintDirection.Horizontal) Cursor.Row++;
-                else if (direction == PrintDirection.Vertical) Cursor.Row += values.Length;
-                else throw new NotSupportedException();
-                ResetCursorColumn();
-            });
+            var range = Print(direction, values);
+
+            if (direction == PrintDirection.Horizontal) Cursor.Row++;
+            else if (direction == PrintDirection.Vertical) Cursor.Row += values.Length;
+            else throw new NotSupportedException();
+            ResetCursorColumn();
+
+            return range;
         }
         public SheetRange PrintLine(object[,] values)
         {
             var rowLength = values.GetLength(0);
-            return Print(values).Then(range => { Cursor.Row += values.GetLength(0); ResetCursorColumn(); });
+            var range = Print(values);
+            Cursor.Row += values.GetLength(0);
+            ResetCursorColumn();
+            return range;
         }
         public SheetRange PrintLine(object[][] values)
         {
             var rowLength = values.GetLength(0);
-            return Print(values).Then(range => { Cursor.Row += values.GetLength(0); ResetCursorColumn(); });
+            var range = Print(values);
+            Cursor.Row += values.GetLength(0);
+            ResetCursorColumn();
+            return range;
         }
 
         public SheetRange PrintDataTable(DataTable table)
@@ -276,6 +283,8 @@ namespace ExcelSharp.NPOI
 
         private object GetCellValue(SheetCell cell, Type type)
         {
+            if (cell.IsMergedCell && cell.MergedRange.Cell.CellName != cell.CellName) return GetCellValue(cell.MergedRange.Cell, type);
+
             if (cell.CellType == CellType.Blank)
             {
                 if (type.IsNullable()) return ConvertEx.ChangeType(null, type);
@@ -283,19 +292,19 @@ namespace ExcelSharp.NPOI
             }
             else if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
-                var value = cell.IsMergedCell ? cell.MergedRange.Cell.DateTime : cell.DateTime;
+                var value = cell.DateTime;
                 return ConvertEx.ChangeType(value, type);
             }
 #if NET6_0_OR_GREATER
             else if (type == typeof(DateOnly) || type == typeof(DateOnly?))
             {
-                var value = cell.IsMergedCell ? cell.MergedRange.Cell.DateTime : cell.DateTime;
+                var value = cell.DateTime;
                 return DateOnly.FromDateTime((DateTime)ConvertEx.ChangeType(value, typeof(DateTime)));
             }
 #endif
             else
             {
-                var value = cell.IsMergedCell ? cell.MergedRange.Cell.GetValue() : cell.GetValue();
+                var value = cell.GetValue();
                 return ConvertUtil.Convert(value, type);
             }
         }
@@ -309,22 +318,23 @@ namespace ExcelSharp.NPOI
             var ret = new List<TModel>();
             PropertyInfo[] props;
 
-            var propNames = new string[0];
+            var propNames = Array.Empty<string>();
             if (includes != null)
             {
-                switch (includes.Body)
+                propNames = includes.Body switch
                 {
-                    case MemberExpression exp: propNames = new[] { exp.Member.Name }; break;
-                    case NewExpression exp: propNames = exp.Members.Select(x => x.Name).ToArray(); break;
-                    default: throw new NotSupportedException("This argument 'includes' must be MemberExpression or NewExpression.");
-                }
+                    MemberExpression exp => new[] { exp.Member.Name },
+                    NewExpression exp => exp.Members.Select(x => x.Name).ToArray(),
+                    _ => throw new ArgumentException("Any element must be MemberExpression or NewExpression.", nameof(includes)),
+                };
             }
 
             if (propNames.Any())
             {
                 props = typeof(TModel).GetProperties()
                     .Where(prop => prop.CanWrite && propNames.Contains(prop.Name))
-                    .OrderBy(prop => propNames.IndexOf(prop.Name)).ToArray();
+                    .OrderBy(prop => propNames.IndexOf(prop.Name))
+                    .ToArray();
             }
             else props = typeof(TModel).GetProperties().Where(prop => prop.CanWrite).ToArray();
 
@@ -350,7 +360,7 @@ namespace ExcelSharp.NPOI
 
                 var model = new TModel();
                 var colOffset = 0;
-                foreach (var kv in props.AsKvPairs())
+                foreach (var kv in props.AsKeyValuePairs())
                 {
                     var property = kv.Value;
                     var propertyType = property.PropertyType;
@@ -416,7 +426,7 @@ namespace ExcelSharp.NPOI
             (int row, int col) = (startCell.Row, startCell.Col);
 
             var ret = new DataTable();
-            ret.Columns.Then(x => x.AddRange(colTypes.Select(colType => new DataColumn("", colType)).ToArray()));
+            ret.Columns.AddRange(colTypes.Select(colType => new DataColumn("", colType)).ToArray());
 
             (int row, int col) dataStart;
             if (isFirstRowTitle)
