@@ -523,8 +523,13 @@ namespace ExcelSharp.NPOI
                     using (var paint = new SKPaint(new SKFont(face, FontSizeUtil.GetSKSize(cstyle.Font.FontSize))))
                     {
                         var rect = new SKRect();
-                        paint.MeasureText(valueString, ref rect);
-                        var width = rect.Width;
+                        float width = 0;
+                        foreach (var valueRow in valueString.NormalizeNewLine().Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            paint.MeasureText(valueRow, ref rect);
+                            if (rect.Width > width) width = rect.Width;
+                        }
+
                         var targetWidth = width > 0 ? (int)((COLUMN_BORDER_PX + AUTO_SIZE_PADDING_PX + width) / EXCEL_WIDTH_PER_PX) : 0;
 
                         if (targetWidth >= maxWidth)
