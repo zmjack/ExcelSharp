@@ -285,27 +285,34 @@ namespace ExcelSharp.NPOI
         {
             if (cell.IsMergedCell && cell.MergedRange.Cell.CellName != cell.CellName) return GetCellValue(cell.MergedRange.Cell, type);
 
-            if (cell.CellType == CellType.Blank)
+            try
             {
-                if (type.IsNullable()) return ConvertEx.ChangeType(null, type);
-                else return type.CreateDefault();
-            }
-            else if (type == typeof(DateTime) || type == typeof(DateTime?))
-            {
-                var value = cell.DateTime;
-                return ConvertEx.ChangeType(value, type);
-            }
+                if (cell.CellType == CellType.Blank)
+                {
+                    if (type.IsNullable()) return ConvertEx.ChangeType(null, type);
+                    else return type.CreateDefault();
+                }
+                else if (type == typeof(DateTime) || type == typeof(DateTime?))
+                {
+                    var value = cell.DateTime;
+                    return ConvertEx.ChangeType(value, type);
+                }
 #if NET6_0_OR_GREATER
-            else if (type == typeof(DateOnly) || type == typeof(DateOnly?))
-            {
-                var value = cell.DateTime;
-                return DateOnly.FromDateTime((DateTime)ConvertEx.ChangeType(value, typeof(DateTime)));
-            }
+                else if (type == typeof(DateOnly) || type == typeof(DateOnly?))
+                {
+                    var value = cell.DateTime;
+                    return DateOnly.FromDateTime((DateTime)ConvertEx.ChangeType(value, typeof(DateTime)));
+                }
 #endif
-            else
+                else
+                {
+                    var value = cell.GetValue();
+                    return ConvertUtil.Convert(value, type);
+                }
+            }
+            catch
             {
-                var value = cell.GetValue();
-                return ConvertUtil.Convert(value, type);
+                return type.CreateDefault();
             }
         }
 
@@ -550,7 +557,6 @@ namespace ExcelSharp.NPOI
         {
             get
             {
-
                 return new SheetRange[NumMergedRegions].Let(i => GetMergedRegion(i)
                     .For(x => new SheetRange(this, (x.FirstRow, x.FirstColumn), (x.LastRow, x.LastColumn))));
             }
