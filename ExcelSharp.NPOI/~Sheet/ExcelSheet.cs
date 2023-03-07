@@ -367,9 +367,8 @@ namespace ExcelSharp.NPOI
 
                 var model = new TModel();
                 var colOffset = 0;
-                foreach (var kv in props.AsKeyValuePairs())
+                foreach (var property in props)
                 {
-                    var property = kv.Value;
                     var propertyType = property.PropertyType;
 
                     if (propertyType.IsArray)

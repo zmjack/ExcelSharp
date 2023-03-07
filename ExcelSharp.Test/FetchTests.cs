@@ -136,7 +136,7 @@ namespace ExcelSharp.Test
             Assert.Equal(550, valueModel.Total);
 
             var blankModel = models[1];
-            Assert.Equal(new int?[10].Let(() => null), blankModel.Numbers);
+            Assert.Equal(new int?[10].Let(i => null), blankModel.Numbers);
             Assert.Null(blankModel.Total);
         }
 
