@@ -60,7 +60,7 @@ namespace ExcelSharp
             return part;
         }
 
-        public ExcelSheet Sheets(string name)
+        public ExcelSheet GetSheet(string name)
         {
             return new ExcelSheet(this, InnerSheets.ChildElements.OfType<Sheet>().FirstOrDefault(x => x.Name == name));
         }
