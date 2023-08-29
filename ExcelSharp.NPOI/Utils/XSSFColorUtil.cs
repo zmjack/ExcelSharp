@@ -9,7 +9,7 @@ namespace ExcelSharp.NPOI.Utils
         {
             var bytes = color.RGB;
             if (bytes is null) return ExcelColor.Automatic;
-            else return RgbColor.Create(bytes[0], bytes[1], bytes[2]);
+            else return new RgbColor(bytes[0], bytes[1], bytes[2]);
         }
 
         public static XSSFColor GetXSSFColor(IArgbColor color)
