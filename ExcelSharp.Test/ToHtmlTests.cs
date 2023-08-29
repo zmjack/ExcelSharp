@@ -1,4 +1,5 @@
 ﻿using ExcelSharp.NPOI;
+using NPOI.SS.Formula.Functions;
 using NStandard;
 using Richx;
 using System;
@@ -123,6 +124,41 @@ namespace ExcelSharp.Test
             excel.SaveAs("D:\\tmp\\11.xlsx");
 
             var html = new HtmlTable(uniTable).ToHtml();
+        }
+
+        [Fact]
+        public void ThemeTest()
+        {
+            var table = new RichTable();
+            for (int row = 0; row < 6; row++)
+            {
+                for (int col = 0; col < 10; col++)
+                {
+                    table[(row, col)].Value = new RichValue
+                    {
+                        Style = RichStyle.Default with
+                        {
+                            BackgroundColor = ExcelColor.Theme(row, col),
+                        },
+                        Value = $"{row},{col}",
+                    };
+                }
+            }
+
+            table[(7, 0)].Value = "标准色";
+            for (int col = 0; col < 10; col++)
+            {
+                table[(8, col)].Value = new RichValue
+                {
+                    Style = RichStyle.Default with
+                    {
+                        BackgroundColor = ExcelColor.Standard(0, col),
+                    },
+                    Value = $"{8},{col}",
+                };
+            }
+
+            var html = new HtmlTable(table).ToHtml();
         }
 
     }
