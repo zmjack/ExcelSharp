@@ -1,71 +1,77 @@
 ﻿using NPOI.SS.UserModel;
 using NStandard;
-using Richx;
 using System.Linq;
+using VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment;
 
-namespace ExcelSharp.NPOI
+namespace ExcelSharp.NPOI;
+
+public class ExcelArea : Scope<ExcelArea>
 {
-    public class ExcelArea : Scope<ExcelArea>
+    public ExcelSheet Sheet { get; private set; }
+
+    internal Cursor _start;
+    internal Cursor _end;
+    public Cursor Start { get => _start; }
+    public Cursor End { get => _end; }
+
+    public ExcelArea(ExcelSheet sheet)
     {
-        public ExcelSheet Sheet { get; private set; }
+        Sheet = sheet;
+        _start = _end = sheet.Cursor;
+    }
+    public ExcelArea(ExcelSheet sheet, Cursor start, Cursor end)
+    {
+        Sheet = sheet;
+        _start = start;
+        _end = end;
+    }
 
-        internal Cursor _start;
-        internal Cursor _end;
-        public Cursor Start { get => _start; }
-        public Cursor End { get => _end; }
+    public void Update(Cursor start, Cursor end)
+    {
+        if (_start.Row > start.Row) _start.Row = start.Row;
+        if (_start.Col > start.Col) _start.Col = start.Col;
 
-        public ExcelArea(ExcelSheet sheet)
+        if (_end.Row < end.Row) _end.Row = end.Row;
+        if (_end.Col < end.Col) _end.Col = end.Col;
+    }
+
+    public SheetRange GetRange() => new(Sheet, _start, _end);
+
+    public HtmlTable ToHtmlTable()
+    {
+        //TODO: sheet name
+        var uniTable = new CoSheet("Sheet1");
+        for (int row = _start.Row; row <= _end.Row; row++)
         {
-            Sheet = sheet;
-            _start = _end = sheet.Cursor;
-        }
-        public ExcelArea(ExcelSheet sheet, Cursor start, Cursor end)
-        {
-            Sheet = sheet;
-            _start = start;
-            _end = end;
-        }
+            var rowOffset = row - _start.Row;
+            var uniRow = uniTable.Rows[rowOffset];
 
-        public void Update(Cursor start, Cursor end)
-        {
-            if (_start.Row > start.Row) _start.Row = start.Row;
-            if (_start.Col > start.Col) _start.Col = start.Col;
-
-            if (_end.Row < end.Row) _end.Row = end.Row;
-            if (_end.Col < end.Col) _end.Col = end.Col;
-        }
-
-        public SheetRange GetRange() => new(Sheet, _start, _end);
-
-        public HtmlTable ToHtmlTable()
-        {
-            var uniTable = new RichTable();
-            for (int row = _start.Row; row <= _end.Row; row++)
+            for (int col = _start.Col; col <= _end.Col; col++)
             {
-                var rowOffset = row - _start.Row;
-                var uniRow = uniTable.Row(rowOffset);
+                var colOffset = col - _start.Col;
+                var uniCell = uniRow[colOffset];
 
-                for (int col = _start.Col; col <= _end.Col; col++)
+                var cell = Sheet[(row, col)];
+                var cstyle = cell.GetCStyle();
+
+                if (!cell.IsMergedCell || cell.IsMergedDefinitionCell)
                 {
-                    var colOffset = col - _start.Col;
-                    var uniCell = uniRow.Cell(colOffset);
+                    var value = cell.GetValue();
 
-                    var cell = Sheet[(row, col)];
-                    var cstyle = cell.GetCStyle();
-
-                    if (!cell.IsMergedCell || cell.IsMergedDefinitionCell)
+                    uniCell.Value = cell.GetValue()?.Pipe(value =>
                     {
-                        uniCell.Value = cell.GetValue()?.For(value =>
-                        {
-                            var format = cstyle.DataFormat;
-                            if (cell.CellType == CellType.Numeric && format != "General") return ((double)value).ToString(format);
-                            else return value?.ToString();
-                        });
-                        uniCell.Comment = cell.CellComment?.String.String;
-                        uniCell.RowSpan = cell.RowSpan;
-                        uniCell.ColSpan = cell.ColSpan;
+                        var format = cstyle.DataFormat;
+                        if (cell.CellType == CellType.Numeric && format != "General") return ((double)value).ToString(format);
+                        else return value?.ToString();
+                    });
 
-                        uniCell.Style = new RichStyle
+                    uniCell.RowSpan = cell.RowSpan;
+                    uniCell.ColSpan = cell.ColSpan;
+
+                    if (uniCell.Value is not null)
+                    {
+                        uniCell.Comment = cell.CellComment?.String.String;
+                        uniCell.Style = new CoStyle
                         {
                             BackgroundColor = cstyle.FillPattern != FillPattern.NoFill ? cstyle.FillForegroundColor : null,
                             Color = cstyle.Font.FontColor,
@@ -77,32 +83,32 @@ namespace ExcelSharp.NPOI
                             BorderRight = cstyle.BorderRight != BorderStyle.None,
                             TextAlign = cstyle.Alignment switch
                             {
-                                HorizontalAlignment.Left => RichTextAlignment.Left,
-                                HorizontalAlignment.Center => RichTextAlignment.Center,
-                                HorizontalAlignment.Right => RichTextAlignment.Right,
-                                _ => RichTextAlignment.Preserve,
+                                HorizontalAlignment.Left => TextAlign.Left,
+                                HorizontalAlignment.Center => TextAlign.Center,
+                                HorizontalAlignment.Right => TextAlign.Right,
+                                _ => TextAlign.Preserve,
                             },
-                            VerticalAlign = cstyle.VerticalAlignment switch
+                            VertAlign = cstyle.VerticalAlignment switch
                             {
-                                VerticalAlignment.Top => RichVerticalAlignment.Top,
-                                VerticalAlignment.Center => RichVerticalAlignment.Middle,
-                                VerticalAlignment.Bottom => RichVerticalAlignment.Bottom,
-                                _ => RichVerticalAlignment.Preserve,
+                                VerticalAlignment.Top => VertAlign.Top,
+                                VerticalAlignment.Center => VertAlign.Middle,
+                                VerticalAlignment.Bottom => VertAlign.Bottom,
+                                _ => VertAlign.Preserve,
                             },
                         };
                     }
-                    else uniCell.Ignored = true;
                 }
+                else uniCell.Ignored = true;
             }
-
-            return new HtmlTable(uniTable);
         }
 
-        public override void Disposing()
-        {
-            Sheet.Cursor = new Cursor(End.Row + 1, Start.Col);
-            var outterArea = Scopes.Skip(1).FirstOrDefault();
-            if (outterArea is not null) outterArea.Update(_start, _end);
-        }
+        return new HtmlTable(uniTable);
+    }
+
+    public override void Disposing()
+    {
+        Sheet.Cursor = new Cursor(End.Row + 1, Start.Col);
+        var outterArea = Scopes.Skip(1).FirstOrDefault();
+        outterArea?.Update(_start, _end);
     }
 }

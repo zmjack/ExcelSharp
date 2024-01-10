@@ -1,18 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Label="Globals">
-    <SccProjectName>SAK</SccProjectName>
-    <SccProvider>SAK</SccProvider>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccLocalPath>SAK</SccLocalPath>
-  </PropertyGroup>
-
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net7.0</TargetFrameworks>
     <Authors>zmjack</Authors>
     <Owners>zmjack</Owners>
     <Company>nstandard.net</Company>
-    <Version>0.4.5</Version>
+    <Version>0.5.0</Version>
+    <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/zmjack/ExcelSharp</PackageProjectUrl>
     <PackageId>ExcelSharp.NPOI</PackageId>
@@ -25,9 +19,14 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetCore.NPOI" Version="1.2.3" />
-    <PackageReference Include="NStandard" Version="0.37.0" />
-    <PackageReference Include="RichTable" Version="0.4.5" />
-    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="NStandard" Version="0.56.1" />
+    <PackageReference Include="SkiaSharp" Version="2.88.6" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+    <PackageReference Include="Cocoa">
+      <Version>0.0.1.7</Version>
+    </PackageReference>
   </ItemGroup>
 
   <Import Project="..\ExcelSharp.Shared\ExcelSharp.Shared.projitems" Label="Shared" />

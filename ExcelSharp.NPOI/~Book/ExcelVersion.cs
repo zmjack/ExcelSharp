@@ -1,8 +1,7 @@
-﻿namespace ExcelSharp.NPOI
+﻿namespace ExcelSharp.NPOI;
+
+public enum ExcelVersion
 {
-    public enum ExcelVersion
-    {
-        Excel2003,
-        Excel2007,
-    }
+    Excel2003,
+    Excel2007,
 }

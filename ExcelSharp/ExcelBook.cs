@@ -7,67 +7,86 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ExcelSharp
+namespace ExcelSharp;
+
+public class ExcelBook : IDisposable
 {
-    public class ExcelBook : IDisposable
+    private readonly SpreadsheetDocument Document;
+
+    public ExcelBook(string path)
     {
-        private readonly SpreadsheetDocument Document;
+        if (File.Exists(path)) Document = SpreadsheetDocument.Open(path, true);
+        else Document = SpreadsheetDocument.Create(path, SpreadsheetDocumentType.Workbook);
+    }
 
-        public ExcelBook(string path)
+    private WorkbookPart WorkbookPart
+    {
+        get
         {
-            if (File.Exists(path)) Document = SpreadsheetDocument.Open(path, true);
-            else Document = SpreadsheetDocument.Create(path, SpreadsheetDocumentType.Workbook);
-        }
-
-        private WorkbookPart WorkbookPart => Document.WorkbookPart ?? Document.AddWorkbookPart().Then(x => x.Workbook = new Workbook());
-        private SharedStringTablePart SharedStringTablePart => Document.WorkbookPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault() ?? Document.WorkbookPart.AddNewPart<SharedStringTablePart>();
-        private Sheets InnerSheets => WorkbookPart.Workbook.GetFirstChild<Sheets>() ?? Document.WorkbookPart.Workbook.AppendChild(new Sheets());
-        private uint NewSheetId()
-        {
-            if (InnerSheets.Elements<Sheet>().Count() == 0) return 1;
-            else return InnerSheets.Elements<Sheet>().Select(s => s.SheetId.Value).Max() + 1;
-        }
-
-        public IEnumerable<string> SharedStrings => SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>().Select(x => x.InnerText);
-
-        public int GetIndexOfSharedString(string text)
-        {
-            SharedStringTablePart.SharedStringTable ??= new SharedStringTable();
-
-            int i = 0;
-            foreach (SharedStringItem item in SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>())
-            {
-                if (item.InnerText == text) return i;
-                i++;
-            }
-            SharedStringTablePart.SharedStringTable.AppendChild(new SharedStringItem(new Text(text)));
-            SharedStringTablePart.SharedStringTable.Save();
-
-            return i;
-        }
-
-        public WorksheetPart CreateSheet(string sheetName)
-        {
-            var part = WorkbookPart.AddNewPart<WorksheetPart>();
-            part.Worksheet = new Worksheet(new SheetData());
-            part.Worksheet.Save();
-
-            var relationshipId = WorkbookPart.GetIdOfPart(part);
-            var sheet = new Sheet { Id = relationshipId, SheetId = NewSheetId(), Name = sheetName };
-            InnerSheets.Append(sheet);
-            WorkbookPart.Workbook.Save();
-
+            var part = Document.WorkbookPart ?? Document.AddWorkbookPart();
+            part.Workbook = new Workbook();
             return part;
         }
-
-        public ExcelSheet GetSheet(string name)
+    }
+    private SharedStringTablePart SharedStringTablePart
+    {
+        get
         {
-            return new ExcelSheet(this, InnerSheets.ChildElements.OfType<Sheet>().FirstOrDefault(x => x.Name == name));
+            return Document.WorkbookPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()
+                ?? Document.WorkbookPart.AddNewPart<SharedStringTablePart>();
         }
+    }
+    private Sheets InnerSheets => WorkbookPart.Workbook.GetFirstChild<Sheets>() ?? Document.WorkbookPart.Workbook.AppendChild(new Sheets());
+    private uint NewSheetId()
+    {
+        if (!InnerSheets.Elements<Sheet>().Any()) return 1;
+        else return InnerSheets.Elements<Sheet>().Select(s => s.SheetId.Value).Max() + 1;
+    }
 
-        public void Dispose()
+    public IEnumerable<string> SharedStrings => SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>().Select(x => x.InnerText);
+
+    public int GetIndexOfSharedString(string text)
+    {
+        SharedStringTablePart.SharedStringTable ??= new SharedStringTable();
+
+        int i = 0;
+        foreach (SharedStringItem item in SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>())
         {
-            Document.Dispose();
+            if (item.InnerText == text) return i;
+            i++;
         }
+        SharedStringTablePart.SharedStringTable.AppendChild(new SharedStringItem(new Text(text)));
+        SharedStringTablePart.SharedStringTable.Save();
+
+        return i;
+    }
+
+    public WorksheetPart CreateSheet(string sheetName)
+    {
+        var part = WorkbookPart.AddNewPart<WorksheetPart>();
+        part.Worksheet = new Worksheet(new SheetData());
+        part.Worksheet.Save();
+
+        var relationshipId = WorkbookPart.GetIdOfPart(part);
+        var sheet = new Sheet
+        {
+            Id = relationshipId,
+            SheetId = NewSheetId(),
+            Name = sheetName
+        };
+        InnerSheets.Append(sheet);
+        WorkbookPart.Workbook.Save();
+
+        return part;
+    }
+
+    public ExcelSheet GetSheet(string name)
+    {
+        return new ExcelSheet(this, InnerSheets.ChildElements.OfType<Sheet>().FirstOrDefault(x => x.Name == name));
+    }
+
+    public void Dispose()
+    {
+        Document.Dispose();
     }
 }

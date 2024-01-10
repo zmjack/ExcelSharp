@@ -1,12 +1,11 @@
 ﻿using NPOI.SS.UserModel;
 using System;
 
-namespace ExcelSharp.NPOI
+namespace ExcelSharp.NPOI;
+
+public interface IStylizable
 {
-    public interface IStylizable
-    {
-        void SetCellStyle(ICellStyle style);
-        void SetCStyle(CStyle style);
-        void SetCStyle(Action<CStyleApplier> initApplier);
-    }
+    void SetCellStyle(ICellStyle style);
+    void SetCStyle(CStyle style);
+    void SetCStyle(Action<CStyleApplier> initApplier);
 }

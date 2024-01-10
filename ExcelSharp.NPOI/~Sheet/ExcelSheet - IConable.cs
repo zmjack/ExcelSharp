@@ -1,16 +1,15 @@
 ﻿using System;
 
-namespace ExcelSharp.NPOI
+namespace ExcelSharp.NPOI;
+
+public partial class ExcelSheet : ICloneable
 {
-    public partial class ExcelSheet : ICloneable
+    object ICloneable.Clone() => Book.CloneSheet(SheetName);
+    public ExcelSheet Clone() => (this as ICloneable).Clone() as ExcelSheet;
+    public ExcelSheet Clone(string newSheetName)
     {
-        object ICloneable.Clone() => Book.CloneSheet(SheetName);
-        public ExcelSheet Clone() => (this as ICloneable).Clone() as ExcelSheet;
-        public ExcelSheet Clone(string newSheetName)
-        {
-            var clone = Clone();
-            Book.SetSheetName(Book.GetSheetIndex(clone), newSheetName);
-            return clone;
-        }
+        var clone = Clone();
+        Book.SetSheetName(Book.GetSheetIndex(clone), newSheetName);
+        return clone;
     }
 }

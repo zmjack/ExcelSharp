@@ -1,109 +1,111 @@
 ﻿using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using System;
+using ICell = NPOI.SS.UserModel.ICell;
+using IRow = NPOI.SS.UserModel.IRow;
+using ISheet = NPOI.SS.UserModel.ISheet;
 
-namespace ExcelSharp.NPOI
+namespace ExcelSharp.NPOI;
+
+public partial class SheetCell : ICell
 {
-    public partial class SheetCell : ICell
+    public int ColumnIndex => MapedCell.ColumnIndex;
+
+    public int RowIndex => MapedCell.RowIndex;
+
+    public IRow Row => MapedCell.Row;
+
+    public CellType CellType => MapedCell.CellType;
+
+    public CellType CachedFormulaResultType => MapedCell.CachedFormulaResultType;
+
+    public string CellFormula { get => MapedCell.CellFormula; set => MapedCell.CellFormula = value; }
+
+    public double NumericCellValue => MapedCell.NumericCellValue;
+
+    public DateTime DateCellValue => MapedCell.DateCellValue;
+
+    public IRichTextString RichStringCellValue => MapedCell.RichStringCellValue;
+
+    public byte ErrorCellValue => MapedCell.ErrorCellValue;
+
+    public string StringCellValue => MapedCell.StringCellValue;
+
+    public bool BooleanCellValue => MapedCell.BooleanCellValue;
+
+    public IComment CellComment { get => MapedCell.CellComment; set => MapedCell.CellComment = value; }
+    public IHyperlink Hyperlink { get => MapedCell.Hyperlink; set => MapedCell.Hyperlink = value; }
+
+    public CellRangeAddress ArrayFormulaRange => MapedCell.ArrayFormulaRange;
+
+    public bool IsPartOfArrayFormulaGroup => MapedCell.IsPartOfArrayFormulaGroup;
+
+    public bool IsMergedCell => MapedCell.IsMergedCell;
+
+    ISheet ICell.Sheet => MapedCell.Sheet;
+
+    public ICell CopyCellTo(int targetIndex)
     {
-        public int ColumnIndex => MapedCell.ColumnIndex;
+        return MapedCell.CopyCellTo(targetIndex);
+    }
 
-        public int RowIndex => MapedCell.RowIndex;
+    public CellType GetCachedFormulaResultTypeEnum()
+    {
+        return MapedCell.GetCachedFormulaResultTypeEnum();
+    }
 
-        public IRow Row => MapedCell.Row;
+    public void RemoveCellComment()
+    {
+        MapedCell.RemoveCellComment();
+    }
 
-        public CellType CellType => MapedCell.CellType;
+    public void RemoveHyperlink()
+    {
+        MapedCell.RemoveHyperlink();
+    }
 
-        public CellType CachedFormulaResultType => MapedCell.CachedFormulaResultType;
+    public void SetAsActiveCell()
+    {
+        MapedCell.SetAsActiveCell();
+    }
 
-        public string CellFormula { get => MapedCell.CellFormula; set => MapedCell.CellFormula = value; }
+    public void SetCellErrorValue(byte value)
+    {
+        MapedCell.SetCellErrorValue(value);
+    }
 
-        public double NumericCellValue => MapedCell.NumericCellValue;
+    public void SetCellFormula(string formula)
+    {
+        MapedCell.SetCellFormula(formula);
+    }
 
-        public DateTime DateCellValue => MapedCell.DateCellValue;
+    public void SetCellType(CellType cellType)
+    {
+        MapedCell.SetCellType(cellType);
+    }
 
-        public IRichTextString RichStringCellValue => MapedCell.RichStringCellValue;
+    public void SetCellValue(double value)
+    {
+        MapedCell.SetCellValue(value);
+    }
 
-        public byte ErrorCellValue => MapedCell.ErrorCellValue;
+    public void SetCellValue(DateTime value)
+    {
+        MapedCell.SetCellValue(value);
+    }
 
-        public string StringCellValue => MapedCell.StringCellValue;
+    public void SetCellValue(IRichTextString value)
+    {
+        MapedCell.SetCellValue(value);
+    }
 
-        public bool BooleanCellValue => MapedCell.BooleanCellValue;
+    public void SetCellValue(string value)
+    {
+        MapedCell.SetCellValue(value);
+    }
 
-        public IComment CellComment { get => MapedCell.CellComment; set => MapedCell.CellComment = value; }
-        public IHyperlink Hyperlink { get => MapedCell.Hyperlink; set => MapedCell.Hyperlink = value; }
-
-        public CellRangeAddress ArrayFormulaRange => MapedCell.ArrayFormulaRange;
-
-        public bool IsPartOfArrayFormulaGroup => MapedCell.IsPartOfArrayFormulaGroup;
-
-        public bool IsMergedCell => MapedCell.IsMergedCell;
-
-        ISheet ICell.Sheet => MapedCell.Sheet;
-
-        public ICell CopyCellTo(int targetIndex)
-        {
-            return MapedCell.CopyCellTo(targetIndex);
-        }
-
-        public CellType GetCachedFormulaResultTypeEnum()
-        {
-            return MapedCell.GetCachedFormulaResultTypeEnum();
-        }
-
-        public void RemoveCellComment()
-        {
-            MapedCell.RemoveCellComment();
-        }
-
-        public void RemoveHyperlink()
-        {
-            MapedCell.RemoveHyperlink();
-        }
-
-        public void SetAsActiveCell()
-        {
-            MapedCell.SetAsActiveCell();
-        }
-
-        public void SetCellErrorValue(byte value)
-        {
-            MapedCell.SetCellErrorValue(value);
-        }
-
-        public void SetCellFormula(string formula)
-        {
-            MapedCell.SetCellFormula(formula);
-        }
-
-        public void SetCellType(CellType cellType)
-        {
-            MapedCell.SetCellType(cellType);
-        }
-
-        public void SetCellValue(double value)
-        {
-            MapedCell.SetCellValue(value);
-        }
-
-        public void SetCellValue(DateTime value)
-        {
-            MapedCell.SetCellValue(value);
-        }
-
-        public void SetCellValue(IRichTextString value)
-        {
-            MapedCell.SetCellValue(value);
-        }
-
-        public void SetCellValue(string value)
-        {
-            MapedCell.SetCellValue(value);
-        }
-
-        public void SetCellValue(bool value)
-        {
-            MapedCell.SetCellValue(value);
-        }
+    public void SetCellValue(bool value)
+    {
+        MapedCell.SetCellValue(value);
     }
 }

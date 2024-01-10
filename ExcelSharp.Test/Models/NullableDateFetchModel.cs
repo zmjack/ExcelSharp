@@ -1,13 +1,22 @@
-﻿using System;
+﻿using ExcelSharp.NPOI;
+using System;
 
-namespace ExcelSharp.Test.Models
+namespace ExcelSharp.Test.Models;
+
+public class NullableDateFetchModel
 {
-    public class NullableDateFetchModel
-    {
-        public string Name { get; set; }
-        public DateTime? Date { get; set; }
-        public DateTime? StringDate { get; set; }
-        public DateTime? NumberDate { get; set; }
-        public DateTime? FormulaDate { get; set; }
-    }
+    [SheetColumn("Name")]
+    public string Name { get; set; }
+
+    [SheetColumn("DateTime")]
+    public DateTime? Date { get; set; }
+
+    [SheetColumn("DateTime (String)")]
+    public DateTime? StringDate { get; set; }
+
+    [SheetColumn("DateTime (Number)")]
+    public DateTime? NumberDate { get; set; }
+
+    [SheetColumn("DateTime (Formula)")]
+    public DateTime? FormulaDate { get; set; }
 }
