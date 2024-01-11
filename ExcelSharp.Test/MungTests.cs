@@ -1,41 +1,35 @@
-﻿using Cocoa;
-using ExcelSharp.NPOI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ExcelSharp.NPOI;
 using Xunit;
 
 namespace ExcelSharp.Test;
 
-public class CocoaTests
+public class MungTests
 {
     [Fact]
     public void Test()
     {
-        var coBook = new CoBook
+        var mungBook = new MungBook
         {
-            new CoSheet("Sheet1")
+            new MungSheet("Sheet1")
             {
-                new CoGrid.Vert("main", [
-                    CoStyle.Table with { BackgroundColor = new RgbaColor(0xcccccc) },
-                    CoStyle.Table with { BackgroundColor = new RgbaColor(0x999999) },
+                new Vert("main", [
+                    MungStyle.Table with { BackgroundColor = new RgbaColor(0xcccccc) },
+                    MungStyle.Table with { BackgroundColor = new RgbaColor(0x999999) },
                 ])
                 {
-                    new CoGrid.Hori(CoStyle.Table with
+                    new Hori(MungStyle.Table with
                     {
                         BackgroundColor = new RgbaColor(0xcc66cc),
                     })
                     {
-                        new CoGrid.Vert
+                        new Vert
                         {
-                            new CoGrid.Hori { "a" },
-                            new CoGrid.Hori { "b", new CoGrid.Vert { 1, 2 } },
+                            new Hori { "a" },
+                            new Hori { "b", new Vert { 1, 2 } },
                         },
-                        new CoGrid.Vert
+                        new Vert
                         {
-                            new CoGrid.Hori(CoStyle.Table with
+                            new Hori(MungStyle.Table with
                             {
                                 BackgroundColor = new RgbaColor(0xcc66cc),
                                 Format = "#,##0.00"
@@ -45,12 +39,12 @@ public class CocoaTests
                             },
                             "c",
                         },
-                        new CoGrid.Vert
+                        new Vert
                         {
                             "e",
                         },
                         "f",
-                        new CoGrid.Vert
+                        new Vert
                         {
                             "11",
                             "22",
@@ -58,21 +52,21 @@ public class CocoaTests
                             "44",
                         },
                     },
-                    new CoGrid.Hori()
+                    new Hori()
                     {
                         "A",
-                        new CoGrid.Vert
+                        new Vert
                         {
                             "d",
                             "e",
                         },
                     },
-                    new CoGrid.Hori()
+                    new Hori()
                     {
                         "A",
-                        new CoGrid.Vert([
-                            CoStyle.Table with { BackgroundColor = new RgbaColor(0xff0000) },
-                            CoStyle.Table with { BackgroundColor = new RgbaColor(0x0000ff) },
+                        new Vert([
+                            MungStyle.Table with { BackgroundColor = new RgbaColor(0xff0000) },
+                            MungStyle.Table with { BackgroundColor = new RgbaColor(0x0000ff) },
                         ])
                         {
                             "d",
@@ -82,7 +76,7 @@ public class CocoaTests
                 }
             }
         };
-        var book = coBook.ToExcelBook();
+        var book = mungBook.ToExcelBook();
     }
 
 }

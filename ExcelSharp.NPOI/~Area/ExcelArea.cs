@@ -40,7 +40,7 @@ public class ExcelArea : Scope<ExcelArea>
     public HtmlTable ToHtmlTable()
     {
         //TODO: sheet name
-        var uniTable = new CoSheet("Sheet1");
+        var uniTable = new MungSheet("Sheet1");
         for (int row = _start.Row; row <= _end.Row; row++)
         {
             var rowOffset = row - _start.Row;
@@ -71,7 +71,7 @@ public class ExcelArea : Scope<ExcelArea>
                     if (uniCell.Value is not null)
                     {
                         uniCell.Comment = cell.CellComment?.String.String;
-                        uniCell.Style = new CoStyle
+                        uniCell.Style = new MungStyle
                         {
                             BackgroundColor = cstyle.FillPattern != FillPattern.NoFill ? cstyle.FillForegroundColor : null,
                             Color = cstyle.Font.FontColor,
@@ -81,12 +81,12 @@ public class ExcelArea : Scope<ExcelArea>
                             BorderBottom = cstyle.BorderBottom != BorderStyle.None,
                             BorderLeft = cstyle.BorderLeft != BorderStyle.None,
                             BorderRight = cstyle.BorderRight != BorderStyle.None,
-                            TextAlign = cstyle.Alignment switch
+                            HoriAlign = cstyle.Alignment switch
                             {
-                                HorizontalAlignment.Left => TextAlign.Left,
-                                HorizontalAlignment.Center => TextAlign.Center,
-                                HorizontalAlignment.Right => TextAlign.Right,
-                                _ => TextAlign.Preserve,
+                                HorizontalAlignment.Left => HoriAlign.Left,
+                                HorizontalAlignment.Center => HoriAlign.Center,
+                                HorizontalAlignment.Right => HoriAlign.Right,
+                                _ => HoriAlign.Preserve,
                             },
                             VertAlign = cstyle.VerticalAlignment switch
                             {

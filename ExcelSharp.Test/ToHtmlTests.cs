@@ -1,5 +1,4 @@
-﻿using Cocoa;
-using ExcelSharp.NPOI;
+﻿using ExcelSharp.NPOI;
 using NPOI.SS.Formula.Functions;
 using NStandard;
 using System;
@@ -12,7 +11,7 @@ public class ToHtmlTests
     [Fact]
     public void Test1()
     {
-        var sheet = new CoSheet("Sheet1");
+        var sheet = new MungSheet("Sheet1");
         sheet[(0, 0)].Pipe(cell => { cell.Value = "00"; });
         sheet[(0, 1)].Pipe(cell => { cell.Value = "01"; });
         sheet[(0, 2)].Pipe(cell => { cell.Value = "02"; });
@@ -43,8 +42,7 @@ public class ToHtmlTests
                     BorderBottom = true,
                     BorderLeft = true,
                     BorderRight = true,
-
-                    TextAlign = TextAlign.Center,
+                    HoriAlign = HoriAlign.Center,
                 };
             }
         }
@@ -56,9 +54,9 @@ public class ToHtmlTests
     [Fact]
     public void Test2()
     {
-        var mainTitleStyle = new CoStyle
+        var mainTitleStyle = new MungStyle
         {
-            TextAlign = TextAlign.Center,
+            HoriAlign = HoriAlign.Center,
             VertAlign = VertAlign.Middle,
             BackgroundColor = new RgbaColor(0x538DE7),
             FontFamily = "Microsoft YaHei",
@@ -70,9 +68,9 @@ public class ToHtmlTests
             BorderLeft = true,
             BorderRight = true,
         };
-        var titleStyle = new CoStyle
+        var titleStyle = new MungStyle
         {
-            TextAlign = TextAlign.Center,
+            HoriAlign = HoriAlign.Center,
             VertAlign = VertAlign.Middle,
             BackgroundColor = new RgbaColor(0x538DE7),
             FontFamily = "Microsoft YaHei",
@@ -84,46 +82,46 @@ public class ToHtmlTests
             BorderLeft = true,
             BorderRight = true,
         };
-        var dateStyle = new CoStyle
+        var dateStyle = new MungStyle
         {
-            TextAlign = TextAlign.Right,
+            HoriAlign = HoriAlign.Right,
             VertAlign = VertAlign.Middle,
             FontFamily = "Microsoft YaHei",
             FontSize = 9,
             Bold = true,
         };
 
-        var coSheet = new CoSheet("Sheet1");
-        coSheet["B2"].Pipe(cell =>
+        var mungSheet = new MungSheet("Sheet1");
+        mungSheet["B2"].Pipe(cell =>
         {
             cell.Value = $"{new DateTime(2000, 1, 1):yyyy年MM月}";
             cell.Style = mainTitleStyle with { };
         });
 
-        coSheet["B5"].Pipe(cell =>
+        mungSheet["B5"].Pipe(cell =>
         {
             cell.Value = "生产月份";
             cell.Style = titleStyle with { };
         });
-        coSheet["B5", "D5"].Merge();
-        coSheet["B6"].Pipe(cell =>
+        mungSheet["B5", "D5"].Merge();
+        mungSheet["B6"].Pipe(cell =>
         {
             cell.Value = "货龄";
             cell.Style = titleStyle with { };
         });
-        coSheet["B6", "D6"].Merge();
-        coSheet["B7"].Pipe(cell =>
+        mungSheet["B6", "D6"].Merge();
+        mungSheet["B7"].Pipe(cell =>
         {
             cell.Value = "合计数量";
             cell.Style = titleStyle with { };
         });
-        coSheet["B7", "D7"].Merge();
-        coSheet["B8"].Pipe(cell =>
+        mungSheet["B7", "D7"].Merge();
+        mungSheet["B8"].Pipe(cell =>
         {
             cell.Value = "合计占比（%）";
             cell.Style = titleStyle with { };
         });
-        coSheet["B8", "D8"].Merge();
+        mungSheet["B8", "D8"].Merge();
 
         var excel = new ExcelBook(ExcelVersion.Excel2007);
         excel.CreateSheet("sheet1");
@@ -131,23 +129,23 @@ public class ToHtmlTests
 
         using (var area = sheet.BeginArea("E7"))
         {
-            sheet.ExtendPrintLine(coSheet);
+            sheet.ExtendPrintLine(mungSheet);
         }
         excel.SaveAs("D:\\tmp\\11.xlsx");
 
-        var html = new HtmlTable(coSheet).ToHtml();
+        var html = new HtmlTable(mungSheet).ToHtml();
     }
 
     [Fact]
     public void ThemeTest()
     {
-        var sheet = new CoSheet("Sheet1");
+        var sheet = new MungSheet("Sheet1");
         for (int row = 0; row < 6; row++)
         {
             for (int col = 0; col < 10; col++)
             {
                 sheet[(row, col)].Grid =
-                    new CoGrid.Hori(CoStyle.Default with
+                    new Hori(MungStyle.Default with
                     {
                         BackgroundColor = ExcelColor.Theme(row, col),
                     })
@@ -161,7 +159,7 @@ public class ToHtmlTests
         for (int col = 0; col < 10; col++)
         {
             sheet[(8, col)].Grid =
-                new CoGrid.Hori(CoStyle.Default with
+                new Hori(MungStyle.Default with
                 {
                     BackgroundColor = ExcelColor.Standard(0, col),
                 })

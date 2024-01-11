@@ -1,5 +1,4 @@
 ﻿using ExcelSharp.NPOI.Utils;
-using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NStandard;
 using SkiaSharp;
@@ -81,48 +80,48 @@ public partial class ExcelSheet
         if (recent is not null) recent.Update(start, end);
     }
 
-    public void ExtendPrintLine(ICoSheet sheet)
+    public void ExtendPrintLine(IMungSheet sheet)
     {
         var cellsGroups = sheet.Rows.SelectMany(x => x.Cells).GroupBy(x => new { x.Style, x.Style?.Format });
 
         foreach (var cells in cellsGroups)
         {
-            var coStyle = cells.Key.Style;
+            var mungStyle = cells.Key.Style;
 
             CStyle? style = null;
-            if (coStyle is not null)
+            if (mungStyle is not null)
             {
                 style = Book.CStyle(x =>
                 {
-                    if (coStyle.BackgroundColor is not null) x.CellColor(coStyle.BackgroundColor);
-                    if (coStyle.Color is not null || coStyle.FontSize.HasValue || coStyle.FontFamily is not null)
+                    if (mungStyle.BackgroundColor is not null) x.CellColor(mungStyle.BackgroundColor);
+                    if (mungStyle.Color is not null || mungStyle.FontSize.HasValue || mungStyle.FontFamily is not null)
                     {
-                        var fontFamily = coStyle.FontFamily;
-                        var fontSize = (short)Math.Round((coStyle.FontSize ?? 14) * 0.75, 0, MidpointRounding.AwayFromZero);
-                        if (coStyle.Color is not null)
+                        var fontFamily = mungStyle.FontFamily;
+                        var fontSize = (short)Math.Round((mungStyle.FontSize ?? 14) * 0.75, 0, MidpointRounding.AwayFromZero);
+                        if (mungStyle.Color is not null)
                         {
-                            var color = coStyle.Color;
+                            var color = mungStyle.Color;
                             x.SetFont(fontFamily, fontSize, color);
                         }
                         else x.SetFont(fontFamily, fontSize);
                     }
-                    if (coStyle.Bold.HasValue && coStyle.Bold.Value) x.Bold();
-                    if (coStyle.BorderTop.HasValue && coStyle.BorderTop.Value) x.BorderTop = BorderStyle.Thin;
-                    if (coStyle.BorderBottom.HasValue && coStyle.BorderBottom.Value) x.BorderBottom = BorderStyle.Thin;
-                    if (coStyle.BorderLeft.HasValue && coStyle.BorderLeft.Value) x.BorderLeft = BorderStyle.Thin;
-                    if (coStyle.BorderRight.HasValue && coStyle.BorderRight.Value) x.BorderRight = BorderStyle.Thin;
-                    if (coStyle.TextAlign != TextAlign.Preserve)
+                    if (mungStyle.Bold.HasValue && mungStyle.Bold.Value) x.Bold();
+                    if (mungStyle.BorderTop.HasValue && mungStyle.BorderTop.Value) x.BorderTop = BorderStyle.Thin;
+                    if (mungStyle.BorderBottom.HasValue && mungStyle.BorderBottom.Value) x.BorderBottom = BorderStyle.Thin;
+                    if (mungStyle.BorderLeft.HasValue && mungStyle.BorderLeft.Value) x.BorderLeft = BorderStyle.Thin;
+                    if (mungStyle.BorderRight.HasValue && mungStyle.BorderRight.Value) x.BorderRight = BorderStyle.Thin;
+                    if (mungStyle.HoriAlign != HoriAlign.Preserve)
                     {
-                        switch (coStyle.TextAlign)
+                        switch (mungStyle.HoriAlign)
                         {
-                            case TextAlign.Left: x.HLeft(); break;
-                            case TextAlign.Center: x.HCenter(); break;
-                            case TextAlign.Right: x.HRight(); break;
+                            case HoriAlign.Left: x.HLeft(); break;
+                            case HoriAlign.Center: x.HCenter(); break;
+                            case HoriAlign.Right: x.HRight(); break;
                         }
                     }
-                    if (coStyle.VertAlign != VertAlign.Preserve)
+                    if (mungStyle.VertAlign != VertAlign.Preserve)
                     {
-                        switch (coStyle.VertAlign)
+                        switch (mungStyle.VertAlign)
                         {
                             case VertAlign.Top: x.VTop(); break;
                             case VertAlign.Middle: x.VCenter(); break;
