@@ -2,6 +2,7 @@
 using ExcelSharp.Test.Models;
 using NStandard;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace ExcelSharp.Test;
@@ -12,22 +13,29 @@ public class FetchTests
     public void DateFetchTest_SheetColumnAttribute()
     {
         var book = new ExcelBook("excel-sharp.xlsx");
-        var sheet = book.GetSheet("Fetch");
+        {
+            var sheet = book.GetSheet("Fetch");
+            var models = sheet.Fetch<DateFetchModel>("A5");
+            var date = new DateTime(2000, 1, 1);
 
-        var models = sheet.Fetch<DateFetchModel>("A5");
-        var date = new DateTime(2000, 1, 1);
+            var valueModel = models[0];
+            Assert.Equal(date, valueModel.Date);
+            Assert.Equal(date, valueModel.StringDate);
+            Assert.Equal(date, valueModel.NumberDate);
+            Assert.Equal(date, valueModel.FormulaDate);
 
-        var valueModel = models[0];
-        Assert.Equal(date, valueModel.Date);
-        Assert.Equal(date, valueModel.StringDate);
-        Assert.Equal(date, valueModel.NumberDate);
-        Assert.Equal(date, valueModel.FormulaDate);
+            var blankModel = models[1];
+            Assert.Equal(DateTime.MinValue, blankModel.Date);
+            Assert.Equal(DateTime.MinValue, blankModel.StringDate);
+            Assert.Equal(DateTime.MinValue, blankModel.NumberDate);
+            Assert.Equal(DateTime.MinValue, blankModel.FormulaDate);
+        }
 
-        var blankModel = models[1];
-        Assert.Equal(DateTime.MinValue, blankModel.Date);
-        Assert.Equal(DateTime.MinValue, blankModel.StringDate);
-        Assert.Equal(DateTime.MinValue, blankModel.NumberDate);
-        Assert.Equal(DateTime.MinValue, blankModel.FormulaDate);
+        {
+            var sheet = book.GetSheet("2D");
+            var models = sheet.Fetch2D<double>("A1");
+            Assert.Equal(21, models.Sum(x => x.Value));
+        }
     }
 
     [Fact]

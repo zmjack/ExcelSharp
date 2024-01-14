@@ -5,18 +5,18 @@ namespace ExcelSharp.Test.Models;
 
 public class NullableDateFetchModel
 {
-    [SheetColumn("Name")]
+    [DataColumn("Name")]
     public string Name { get; set; }
 
-    [SheetColumn("DateTime")]
+    [DataColumn("DateTime")]
     public DateTime? Date { get; set; }
 
-    [SheetColumn("DateTime (String)")]
+    [DataColumn("DateTime (String)")]
     public DateTime? StringDate { get; set; }
 
-    [SheetColumn("DateTime (Number)")]
+    [DataColumn("DateTime (Number)")]
     public DateTime? NumberDate { get; set; }
 
-    [SheetColumn("DateTime (Formula)")]
+    [DataColumn("DateTime (Formula)")]
     public DateTime? FormulaDate { get; set; }
 }

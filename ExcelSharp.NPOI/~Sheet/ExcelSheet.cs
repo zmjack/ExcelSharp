@@ -1,4 +1,6 @@
 ﻿using ExcelSharp.NPOI.Utils;
+using Mung;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NStandard;
 using SkiaSharp;
@@ -347,13 +349,13 @@ public partial class ExcelSheet
         (int row, int col) = (startCell.Row, startCell.Col);
         var props = (
              from prop in typeof(TModel).GetProperties()
-             let names = prop.GetCustomAttribute<SheetColumnAttribute>()?.Names
+             let names = prop.GetCustomAttribute<DataColumnAttribute>()?.Names
              where prop.CanWrite
              select KeyValuePair.Create(prop.Name, names)
         ).ToArray();
 
         var propNames = new List<string>();
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 200; i++)
         {
             var cell = this[(row, col + i)];
             var value = GetCellValue(cell, typeof(string));
@@ -369,6 +371,58 @@ public partial class ExcelSheet
         }
 
         return Fetch<TModel>((startCell.Row + 1, startCell.Col), [.. propNames]);
+    }
+
+    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(Cursor startCell) where T : new()
+    {
+        //Title
+        var colList = new List<string>();
+        for (int col = 1; col < 200; col++)
+        {
+            var cell = this[(startCell.Row, startCell.Col + col)];
+            var value = GetCellValue(cell, typeof(string));
+            var svalue = value?.ToString().Unique() ?? string.Empty;
+            if (!svalue.IsNullOrWhiteSpace())
+            {
+                colList.Add(svalue);
+            }
+        }
+
+        var rowList = new List<string>();
+        for (int row = 1; row < 20000; row++)
+        {
+            var cell = this[(startCell.Row + row, startCell.Col)];
+            var value = GetCellValue(cell, typeof(string));
+            var svalue = value?.ToString().Unique() ?? string.Empty;
+            if (!svalue.IsNullOrWhiteSpace())
+            {
+                rowList.Add(svalue);
+            }
+        }
+
+        var list = new List<Model2D<T>>();
+        var start = new Cursor(startCell.Row + 1, startCell.Col + 1);
+        var type = typeof(T);
+        foreach (var (rowIndex, rowName) in rowList.Pairs())
+        {
+            foreach (var (colIndex, colName) in colList.Pairs())
+            {
+                var cell = this[(start.Row + rowIndex, start.Col + colIndex)];
+                var cellType = cell.IsMergedCell ? cell.MergedRange.Cell.CellType : cell.CellType;
+                if (cellType != CellType.Blank)
+                {
+                    var value = (T)GetCellValue(cell, type);
+                    list.Add(new Model2D<T>
+                    {
+                        RowName = rowName,
+                        ColName = colName,
+                        Value = value,
+                    });
+                }
+            }
+        }
+
+        return list;
     }
 
     public TModel[] Fetch<TModel>(Cursor startCell, Expression<Func<TModel, object>> includes = null, Predicate<int> rowSelector = null)

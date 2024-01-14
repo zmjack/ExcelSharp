@@ -15,7 +15,7 @@ public class FetchAttribute : Attribute
 }
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-public class SheetColumnAttribute(params string[] names) : Attribute
+public class DataColumnAttribute(params string[] names) : Attribute
 {
     public string[] Names { get; set; } = names;
 }
