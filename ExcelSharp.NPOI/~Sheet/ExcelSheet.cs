@@ -373,13 +373,17 @@ public partial class ExcelSheet
         return Fetch<TModel>((startCell.Row + 1, startCell.Col), [.. propNames]);
     }
 
-    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(Cursor startCell, int rowNameIndex = 0, int colNameIndex = 0) where T : new()
+    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(Cursor archer, int rowNameIndex = 0, int colNameIndex = 0) where T : new()
     {
-        var archer = this[startCell];
+        return Fetch2D<T>(this[archer, archer], rowNameIndex, colNameIndex);
+    }
+    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(SheetRange archer, int rowNameIndex = 0, int colNameIndex = 0) where T : new()
+    {
+        var startCell = archer.Start;
 
         //Title
         var colList = new List<string>();
-        for (int col = archer.ColSpan; col < 200; col++)
+        for (int col = archer.ColumnLengh; col < 200; col++)
         {
             var cell = this[(startCell.Row + rowNameIndex, startCell.Col + col)];
             var value = GetCellValue(cell, typeof(string));
@@ -392,7 +396,7 @@ public partial class ExcelSheet
         }
 
         var rowList = new List<string>();
-        for (int row = archer.RowSpan; row < 20000; row++)
+        for (int row = archer.RowLength; row < 20000; row++)
         {
             var cell = this[(startCell.Row + row, startCell.Col + colNameIndex)];
             var value = GetCellValue(cell, typeof(string));
@@ -405,7 +409,7 @@ public partial class ExcelSheet
         }
 
         var list = new List<Model2D<T>>();
-        var start = new Cursor(startCell.Row + archer.RowSpan, startCell.Col + archer.ColSpan);
+        var start = new Cursor(startCell.Row + archer.RowLength, startCell.Col + archer.ColumnLengh);
         var type = typeof(T);
         foreach (var (rowIndex, rowName) in rowList.Pairs())
         {
