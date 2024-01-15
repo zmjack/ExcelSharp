@@ -373,35 +373,39 @@ public partial class ExcelSheet
         return Fetch<TModel>((startCell.Row + 1, startCell.Col), [.. propNames]);
     }
 
-    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(Cursor startCell) where T : new()
+    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(Cursor startCell, int rowNameIndex = 0, int colNameIndex = 0) where T : new()
     {
+        var archer = this[startCell];
+
         //Title
         var colList = new List<string>();
-        for (int col = 1; col < 200; col++)
+        for (int col = archer.ColSpan; col < 200; col++)
         {
-            var cell = this[(startCell.Row, startCell.Col + col)];
+            var cell = this[(startCell.Row + rowNameIndex, startCell.Col + col)];
             var value = GetCellValue(cell, typeof(string));
             var svalue = value?.ToString().Unique() ?? string.Empty;
             if (!svalue.IsNullOrWhiteSpace())
             {
                 colList.Add(svalue);
             }
+            else break;
         }
 
         var rowList = new List<string>();
-        for (int row = 1; row < 20000; row++)
+        for (int row = archer.RowSpan; row < 20000; row++)
         {
-            var cell = this[(startCell.Row + row, startCell.Col)];
+            var cell = this[(startCell.Row + row, startCell.Col + colNameIndex)];
             var value = GetCellValue(cell, typeof(string));
             var svalue = value?.ToString().Unique() ?? string.Empty;
             if (!svalue.IsNullOrWhiteSpace())
             {
                 rowList.Add(svalue);
             }
+            else break;
         }
 
         var list = new List<Model2D<T>>();
-        var start = new Cursor(startCell.Row + 1, startCell.Col + 1);
+        var start = new Cursor(startCell.Row + archer.RowSpan, startCell.Col + archer.ColSpan);
         var type = typeof(T);
         foreach (var (rowIndex, rowName) in rowList.Pairs())
         {

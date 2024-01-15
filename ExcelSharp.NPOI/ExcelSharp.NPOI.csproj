@@ -5,7 +5,7 @@
     <Authors>zmjack</Authors>
     <Owners>zmjack</Owners>
     <Company>nstandard.net</Company>
-    <Version>0.7.5</Version>
+    <Version>0.8.0</Version>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/zmjack/ExcelSharp</PackageProjectUrl>
@@ -21,6 +21,7 @@
     <PackageReference Include="DotNetCore.NPOI" Version="1.2.3" />
     <PackageReference Include="Mung" Version="0.0.1" />
     <PackageReference Include="NStandard" Version="0.56.1" />
+    <PackageReference Include="RichTable" Version="0.4.5" />
     <PackageReference Include="SkiaSharp" Version="2.88.6" />
   </ItemGroup>
 
