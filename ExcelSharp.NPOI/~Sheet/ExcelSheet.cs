@@ -1,8 +1,5 @@
 ﻿using ExcelSharp.NPOI.Utils;
-using Mung;
-using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
-using NPOI.XSSF.Streaming.Values;
 using NStandard;
 using SkiaSharp;
 using System;
@@ -400,6 +397,7 @@ public partial class ExcelSheet
                     valid = true;
                     values.Add(svalue);
                 }
+                else values.Add(null);
             }
 
             if (valid)
@@ -452,6 +450,15 @@ public partial class ExcelSheet
                         RowNames = rowNames,
                         ColNames = colNames,
                         Value = value,
+                    });
+                }
+                else
+                {
+                    list.Add(new Model2D<T>
+                    {
+                        RowNames = rowNames,
+                        ColNames = colNames,
+                        Value = default,
                     });
                 }
             }
