@@ -384,10 +384,10 @@ public partial class ExcelSheet
         var archerRowLength = archerEnd.Row - archerStart.Row + 1;
         var archerColLength = archerEnd.Col - archerStart.Col + 1;
 
-        var colList = new List<string[]>();
+        var colList = new List<string?[]>();
         for (int col = archerColLength; col < 200; col++)
         {
-            var values = new List<string>();
+            var values = new List<string?>();
             var valid = false;
 
             for (int i = 0; i < archerRowLength; i++)
@@ -409,10 +409,10 @@ public partial class ExcelSheet
             else break;
         }
 
-        var rowList = new List<string[]>();
+        var rowList = new List<string?[]>();
         for (int row = archerRowLength; row < 20000; row++)
         {
-            var values = new List<string>();
+            var values = new List<string?>();
             var valid = false;
 
             for (int i = 0; i < archerRowLength; i++)
@@ -425,7 +425,7 @@ public partial class ExcelSheet
                     valid = true;
                     values.Add(svalue);
                 }
-                else break;
+                else values.Add(null);
             }
 
             if (valid)
