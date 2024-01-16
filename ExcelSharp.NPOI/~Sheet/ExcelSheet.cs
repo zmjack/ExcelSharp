@@ -2,6 +2,7 @@
 using Mung;
 using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
+using NPOI.XSSF.Streaming.Values;
 using NStandard;
 using SkiaSharp;
 using System;
@@ -373,47 +374,73 @@ public partial class ExcelSheet
         return Fetch<TModel>((startCell.Row + 1, startCell.Col), [.. propNames]);
     }
 
-    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(Cursor archer, int rowNameIndex = 0, int colNameIndex = 0) where T : new()
+    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(Cursor archer) where T : new()
     {
-        return Fetch2D<T>(this[archer, archer], rowNameIndex, colNameIndex);
+        var cell = this[archer];
+        return Fetch2D<T>(archer, (archer.Row + cell.RowSpan - 1, archer.Col + cell.ColSpan - 1));
     }
-    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(SheetRange archer, int rowNameIndex = 0, int colNameIndex = 0) where T : new()
+    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(Cursor archerStart, Cursor archerEnd) where T : new()
     {
-        var startCell = archer.Start;
+        var archerRowLength = archerEnd.Row - archerStart.Row + 1;
+        var archerColLength = archerEnd.Col - archerStart.Col + 1;
 
-        //Title
-        var colList = new List<string>();
-        for (int col = archer.ColumnLengh; col < 200; col++)
+        var colList = new List<string[]>();
+        for (int col = archerColLength; col < 200; col++)
         {
-            var cell = this[(startCell.Row + rowNameIndex, startCell.Col + col)];
-            var value = GetCellValue(cell, typeof(string));
-            var svalue = value?.ToString().Unique() ?? string.Empty;
-            if (!svalue.IsNullOrWhiteSpace())
+            var values = new List<string>();
+            var valid = false;
+
+            for (int i = 0; i < archerRowLength; i++)
             {
-                colList.Add(svalue);
+                var cell = this[(archerStart.Row + i, archerStart.Col + col)];
+                var value = GetCellValue(cell, typeof(string));
+                var svalue = value?.ToString().Unique() ?? string.Empty;
+                if (!svalue.IsNullOrWhiteSpace())
+                {
+                    valid = true;
+                    values.Add(svalue);
+                }
+            }
+
+            if (valid)
+            {
+                colList.Add([.. values]);
             }
             else break;
         }
 
-        var rowList = new List<string>();
-        for (int row = archer.RowLength; row < 20000; row++)
+        var rowList = new List<string[]>();
+        for (int row = archerRowLength; row < 20000; row++)
         {
-            var cell = this[(startCell.Row + row, startCell.Col + colNameIndex)];
-            var value = GetCellValue(cell, typeof(string));
-            var svalue = value?.ToString().Unique() ?? string.Empty;
-            if (!svalue.IsNullOrWhiteSpace())
+            var values = new List<string>();
+            var valid = false;
+
+            for (int i = 0; i < archerRowLength; i++)
             {
-                rowList.Add(svalue);
+                var cell = this[(archerStart.Row + row, archerStart.Col + i)];
+                var value = GetCellValue(cell, typeof(string));
+                var svalue = value?.ToString().Unique() ?? string.Empty;
+                if (!svalue.IsNullOrWhiteSpace())
+                {
+                    valid = true;
+                    values.Add(svalue);
+                }
+                else break;
+            }
+
+            if (valid)
+            {
+                rowList.Add([.. values]);
             }
             else break;
         }
 
         var list = new List<Model2D<T>>();
-        var start = new Cursor(startCell.Row + archer.RowLength, startCell.Col + archer.ColumnLengh);
+        var start = new Cursor(archerStart.Row + archerRowLength, archerStart.Col + archerColLength);
         var type = typeof(T);
-        foreach (var (rowIndex, rowName) in rowList.Pairs())
+        foreach (var (rowIndex, rowNames) in rowList.Pairs())
         {
-            foreach (var (colIndex, colName) in colList.Pairs())
+            foreach (var (colIndex, colNames) in colList.Pairs())
             {
                 var cell = this[(start.Row + rowIndex, start.Col + colIndex)];
                 var cellType = cell.IsMergedCell ? cell.MergedRange.Cell.CellType : cell.CellType;
@@ -422,8 +449,8 @@ public partial class ExcelSheet
                     var value = (T)GetCellValue(cell, type);
                     list.Add(new Model2D<T>
                     {
-                        RowName = rowName,
-                        ColName = colName,
+                        RowNames = rowNames,
+                        ColNames = colNames,
                         Value = value,
                     });
                 }

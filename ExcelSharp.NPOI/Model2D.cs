@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace ExcelSharp.NPOI;
 
-[DebuggerDisplay("{RowName} & {ColName}: {Value}")]
+[DebuggerDisplay(@"{string.Join("","", RowNames)} & {string.Join("","", ColNames)}: {Value}")]
 public class Model2D<T>
 {
-    public string RowName { get; set; }
-    public string ColName { get; set; }
+    public string[] RowNames { get; set; }
+    public string[] ColNames { get; set; }
     public T Value { get; set; }
 }
