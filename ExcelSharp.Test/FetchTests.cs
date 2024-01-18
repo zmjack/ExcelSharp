@@ -33,12 +33,12 @@ public class FetchTests
 
         {
             var sheet = book.GetSheet("2D");
-            var models = sheet.Fetch2D<double>("A1");
+            var models = sheet.Fetch2D<double?>("A1");
             Assert.Equal(21, models.Sum(x => x.Value));
         }
         {
             var sheet = book.GetSheet("2D");
-            var models = sheet.Fetch2D<double>("A6");
+            var models = sheet.Fetch2D<double?>("A6");
             Assert.Equal(21, models.Sum(x => x.Value));
         }
     }

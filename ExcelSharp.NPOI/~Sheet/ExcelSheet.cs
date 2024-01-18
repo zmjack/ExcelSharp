@@ -341,6 +341,34 @@ public partial class ExcelSheet
             return type.CreateDefault();
         }
     }
+    public TModel[] Fetch<TModel, TImplement>(Cursor startCell) where TModel : TImplement, new()
+    {
+        (int row, int col) = (startCell.Row, startCell.Col);
+        var props = (
+             from prop in typeof(TImplement).GetProperties()
+             let names = prop.GetCustomAttribute<DataColumnAttribute>()?.Names
+             where prop.CanWrite
+             select KeyValuePair.Create(prop.Name, names)
+        ).ToArray();
+
+        var propNames = new List<string>();
+        for (int i = 0; i < 200; i++)
+        {
+            var cell = this[(row, col + i)];
+            var value = GetCellValue(cell, typeof(string));
+            var svalue = value?.ToString().Unique() ?? string.Empty;
+            if (!svalue.IsNullOrWhiteSpace())
+            {
+                var prop = props.FirstOrDefault(x => x.Value.Contains(svalue));
+                if (prop.Key is not null)
+                {
+                    propNames.Add(prop.Key);
+                }
+            }
+        }
+
+        return Fetch<TModel>((startCell.Row + 1, startCell.Col), [.. propNames]);
+    }
 
     public TModel[] Fetch<TModel>(Cursor startCell) where TModel : new()
     {
@@ -467,7 +495,7 @@ public partial class ExcelSheet
         return list;
     }
 
-    public TModel[] Fetch<TModel>(Cursor startCell, Expression<Func<TModel, object>> includes = null, Predicate<int> rowSelector = null)
+    public TModel[] Fetch<TModel>(Cursor startCell, Expression<Func<TModel, object>> includes, Predicate<int>? rowSelector = null)
         where TModel : new()
     {
         var propNames = includes is not null ? includes.Body switch
@@ -480,12 +508,22 @@ public partial class ExcelSheet
         return Fetch<TModel>(startCell, propNames, rowSelector);
     }
 
-    public TModel[] Fetch<TModel>(Cursor startCell, string[] propNames, Predicate<int> rowSelector = null)
+    public TModel[] Fetch<TModel, TImplement>(Cursor startCell, Expression<Func<TModel, object>> includes, Predicate<int>? rowSelector = null)
+        where TModel : TImplement, new()
+    {
+        var propNames = includes is not null ? includes.Body switch
+        {
+            MemberExpression exp => [exp.Member.Name],
+            NewExpression exp => exp.Members.Select(x => x.Name).ToArray(),
+            _ => throw new ArgumentException("Any element must be MemberExpression or NewExpression.", nameof(includes)),
+        } : [];
+
+        return Fetch<TModel, TImplement>(startCell, propNames, rowSelector);
+    }
+
+    public TModel[] Fetch<TModel>(Cursor startCell, string[] propNames, Predicate<int>? rowSelector = null)
         where TModel : new()
     {
-        (int row, int col) = (startCell.Row, startCell.Col);
-
-        var ret = new List<TModel>();
         var props = propNames.Any() ?
         [
             .. from prop in typeof(TModel).GetProperties()
@@ -494,6 +532,29 @@ public partial class ExcelSheet
                select prop
         ] : typeof(TModel).GetProperties().Where(prop => prop.CanWrite).ToArray();
 
+        return Fetch<TModel, TModel>(startCell, props, rowSelector);
+    }
+
+    public TModel[] Fetch<TModel, TImplement>(Cursor startCell, string[] propNames, Predicate<int>? rowSelector = null)
+        where TModel : TImplement, new()
+    {
+        var props = propNames.Any() ?
+        [
+            .. from prop in typeof(TImplement).GetProperties()
+               where prop.CanWrite && propNames.Contains(prop.Name)
+               orderby propNames.IndexOf(prop.Name)
+               select prop
+        ] : typeof(TModel).GetProperties().Where(prop => prop.CanWrite).ToArray();
+
+        return Fetch<TModel, TImplement>(startCell, props, rowSelector);
+    }
+
+    private TModel[] Fetch<TModel, TImplement>(Cursor startCell, PropertyInfo[] props, Predicate<int>? rowSelector = null)
+        where TModel : new()
+    {
+        (int row, int col) = (startCell.Row, startCell.Col);
+
+        var ret = new List<TModel>();
         for (int rowOffset = 0; row + rowOffset <= MapedSheet.LastRowNum; rowOffset++)
         {
             if (rowSelector != null)
