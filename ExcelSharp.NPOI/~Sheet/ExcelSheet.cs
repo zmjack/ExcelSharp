@@ -508,7 +508,7 @@ public partial class ExcelSheet
         return Fetch<TModel>(startCell, propNames, rowSelector);
     }
 
-    public TModel[] Fetch<TModel, TImplement>(Cursor startCell, Expression<Func<TModel, object>> includes, Predicate<int>? rowSelector = null)
+    public TModel[] Fetch<TModel, TImplement>(Cursor startCell, Expression<Func<TImplement, object>> includes, Predicate<int>? rowSelector = null)
         where TModel : TImplement, new()
     {
         var propNames = includes is not null ? includes.Body switch
