@@ -5,7 +5,7 @@
     <Authors>zmjack</Authors>
     <Owners>zmjack</Owners>
     <Company>nstandard.net</Company>
-    <Version>0.8.7</Version>
+    <Version>0.8.8</Version>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/zmjack/ExcelSharp</PackageProjectUrl>

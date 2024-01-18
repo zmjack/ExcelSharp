@@ -41,6 +41,11 @@ public class FetchTests
             var models = sheet.Fetch2D<double?>("A6");
             Assert.Equal(21, models.Sum(x => x.Value));
         }
+        {
+            var sheet = book.GetSheet("2D");
+            var models = sheet.Fetch2D<double?>("A12", "B12");
+            Assert.Equal(21, models.Sum(x => x.Value));
+        }
     }
 
     [Fact]

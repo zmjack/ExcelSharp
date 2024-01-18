@@ -441,7 +441,7 @@ public partial class ExcelSheet
             var values = new List<string?>();
             var valid = false;
 
-            for (int i = 0; i < archerRowLength; i++)
+            for (int i = 0; i < archerColLength; i++)
             {
                 var cell = this[(archerStart.Row + row, archerStart.Col + i)];
                 var value = GetCellValue(cell, typeof(string));
