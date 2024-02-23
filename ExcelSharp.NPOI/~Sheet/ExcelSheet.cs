@@ -346,7 +346,7 @@ public partial class ExcelSheet
         (int row, int col) = (startCell.Row, startCell.Col);
         var props = (
              from prop in typeof(TImplement).GetProperties()
-             let names = prop.GetCustomAttribute<DataColumnAttribute>()?.Names
+             let names = prop.GetCustomAttribute<DataColumnAttribute>()?.Names ?? []
              where prop.CanWrite
              select KeyValuePair.Create(prop.Name, names)
         ).ToArray();
@@ -375,7 +375,7 @@ public partial class ExcelSheet
         (int row, int col) = (startCell.Row, startCell.Col);
         var props = (
              from prop in typeof(TModel).GetProperties()
-             let names = prop.GetCustomAttribute<DataColumnAttribute>()?.Names
+             let names = prop.GetCustomAttribute<DataColumnAttribute>()?.Names ?? []
              where prop.CanWrite
              select KeyValuePair.Create(prop.Name, names)
         ).ToArray();
