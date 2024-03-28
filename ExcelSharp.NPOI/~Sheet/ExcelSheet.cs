@@ -80,7 +80,7 @@ public partial class ExcelSheet
         if (recent is not null) recent.Update(start, end);
     }
 
-    public void ExtendPrintLine(IMungSheet sheet)
+    public void ExtendPrintLine(ISpreadSheet sheet)
     {
         var cellsGroups = sheet.Rows.SelectMany(x => x.Cells).GroupBy(x => new { x.Style, x.Style?.Format });
 

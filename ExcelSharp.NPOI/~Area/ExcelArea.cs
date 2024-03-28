@@ -40,7 +40,7 @@ public class ExcelArea : Scope<ExcelArea>
     public HtmlTable ToHtmlTable()
     {
         //TODO: sheet name
-        var uniTable = new MungSheet("Sheet1");
+        var uniTable = new SpreadSheet("Sheet1");
         for (int row = _start.Row; row <= _end.Row; row++)
         {
             var rowOffset = row - _start.Row;
@@ -71,7 +71,7 @@ public class ExcelArea : Scope<ExcelArea>
                     if (uniCell.Value is not null)
                     {
                         uniCell.Comment = cell.CellComment?.String.String;
-                        uniCell.Style = new MungStyle
+                        uniCell.Style = new SpreadStyle
                         {
                             BackgroundColor = cstyle.FillPattern != FillPattern.NoFill ? cstyle.FillForegroundColor : null,
                             Color = cstyle.Font.FontColor,

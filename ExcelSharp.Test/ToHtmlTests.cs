@@ -11,7 +11,7 @@ public class ToHtmlTests
     [Fact]
     public void Test1()
     {
-        var sheet = new MungSheet("Sheet1");
+        var sheet = new SpreadSheet("Sheet1");
         sheet[(0, 0)].Pipe(cell => { cell.Value = "00"; });
         sheet[(0, 1)].Pipe(cell => { cell.Value = "01"; });
         sheet[(0, 2)].Pipe(cell => { cell.Value = "02"; });
@@ -54,7 +54,7 @@ public class ToHtmlTests
     [Fact]
     public void Test2()
     {
-        var mainTitleStyle = new MungStyle
+        var mainTitleStyle = new SpreadStyle
         {
             HoriAlign = HoriAlign.Center,
             VertAlign = VertAlign.Middle,
@@ -68,7 +68,7 @@ public class ToHtmlTests
             BorderLeft = true,
             BorderRight = true,
         };
-        var titleStyle = new MungStyle
+        var titleStyle = new SpreadStyle
         {
             HoriAlign = HoriAlign.Center,
             VertAlign = VertAlign.Middle,
@@ -82,7 +82,7 @@ public class ToHtmlTests
             BorderLeft = true,
             BorderRight = true,
         };
-        var dateStyle = new MungStyle
+        var dateStyle = new SpreadStyle
         {
             HoriAlign = HoriAlign.Right,
             VertAlign = VertAlign.Middle,
@@ -91,7 +91,7 @@ public class ToHtmlTests
             Bold = true,
         };
 
-        var mungSheet = new MungSheet("Sheet1");
+        var mungSheet = new SpreadSheet("Sheet1");
         mungSheet["B2"].Pipe(cell =>
         {
             cell.Value = $"{new DateTime(2000, 1, 1):yyyy年MM月}";
@@ -139,13 +139,13 @@ public class ToHtmlTests
     [Fact]
     public void ThemeTest()
     {
-        var sheet = new MungSheet("Sheet1");
+        var sheet = new SpreadSheet("Sheet1");
         for (int row = 0; row < 6; row++)
         {
             for (int col = 0; col < 10; col++)
             {
                 sheet[(row, col)].Grid =
-                    new Hori(MungStyle.Default with
+                    new Hori(SpreadStyle.Default with
                     {
                         BackgroundColor = ExcelColor.Theme(row, col),
                     })
@@ -159,7 +159,7 @@ public class ToHtmlTests
         for (int col = 0; col < 10; col++)
         {
             sheet[(8, col)].Grid =
-                new Hori(MungStyle.Default with
+                new Hori(SpreadStyle.Default with
                 {
                     BackgroundColor = ExcelColor.Standard(0, col),
                 })

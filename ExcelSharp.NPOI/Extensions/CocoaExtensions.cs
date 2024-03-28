@@ -4,9 +4,9 @@ using System.ComponentModel;
 namespace ExcelSharp.NPOI
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class MungExtensions
+    public static class SpreadExtensions
     {
-        public static ExcelBook ToExcelBook(this IMungBook @this)
+        public static ExcelBook ToExcelBook(this ISpreadBook @this)
         {
             var book = new ExcelBook(ExcelVersion.Excel2007);
             foreach (var mungSheet in @this.Sheets)

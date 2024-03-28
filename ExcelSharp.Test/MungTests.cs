@@ -3,21 +3,21 @@ using Xunit;
 
 namespace ExcelSharp.Test;
 
-public class MungTests
+public class SpreadTests
 {
     [Fact]
     public void Test()
     {
-        var mungBook = new MungBook
+        var mungBook = new SpreadBook
         {
-            new MungSheet("Sheet1")
+            new SpreadSheet("Sheet1")
             {
                 new Vert("main", [
-                    MungStyle.Table with { BackgroundColor = new RgbaColor(0xcccccc) },
-                    MungStyle.Table with { BackgroundColor = new RgbaColor(0x999999) },
+                    SpreadStyle.Table with { BackgroundColor = new RgbaColor(0xcccccc) },
+                    SpreadStyle.Table with { BackgroundColor = new RgbaColor(0x999999) },
                 ])
                 {
-                    new Hori(MungStyle.Table with
+                    new Hori(SpreadStyle.Table with
                     {
                         BackgroundColor = new RgbaColor(0xcc66cc),
                     })
@@ -29,7 +29,7 @@ public class MungTests
                         },
                         new Vert
                         {
-                            new Hori(MungStyle.Table with
+                            new Hori(SpreadStyle.Table with
                             {
                                 BackgroundColor = new RgbaColor(0xcc66cc),
                                 Format = "#,##0.00"
@@ -65,8 +65,8 @@ public class MungTests
                     {
                         "A",
                         new Vert([
-                            MungStyle.Table with { BackgroundColor = new RgbaColor(0xff0000) },
-                            MungStyle.Table with { BackgroundColor = new RgbaColor(0x0000ff) },
+                            SpreadStyle.Table with { BackgroundColor = new RgbaColor(0xff0000) },
+                            SpreadStyle.Table with { BackgroundColor = new RgbaColor(0x0000ff) },
                         ])
                         {
                             "d",
