@@ -4,7 +4,7 @@ namespace ExcelSharp.NPOI;
 
 public interface ICFont
 {
-    string FontName { get; set; }
+    string? FontName { get; set; }
     short FontSize { get; set; }
 
     bool IsItalic { get; set; }

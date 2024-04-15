@@ -113,8 +113,8 @@ public class CStyleApplier : ICStyle
     public CStyleApplier Underline(FontUnderlineType value = FontUnderlineType.Single) { Font.Underline = value; return this; }
     public CStyleApplier TypeOffset(FontSuperScript value) { Font.TypeOffset = value; return this; }
 
-    public CStyleApplier SetFont(string fontName, short size) => SetFont(fontName, size, ExcelColor.Automatic);
-    public CStyleApplier SetFont(string fontName, short size, IRgbaColor color)
+    public CStyleApplier SetFont(string? fontName, short size) => SetFont(fontName, size, ExcelColor.Automatic);
+    public CStyleApplier SetFont(string? fontName, short size, IRgbaColor color)
     {
         Font.FontName = fontName;
         Font.FontSize = size;

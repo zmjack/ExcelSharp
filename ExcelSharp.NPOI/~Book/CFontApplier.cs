@@ -11,7 +11,7 @@ public class CFontApplier : ICFont
 
     internal static CFontApplier Create(Action<CFontApplier>? init) => new CFontApplier().Pipe(x => init?.Invoke(x));
 
-    public string FontName { get; set; } = "Calibri";
+    public string? FontName { get; set; } = "Calibri";
     public short FontSize { get; set; } = 11;
 
     public bool IsBold { get; set; } = false;

@@ -129,7 +129,7 @@ public class ToHtmlTests
 
         using (var area = sheet.BeginArea("E7"))
         {
-            sheet.ExtendPrintLine(mungSheet);
+            sheet.PrintSpreadSheet(mungSheet);
         }
         excel.SaveAs("D:\\tmp\\11.xlsx");
 

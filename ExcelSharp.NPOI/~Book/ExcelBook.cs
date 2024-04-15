@@ -12,7 +12,7 @@ namespace ExcelSharp.NPOI;
 public partial class ExcelBook
 {
     public IWorkbook MapedWorkbook { get; private set; }
-    public string FilePath { get; private set; }
+    public string? FilePath { get; private set; }
     public ExcelVersion Version { get; private set; }
 
     public string MediaType
@@ -43,7 +43,9 @@ public partial class ExcelBook
             throw new FileNotFoundException();
 
         using (var file = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
+        {
             MapedWorkbook = Open(file, version);
+        }
     }
 
     public ExcelBook(Stream stream, ExcelVersion version)
@@ -74,7 +76,7 @@ public partial class ExcelBook
         }
         else return find;
     }
-    public CStyleApplier CStyleApplier(Action<CStyleApplier> init) => NPOI.CStyleApplier.Create(init);
+    public static CStyleApplier CStyleApplier(Action<CStyleApplier> init) => NPOI.CStyleApplier.Create(init);
 
     public IEnumerable<IFont> Fonts => new IFont[NumberOfFonts].Let(i => GetFontAt((short)i));
     public IEnumerable<CFont> CFonts => Fonts.Select(x => new CFont(this, x));

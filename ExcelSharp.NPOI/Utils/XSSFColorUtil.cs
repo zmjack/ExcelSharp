@@ -11,7 +11,7 @@ public static class XSSFColorUtil
         else return new RgbaColor(bytes[0], bytes[1], bytes[2]);
     }
 
-    public static XSSFColor GetXSSFColor(IRgbaColor color)
+    public static XSSFColor? GetXSSFColor(IRgbaColor color)
     {
         if (color.Alpha == 0) return null;
         return new XSSFColor([color.Red, color.Green, color.Blue]);

@@ -22,7 +22,7 @@ public partial class SheetCell
     public static implicit operator bool(SheetCell @this) => @this.MapedCell.BooleanCellValue;
     public static implicit operator double(SheetCell @this) => @this.MapedCell.NumericCellValue;
     public static implicit operator DateTime(SheetCell @this) => @this.MapedCell.DateCellValue;
-    public static implicit operator string(SheetCell @this)
+    public static implicit operator string?(SheetCell @this)
     {
         if (@this.MapedCell.CellType == CellType.Formula)
             return @this.MapedCell.StringCellValue;
@@ -43,7 +43,7 @@ public partial class SheetCell
     {
         switch (value)
         {
-            case null: SetValue(null as string); break;
+            case null: SetValue((string?)null); break;
             case bool v: SetValue(v); break;
 
             case short v: SetValue(v); break;
@@ -66,7 +66,7 @@ public partial class SheetCell
                 if (v.DataFormat is not null) UpdateCStyle(x => x.DataFormat = v.DataFormat);
                 break;
 
-            case object v: String = v.ToString(); break;
+            case object v: String = v?.ToString(); break;
         }
     }
 
@@ -74,13 +74,13 @@ public partial class SheetCell
     public void SetValue(bool? value)
     {
         if (value.HasValue) SetValue(value.Value);
-        else MapedCell.SetCellValue((string)null);
+        else MapedCell.SetCellValue((string?)null);
     }
     public void SetValue(double value) => MapedCell.SetCellValue(value);
     public void SetValue(double? value)
     {
         if (value.HasValue) SetValue(value.Value);
-        else MapedCell.SetCellValue((string)null);
+        else MapedCell.SetCellValue((string?)null);
     }
     public void SetValue(DateTime value, string dataFormat = "yyyy/M/d")
     {
@@ -91,10 +91,10 @@ public partial class SheetCell
     public void SetValue(DateTime? value, string dataFormat = "yyyy/M/d")
     {
         if (value.HasValue) SetValue(value.Value, dataFormat);
-        else MapedCell.SetCellValue((string)null);
+        else MapedCell.SetCellValue((string?)null);
     }
     public void SetValue(IRichTextString value) => MapedCell.SetCellValue(value);
-    public void SetValue(string value)
+    public void SetValue(string? value)
     {
         if (value is null) MapedCell.SetCellValue(value);
         else
@@ -167,7 +167,7 @@ public partial class SheetCell
         get => MapedCell.RichStringCellValue;
         set => SetValue(value);
     }
-    public string String
+    public string? String
     {
         get => MapedCell.StringCellValue;
         set => SetValue(value);
@@ -186,6 +186,8 @@ public partial class SheetCell
     {
         get
         {
+            if (MergedRange is null) return false;
+
             return IsMergedCell && RowIndex == MergedRange.Start.Row && ColumnIndex == MergedRange.Start.Col;
         }
     }
@@ -194,7 +196,10 @@ public partial class SheetCell
     {
         get
         {
-            if (IsMergedCell) return MergedRange.End.Row - MergedRange.Start.Row + 1;
+            if (IsMergedCell)
+            {
+                return MergedRange!.End.Row - MergedRange.Start.Row + 1;
+            }
             else return 1;
         }
     }
@@ -203,22 +208,27 @@ public partial class SheetCell
     {
         get
         {
-            if (IsMergedCell) return MergedRange.End.Col - MergedRange.Start.Col + 1;
+            if (IsMergedCell)
+            {
+                return MergedRange!.End.Col - MergedRange.Start.Col + 1;
+            }
             else return 1;
         }
     }
 
-    public SheetRange MergedRange
+    public SheetRange? MergedRange
     {
         get
         {
             if (IsMergedCell)
+            {
                 return Sheet.MergedRanges.FirstOrDefault(x => x.IsInRange(this));
+            }
             else return null;
         }
     }
 
-    public override string ToString()
+    public override string? ToString()
     {
         return CellName;
     }

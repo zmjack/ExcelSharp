@@ -23,7 +23,7 @@ public class CFont : ICFont
 
     public short Index => Font.Index;
 
-    public string FontName
+    public string? FontName
     {
         get => Font.FontName;
         set => Font.FontName = value;

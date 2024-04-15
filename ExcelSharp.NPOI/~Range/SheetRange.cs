@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace ExcelSharp.NPOI;
 
-public class SheetRange : IEnumerable<SheetCell>, IStylizable
+public partial class SheetRange : IEnumerable<SheetCell>, IStylizable
 {
     public ExcelSheet Sheet { get; private set; }
     public Cursor Start { get; private set; }
@@ -39,8 +39,12 @@ public class SheetRange : IEnumerable<SheetCell>, IStylizable
     public void SetCellStyle(ICellStyle style)
     {
         for (int row = Start.Row; row <= End.Row; row++)
+        {
             for (int col = Start.Col; col <= End.Col; col++)
+            {
                 Sheet[(row, col)].SetCellStyle(style);
+            }
+        }
     }
     public void SetCStyle(CStyle style) => SetCellStyle(style.CellStyle);
     public void SetCStyle(Action<CStyleApplier> initApplier) => SetCellStyle(Sheet.Book.CStyle(initApplier).CellStyle);
@@ -104,7 +108,7 @@ public class SheetRange : IEnumerable<SheetCell>, IStylizable
     {
         var col = Start.Col + offsetCols[0];
 
-        string take = null;
+        string? take = null;
         int mergeStart = Start.Row;
 
         for (int takeRow = mergeStart; takeRow <= End.Row; takeRow++)
@@ -123,7 +127,7 @@ public class SheetRange : IEnumerable<SheetCell>, IStylizable
         if (End.Row > mergeStart) SmartMergeVertical(mergeStart, End.Row, col, offsetCols);
 
         //TODO: Remove identifier(type will be changed -> unchange)
-        var regex_matchId = new Regex(@"^\[\[.+?\]\](.*)$");
+        var regex_matchId = SmartMergeRegex();
         foreach (var colIndex in offsetCols)
         {
             foreach (var cell in Column(colIndex))
@@ -131,7 +135,7 @@ public class SheetRange : IEnumerable<SheetCell>, IStylizable
                 var value = cell.GetValue();
                 if (value is string && !(value as string).IsNullOrWhiteSpace())
                 {
-                    var match = regex_matchId.Match(value as string);
+                    var match = regex_matchId.Match((value as string)!);
                     if (match.Success)
                     {
                         if (double.TryParse(match.Groups[1].Value, out double dvalue))
@@ -145,14 +149,14 @@ public class SheetRange : IEnumerable<SheetCell>, IStylizable
 
     public void SmartColMerge()
     {
-        void InnerMerge(int row, int startCol, int endCol, string value)
+        void InnerMerge(int row, int startCol, int endCol, string? value)
         {
             value ??= "";
 
             if (endCol - startCol > 0)
                 new SheetRange(Sheet, (row, startCol), (row, endCol)).Merge();
 
-            var regex = new Regex(@"^\[\[.+?\]\](.*)$");
+            var regex = SmartMergeRegex();
             var match = regex.Match(value);
 
             if (match.Success)
@@ -171,7 +175,7 @@ public class SheetRange : IEnumerable<SheetCell>, IStylizable
 
         for (int row = Start.Row; row <= End.Row; row++)
         {
-            string take = null;
+            string? take = null;
             int startCol = Start.Col;
             int takeCol = startCol;
 
@@ -215,4 +219,6 @@ public class SheetRange : IEnumerable<SheetCell>, IStylizable
                 yield return new SheetCell(Sheet, Sheet[(row, col)]);
     }
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    [GeneratedRegex("^\\[\\[.+?\\]\\](.*)$")]
+    private static partial Regex SmartMergeRegex();
 }

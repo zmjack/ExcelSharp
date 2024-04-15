@@ -80,7 +80,13 @@ public partial class ExcelSheet
         if (recent is not null) recent.Update(start, end);
     }
 
-    public void ExtendPrintLine(ISpreadSheet sheet)
+    public void PrintSpreadSheet(ISpreadSheet sheet, Cursor cursor)
+    {
+        Cursor = cursor;
+        PrintSpreadSheet(sheet);
+    }
+
+    public void PrintSpreadSheet(ISpreadSheet sheet)
     {
         var cellsGroups = sheet.Rows.SelectMany(x => x.Cells).GroupBy(x => new { x.Style, x.Style?.Format });
 
@@ -229,7 +235,7 @@ public partial class ExcelSheet
                 var valueObj = values[row, col];
                 if (valueObj is null) continue;
 
-                if (valueObj is string && (valueObj as string).StartsWith("="))
+                if ((valueObj as string)?.StartsWith("=") ?? false)
                 {
                     //TODO: Analysis formula in same row
                     this[(startRow + row, startCol + col)].SetValue(valueObj);
@@ -307,9 +313,9 @@ public partial class ExcelSheet
         return new SheetRange(this, range1.Start, range2.End);
     }
 
-    private static object GetCellValue(SheetCell cell, Type type)
+    private static object? GetCellValue(SheetCell cell, Type type)
     {
-        if (cell.IsMergedCell && cell.MergedRange.Cell.CellName != cell.CellName) return GetCellValue(cell.MergedRange.Cell, type);
+        if (cell.IsMergedCell && cell.MergedRange!.Cell.CellName != cell.CellName) return GetCellValue(cell.MergedRange.Cell, type);
 
         try
         {
@@ -469,10 +475,10 @@ public partial class ExcelSheet
             foreach (var (colIndex, colNames) in colList.Pairs())
             {
                 var cell = this[(start.Row + rowIndex, start.Col + colIndex)];
-                var cellType = cell.IsMergedCell ? cell.MergedRange.Cell.CellType : cell.CellType;
+                var cellType = cell.IsMergedCell ? cell.MergedRange!.Cell.CellType : cell.CellType;
                 if (cellType != CellType.Blank)
                 {
-                    var value = (T)GetCellValue(cell, type);
+                    var value = (T?)GetCellValue(cell, type);
                     list.Add(new Model2D<T>
                     {
                         RowNames = rowNames,
@@ -501,7 +507,7 @@ public partial class ExcelSheet
         var propNames = includes is not null ? includes.Body switch
         {
             MemberExpression exp => [exp.Member.Name],
-            NewExpression exp => exp.Members.Select(x => x.Name).ToArray(),
+            NewExpression exp => exp.Members!.Select(x => x.Name).ToArray(),
             _ => throw new ArgumentException("Any element must be MemberExpression or NewExpression.", nameof(includes)),
         } : [];
 
@@ -514,7 +520,7 @@ public partial class ExcelSheet
         var propNames = includes is not null ? includes.Body switch
         {
             MemberExpression exp => [exp.Member.Name],
-            NewExpression exp => exp.Members.Select(x => x.Name).ToArray(),
+            NewExpression exp => exp.Members!.Select(x => x.Name).ToArray(),
             _ => throw new ArgumentException("Any element must be MemberExpression or NewExpression.", nameof(includes)),
         } : [];
 
@@ -566,7 +572,7 @@ public partial class ExcelSheet
             for (int i = 0; i < props.Length; i++)
             {
                 var cell = this[(row + rowOffset, col + i)];
-                var cellType = cell.IsMergedCell ? cell.MergedRange.Cell.CellType : cell.CellType;
+                var cellType = cell.IsMergedCell ? cell.MergedRange!.Cell.CellType : cell.CellType;
                 if (cellType != CellType.Blank)
                 {
                     @break = false;
@@ -587,7 +593,7 @@ public partial class ExcelSheet
                     if (fetchAttribute is null) continue;
 
                     var fetchLength = fetchAttribute.Length;
-                    var elementType = propertyType.GetElementType();
+                    var elementType = propertyType.GetElementType()!;
                     var array = Array.CreateInstance(elementType, fetchLength);
 
                     for (var i = 0; i < fetchLength; i++)
