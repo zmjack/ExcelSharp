@@ -5,7 +5,7 @@
     <Authors>zmjack</Authors>
     <Owners>zmjack</Owners>
     <Company>nstandard.net</Company>
-    <Version>0.13.0</Version>
+    <Version>0.14.0</Version>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/zmjack/ExcelSharp</PackageProjectUrl>
@@ -21,7 +21,7 @@
     <PackageReference Include="DotNetCore.NPOI" Version="1.2.3" />
     <PackageReference Include="NStandard" Version="0.63.1" />
     <PackageReference Include="SkiaSharp" Version="2.88.6" />
-    <PackageReference Include="Spread" Version="0.0.5" />
+    <PackageReference Include="Spread" Version="0.0.6" />
   </ItemGroup>
 
   <Import Project="..\ExcelSharp.Shared\ExcelSharp.Shared.projitems" Label="Shared" />
