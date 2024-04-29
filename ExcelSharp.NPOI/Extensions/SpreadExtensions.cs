@@ -9,7 +9,7 @@ public static class SpreadExtensions
     public static ExcelBook ToExcelBook(this ISpreadBook @this)
     {
         var book = new ExcelBook(ExcelVersion.Excel2007);
-        foreach (var spsheet in @this.Sheets.Values)
+        foreach (var spsheet in @this.Sheets)
         {
             var sheet = book.CreateSheet(spsheet.Name);
             sheet.PrintSpreadSheet(spsheet);
@@ -21,7 +21,7 @@ public static class SpreadExtensions
     public static ExcelBook ToExcelBook(this ISpreadBook @this, Cursor cursor)
     {
         var book = new ExcelBook(ExcelVersion.Excel2007);
-        foreach (var spsheet in @this.Sheets.Values)
+        foreach (var spsheet in @this.Sheets)
         {
             var sheet = book.CreateSheet(spsheet.Name);
             sheet.PrintSpreadSheet(spsheet, cursor);
