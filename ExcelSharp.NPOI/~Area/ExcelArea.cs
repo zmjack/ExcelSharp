@@ -44,7 +44,7 @@ public class ExcelArea : Scope<ExcelArea>
         for (int row = _start.Row; row <= _end.Row; row++)
         {
             var rowOffset = row - _start.Row;
-            var uniRow = uniTable.Rows[rowOffset];
+            var uniRow = uniTable[rowOffset];
 
             for (int col = _start.Col; col <= _end.Col; col++)
             {

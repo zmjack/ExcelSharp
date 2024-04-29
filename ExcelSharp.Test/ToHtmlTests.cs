@@ -36,12 +36,9 @@ public class ToHtmlTests
         {
             if (cell.Value is not null)
             {
-                cell.Style = cell.Style with
+                cell.Style = SpreadStyle.Default with
                 {
-                    BorderTop = true,
-                    BorderBottom = true,
-                    BorderLeft = true,
-                    BorderRight = true,
+                    Border = true,
                     HoriAlign = HoriAlign.Center,
                 };
             }
@@ -56,39 +53,30 @@ public class ToHtmlTests
     {
         var mainTitleStyle = new SpreadStyle
         {
-            HoriAlign = HoriAlign.Center,
-            VertAlign = VertAlign.Middle,
             BackgroundColor = new RgbaColor(0x538DE7),
             FontFamily = "Microsoft YaHei",
             FontSize = 24,
             Color = new RgbaColor(0xffffff),
             Bold = true,
-            BorderTop = true,
-            BorderBottom = true,
-            BorderLeft = true,
-            BorderRight = true,
+            Border = true,
+            Center = true,
         };
         var titleStyle = new SpreadStyle
         {
-            HoriAlign = HoriAlign.Center,
-            VertAlign = VertAlign.Middle,
             BackgroundColor = new RgbaColor(0x538DE7),
             FontFamily = "Microsoft YaHei",
             FontSize = 12,
             Color = new RgbaColor(0xffffff),
             Bold = true,
-            BorderTop = true,
-            BorderBottom = true,
-            BorderLeft = true,
-            BorderRight = true,
+            Border = true,
+            Center = true,
         };
         var dateStyle = new SpreadStyle
         {
-            HoriAlign = HoriAlign.Right,
-            VertAlign = VertAlign.Middle,
             FontFamily = "Microsoft YaHei",
             FontSize = 9,
             Bold = true,
+            Center = true,
         };
 
         var mungSheet = new SpreadSheet("Sheet1");
