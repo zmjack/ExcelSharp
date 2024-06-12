@@ -129,8 +129,7 @@ public partial class ExcelBook
 
     public void Save()
     {
-        if (FilePath is null)
-            throw new FileNotFoundException("Has no specified file path.");
+        if (FilePath is null) throw new FileNotFoundException("Has no specified file path.");
 
         using var file = new FileStream(FilePath, FileMode.Create, FileAccess.Write);
         Write(file);

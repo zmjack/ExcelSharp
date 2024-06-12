@@ -1,4 +1,5 @@
 ﻿using ExcelSharp.NPOI;
+using System;
 using Xunit;
 
 namespace ExcelSharp.Test;
@@ -8,18 +9,25 @@ public class SpreadTests
     [Fact]
     public void Test()
     {
-        var mungBook = new SpreadBook
+        var book = new SpreadBook
         {
             new SpreadSheet("Sheet1")
             {
-                new Vert("main", [
-                    SpreadStyle.Table with { BackgroundColor = new RgbaColor(0xcccccc) },
-                    SpreadStyle.Table with { BackgroundColor = new RgbaColor(0x999999) },
+                new Vert("main",
+                [
+                    SpreadStyle.Table with
+                    {
+                        BackgroundColor = ExcelColor.Theme(1, 7),
+                    },
+                    SpreadStyle.Table with
+                    {
+                        BackgroundColor = ExcelColor.Theme(0, 2),
+                    },
                 ])
                 {
                     new Hori(SpreadStyle.Table with
                     {
-                        BackgroundColor = new RgbaColor(0xcc66cc),
+                        BackgroundColor = ExcelColor.Theme(2, 5),
                     })
                     {
                         new Vert
@@ -31,7 +39,7 @@ public class SpreadTests
                         {
                             new Hori(SpreadStyle.Table with
                             {
-                                BackgroundColor = new RgbaColor(0xcc66cc),
+                                BackgroundColor = ExcelColor.Theme(2, 5),
                                 Format = "#,##0.00"
                             })
                             {
@@ -41,9 +49,9 @@ public class SpreadTests
                         },
                         new Vert
                         {
-                            "e",
+                            "d",
                         },
-                        "f",
+                        "e",
                         new Vert
                         {
                             "11",
@@ -52,31 +60,39 @@ public class SpreadTests
                             "44",
                         },
                     },
-                    new Hori()
+                    new Hori
                     {
                         "A",
                         new Vert
                         {
-                            "d",
-                            "e",
+                            "f",
+                            "g",
                         },
                     },
-                    new Hori()
+                    new Hori
                     {
-                        "A",
-                        new Vert([
-                            SpreadStyle.Table with { BackgroundColor = new RgbaColor(0xff0000) },
-                            SpreadStyle.Table with { BackgroundColor = new RgbaColor(0x0000ff) },
+                        "B",
+                        new Vert(
+                        [
+                            SpreadStyle.Table with
+                            {
+                                BackgroundColor = ExcelColor.Theme(2, 9),
+                            },
+                            SpreadStyle.Table with
+                            {
+                                BackgroundColor = ExcelColor.Theme(2, 8),
+                            },
                         ])
                         {
-                            "d",
-                            "e",
+                            "h",
+                            "i",
                         },
                     },
                 }
             }
         };
-        var book = mungBook.ToExcelBook();
+        var ebook = book.ToExcelBook();
+        ebook.SaveAs($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\excelsharp.xlsx");
     }
 
 }

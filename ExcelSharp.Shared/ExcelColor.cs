@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ExcelSharp;
@@ -141,6 +142,12 @@ public static class ExcelColor
 
     public static RgbaColor Theme(int row, int col)
     {
+        if (row < 0) throw new ArgumentOutOfRangeException(nameof(row), "Row index can not be less than 0.");
+        if (row > 6) throw new ArgumentOutOfRangeException(nameof(row), "Row index can not be greater than 6.");
+
+        if (col < 0) throw new ArgumentOutOfRangeException(nameof(row), "Column index can not be less than 0.");
+        if (col > 9) throw new ArgumentOutOfRangeException(nameof(row), "Column index can not be greater than 9.");
+
         return _themeColors[row, col];
     }
 
@@ -154,6 +161,13 @@ public static class ExcelColor
 
     public static RgbaColor Standard(int row, int col)
     {
+        if (row < 0) throw new ArgumentOutOfRangeException(nameof(row), "Row index can not be less than 0.");
+        if (row > 0) throw new ArgumentOutOfRangeException(nameof(row), "Row index can not be greater than 0.");
+
+        if (col < 0) throw new ArgumentOutOfRangeException(nameof(row), "Column index can not be less than 0.");
+        if (col > 9) throw new ArgumentOutOfRangeException(nameof(row), "Column index can not be greater than 9.");
+
         return _standardColors[row, col];
     }
+
 }

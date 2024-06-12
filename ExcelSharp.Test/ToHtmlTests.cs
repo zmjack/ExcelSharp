@@ -49,82 +49,6 @@ public class ToHtmlTests
     }
 
     [Fact]
-    public void Test2()
-    {
-        var mainTitleStyle = new SpreadStyle
-        {
-            BackgroundColor = new RgbaColor(0x538DE7),
-            FontFamily = "Microsoft YaHei",
-            FontSize = 24,
-            Color = new RgbaColor(0xffffff),
-            Bold = true,
-            Border = true,
-            Center = true,
-        };
-        var titleStyle = new SpreadStyle
-        {
-            BackgroundColor = new RgbaColor(0x538DE7),
-            FontFamily = "Microsoft YaHei",
-            FontSize = 12,
-            Color = new RgbaColor(0xffffff),
-            Bold = true,
-            Border = true,
-            Center = true,
-        };
-        var dateStyle = new SpreadStyle
-        {
-            FontFamily = "Microsoft YaHei",
-            FontSize = 9,
-            Bold = true,
-            Center = true,
-        };
-
-        var mungSheet = new SpreadSheet("Sheet1");
-        mungSheet["B2"].Pipe(cell =>
-        {
-            cell.Value = $"{new DateTime(2000, 1, 1):yyyy年MM月}";
-            cell.Style = mainTitleStyle with { };
-        });
-
-        mungSheet["B5"].Pipe(cell =>
-        {
-            cell.Value = "生产月份";
-            cell.Style = titleStyle with { };
-        });
-        mungSheet["B5", "D5"].Merge();
-        mungSheet["B6"].Pipe(cell =>
-        {
-            cell.Value = "货龄";
-            cell.Style = titleStyle with { };
-        });
-        mungSheet["B6", "D6"].Merge();
-        mungSheet["B7"].Pipe(cell =>
-        {
-            cell.Value = "合计数量";
-            cell.Style = titleStyle with { };
-        });
-        mungSheet["B7", "D7"].Merge();
-        mungSheet["B8"].Pipe(cell =>
-        {
-            cell.Value = "合计占比（%）";
-            cell.Style = titleStyle with { };
-        });
-        mungSheet["B8", "D8"].Merge();
-
-        var excel = new ExcelBook(ExcelVersion.Excel2007);
-        excel.CreateSheet("sheet1");
-        var sheet = excel[0];
-
-        using (var area = sheet.BeginArea("E7"))
-        {
-            sheet.PrintSpreadSheet(mungSheet);
-        }
-        excel.SaveAs("D:\\tmp\\11.xlsx");
-
-        var html = new HtmlTable(mungSheet).ToHtml();
-    }
-
-    [Fact]
     public void ThemeTest()
     {
         var sheet = new SpreadSheet("Sheet1");
@@ -143,7 +67,7 @@ public class ToHtmlTests
             }
         }
 
-        sheet[(7, 0)].Value = "标准色";
+        sheet[(7, 0)].Value = "Standard";
         for (int col = 0; col < 10; col++)
         {
             sheet[(8, col)].Grid =
