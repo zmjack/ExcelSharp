@@ -2,5 +2,5 @@
 
 public interface IFetchModel<TValue>
 {
-    public TValue? Value { get; set; }
+    public TValue Value { get; set; }
 }
