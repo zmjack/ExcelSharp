@@ -1,7 +1,5 @@
-﻿using ExcelSharp.NPOI;
-using NPOI.SS.Formula.Functions;
+﻿using NPOI.SS.Formula.Functions;
 using NStandard;
-using System;
 using Xunit;
 
 namespace ExcelSharp.Test;

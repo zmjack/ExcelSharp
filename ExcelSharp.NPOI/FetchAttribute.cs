@@ -19,3 +19,15 @@ public class DataColumnAttribute(params string[] names) : Attribute
 {
     public string[] Names { get; set; } = names;
 }
+
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+public class RowHeaderAttribute(int index) : Attribute
+{
+    public int Index { get; set; } = index;
+}
+
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+public class ColumnHeaderAttribute(int index) : Attribute
+{
+    public int Index { get; set; } = index;
+}

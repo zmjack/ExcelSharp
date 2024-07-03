@@ -405,12 +405,17 @@ public partial class ExcelSheet
         return Fetch<TModel>((startCell.Row + 1, startCell.Col), [.. propNames]);
     }
 
-    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(Cursor archer) where T : new()
+    public IReadOnlyCollection<Model2D<THeader, TValue>> Fetch2D<THeader, TValue>(Cursor archer)
+        where THeader : new()
+        where TValue : new()
     {
         var cell = this[archer];
-        return Fetch2D<T>(archer, (archer.Row + cell.RowSpan - 1, archer.Col + cell.ColSpan - 1));
+        return Fetch2D<THeader, TValue>(archer, (archer.Row + cell.RowSpan - 1, archer.Col + cell.ColSpan - 1));
     }
-    public IReadOnlyCollection<Model2D<T>> Fetch2D<T>(Cursor archerStart, Cursor archerEnd) where T : new()
+
+    public IReadOnlyCollection<Model2D<THeader, TValue>> Fetch2D<THeader, TValue>(Cursor archerStart, Cursor archerEnd)
+        where THeader : new()
+        where TValue : new()
     {
         var archerRowLength = archerEnd.Row - archerStart.Row + 1;
         var archerColLength = archerEnd.Col - archerStart.Col + 1;
@@ -452,6 +457,7 @@ public partial class ExcelSheet
                 var cell = this[(archerStart.Row + row, archerStart.Col + i)];
                 var value = GetCellValue(cell, typeof(string));
                 var svalue = value?.ToString().Unique() ?? string.Empty;
+
                 if (!svalue.IsNullOrWhiteSpace())
                 {
                     valid = true;
@@ -467,36 +473,42 @@ public partial class ExcelSheet
             else break;
         }
 
-        var list = new List<Model2D<T>>();
+        var list = new List<Model2D<THeader, TValue>>();
         var start = new Cursor(archerStart.Row + archerRowLength, archerStart.Col + archerColLength);
-        var type = typeof(T);
-        foreach (var (rowIndex, rowNames) in rowList.Pairs())
+        var type = typeof(TValue);
+
+        using (var scope = new Model2DScope<THeader>())
         {
-            foreach (var (colIndex, colNames) in colList.Pairs())
+            foreach (var (rowIndex, rowNames) in rowList.Pairs())
             {
-                var cell = this[(start.Row + rowIndex, start.Col + colIndex)];
-                var cellType = cell.IsMergedCell ? cell.MergedRange!.Cell.CellType : cell.CellType;
-                if (cellType != CellType.Blank)
+                foreach (var (colIndex, colNames) in colList.Pairs())
                 {
-                    var value = (T?)GetCellValue(cell, type);
-                    list.Add(new Model2D<T>
+                    var header = scope.GetHeader(rowNames, colNames)!;
+
+                    var cell = this[(start.Row + rowIndex, start.Col + colIndex)];
+                    var cellType = cell.IsMergedCell ? cell.MergedRange!.Cell.CellType : cell.CellType;
+
+                    if (cellType != CellType.Blank)
                     {
-                        RowNames = rowNames,
-                        ColNames = colNames,
-                        Value = value,
-                    });
-                }
-                else
-                {
-                    list.Add(new Model2D<T>
+                        var value = (TValue?)GetCellValue(cell, type);
+                        list.Add(new()
+                        {
+                            Header = header,
+                            Value = value,
+                        });
+                    }
+                    else
                     {
-                        RowNames = rowNames,
-                        ColNames = colNames,
-                        Value = default,
-                    });
+                        list.Add(new()
+                        {
+                            Header = header,
+                            Value = default,
+                        });
+                    }
                 }
             }
         }
+
 
         return list;
     }

@@ -9,6 +9,42 @@ namespace ExcelSharp.Test;
 
 public class FetchTests
 {
+    public class Header
+    {
+        [RowHeader(0)]
+        public string Material { get; set; }
+
+        [ColumnHeader(0)]
+        public string Product { get; set; }
+    }
+
+    public class Header2
+    {
+        [RowHeader(1)]
+        public string Material { get; set; }
+
+        [RowHeader(0)]
+        public string MaterialLevel { get; set; }
+
+        [ColumnHeader(0)]
+        public string Product { get; set; }
+
+        [ColumnHeader(1)]
+        public string ProductLevel { get; set; }
+    }
+
+    public class Header3
+    {
+        [RowHeader(1)]
+        public string Material { get; set; }
+
+        [RowHeader(0)]
+        public string MaterialLevel { get; set; }
+
+        [ColumnHeader(0)]
+        public string Product { get; set; }
+    }
+
     [Fact]
     public void DateFetchTest_SheetColumnAttribute()
     {
@@ -33,17 +69,17 @@ public class FetchTests
 
         {
             var sheet = book.GetSheet("2D");
-            var models = sheet.Fetch2D<double?>("A1");
+            var models = sheet.Fetch2D<Header, double?>("A1");
             Assert.Equal(21, models.Sum(x => x.Value));
         }
         {
             var sheet = book.GetSheet("2D");
-            var models = sheet.Fetch2D<double?>("A6");
+            var models = sheet.Fetch2D<Header2, double?>("A6");
             Assert.Equal(21, models.Sum(x => x.Value));
         }
         {
             var sheet = book.GetSheet("2D");
-            var models = sheet.Fetch2D<double?>("A12", "B12");
+            var models = sheet.Fetch2D<Header3, double?>("A12", "B12");
             Assert.Equal(21, models.Sum(x => x.Value));
         }
     }
