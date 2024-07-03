@@ -1,34 +1,25 @@
-﻿using NStandard;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace ExcelSharp.NPOI;
 
-[DebuggerDisplay(@"{Header}: {Value}")]
-public class Model2D<THeader, TValue> where THeader : new()
+internal class HeaderProvider<TModel, TValue> where TModel : IFetchModel<TValue>, new()
 {
-    public required THeader Header { get; set; }
-    public required TValue? Value { get; set; }
-}
+    public delegate TModel GetHeaderDelagate(string[] rowNames, string[] colNames);
+    public GetHeaderDelagate GetModel { get; }
 
-internal class Model2DScope<THeader> : Scope<Model2DScope<THeader>> where THeader : new()
-{
-    public delegate THeader GetHeaderDelagate(string[] rowNames, string[] colNames);
-    public GetHeaderDelagate GetHeader { get; set; }
-
-    public Model2DScope()
+    public HeaderProvider()
     {
         var rowNames = Expression.Parameter(typeof(string[]));
         var colNames = Expression.Parameter(typeof(string[]));
 
         var codes = new List<Expression>();
-        var header = Expression.Variable(typeof(THeader));
+        var header = Expression.Variable(typeof(TModel));
 
-        codes.Add(Expression.Assign(header, Expression.New(typeof(THeader).GetConstructor([])!)));
+        codes.Add(Expression.Assign(header, Expression.New(typeof(TModel).GetConstructor([])!)));
 
-        var props = typeof(THeader).GetProperties();
+        var props = typeof(TModel).GetProperties();
         foreach (var prop in props)
         {
             var row = prop.GetCustomAttribute<RowHeaderAttribute>();
@@ -71,6 +62,6 @@ internal class Model2DScope<THeader> : Scope<Model2DScope<THeader>> where THeade
 
         var body = Expression.Block([header], codes);
         var lambda = Expression.Lambda<GetHeaderDelagate>(body, [rowNames, colNames]);
-        GetHeader = lambda.Compile();
+        GetModel = lambda.Compile();
     }
 }

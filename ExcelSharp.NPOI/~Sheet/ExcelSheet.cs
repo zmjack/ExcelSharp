@@ -1,4 +1,5 @@
 ﻿using ExcelSharp.NPOI.Utils;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NStandard;
 using SkiaSharp;
@@ -405,17 +406,15 @@ public partial class ExcelSheet
         return Fetch<TModel>((startCell.Row + 1, startCell.Col), [.. propNames]);
     }
 
-    public IReadOnlyCollection<Model2D<THeader, TValue>> Fetch2D<THeader, TValue>(Cursor archer)
-        where THeader : new()
-        where TValue : new()
+    public IReadOnlyCollection<TModel> Fetch2D<TModel, TValue>(Cursor archer)
+        where TModel : IFetchModel<TValue>, new()
     {
         var cell = this[archer];
-        return Fetch2D<THeader, TValue>(archer, (archer.Row + cell.RowSpan - 1, archer.Col + cell.ColSpan - 1));
+        return Fetch2D<TModel, TValue>(archer, (archer.Row + cell.RowSpan - 1, archer.Col + cell.ColSpan - 1));
     }
 
-    public IReadOnlyCollection<Model2D<THeader, TValue>> Fetch2D<THeader, TValue>(Cursor archerStart, Cursor archerEnd)
-        where THeader : new()
-        where TValue : new()
+    public IReadOnlyCollection<TModel> Fetch2D<TModel, TValue>(Cursor archerStart, Cursor archerEnd)
+        where TModel : IFetchModel<TValue>, new()
     {
         var archerRowLength = archerEnd.Row - archerStart.Row + 1;
         var archerColLength = archerEnd.Col - archerStart.Col + 1;
@@ -473,44 +472,32 @@ public partial class ExcelSheet
             else break;
         }
 
-        var list = new List<Model2D<THeader, TValue>>();
+        var models = new List<TModel>();
         var start = new Cursor(archerStart.Row + archerRowLength, archerStart.Col + archerColLength);
         var type = typeof(TValue);
 
-        using (var scope = new Model2DScope<THeader>())
+        var provider = new HeaderProvider<TModel, TValue>();
+
+        foreach (var (rowIndex, rowNames) in rowList.Pairs())
         {
-            foreach (var (rowIndex, rowNames) in rowList.Pairs())
+            foreach (var (colIndex, colNames) in colList.Pairs())
             {
-                foreach (var (colIndex, colNames) in colList.Pairs())
+                var model = provider.GetModel(rowNames, colNames)!;
+
+                var cell = this[(start.Row + rowIndex, start.Col + colIndex)];
+                var cellType = cell.IsMergedCell ? cell.MergedRange!.Cell.CellType : cell.CellType;
+
+                if (cellType != CellType.Blank)
                 {
-                    var header = scope.GetHeader(rowNames, colNames)!;
-
-                    var cell = this[(start.Row + rowIndex, start.Col + colIndex)];
-                    var cellType = cell.IsMergedCell ? cell.MergedRange!.Cell.CellType : cell.CellType;
-
-                    if (cellType != CellType.Blank)
-                    {
-                        var value = (TValue?)GetCellValue(cell, type);
-                        list.Add(new()
-                        {
-                            Header = header,
-                            Value = value,
-                        });
-                    }
-                    else
-                    {
-                        list.Add(new()
-                        {
-                            Header = header,
-                            Value = default,
-                        });
-                    }
+                    var value = (TValue?)GetCellValue(cell, type);
+                    model.Value = value;
                 }
+
+                models.Add(model);
             }
         }
 
-
-        return list;
+        return models;
     }
 
     public TModel[] Fetch<TModel>(Cursor startCell, Expression<Func<TModel, object>> includes, Predicate<int>? rowSelector = null)

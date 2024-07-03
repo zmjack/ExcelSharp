@@ -2,6 +2,7 @@
 using ExcelSharp.Test.Models;
 using NStandard;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using Xunit;
 
@@ -9,21 +10,25 @@ namespace ExcelSharp.Test;
 
 public class FetchTests
 {
-    public class Header
+    [DebuggerDisplay("{Value}")]
+    public class Model : IFetchModel<double?>
     {
         [RowHeader(0)]
         public string Material { get; set; }
 
         [ColumnHeader(0)]
         public string Product { get; set; }
+
+        public double? Value { get; set; }
     }
 
-    public class Header2
+    [DebuggerDisplay("{Value}")]
+    public class Model2 : IFetchModel<double?>
     {
-        [RowHeader(1)]
+        [RowHeader(0)]
         public string Material { get; set; }
 
-        [RowHeader(0)]
+        [RowHeader(1)]
         public string MaterialLevel { get; set; }
 
         [ColumnHeader(0)]
@@ -31,18 +36,23 @@ public class FetchTests
 
         [ColumnHeader(1)]
         public string ProductLevel { get; set; }
+
+        public double? Value { get; set; }
     }
 
-    public class Header3
+    [DebuggerDisplay("{Value}")]
+    public class Model3 : IFetchModel<double?>
     {
-        [RowHeader(1)]
+        [RowHeader(0)]
         public string Material { get; set; }
 
-        [RowHeader(0)]
+        [RowHeader(1)]
         public string MaterialLevel { get; set; }
 
         [ColumnHeader(0)]
         public string Product { get; set; }
+
+        public double? Value { get; set; }
     }
 
     [Fact]
@@ -69,18 +79,33 @@ public class FetchTests
 
         {
             var sheet = book.GetSheet("2D");
-            var models = sheet.Fetch2D<Header, double?>("A1");
+            var models = sheet.Fetch2D<Model, double?>("A1");
             Assert.Equal(21, models.Sum(x => x.Value));
+
+            var model = models.First(x => x.Value == 2);
+            Assert.Equal("Material 2", model.Material);
+            Assert.Equal("Product B", model.Product);
         }
         {
             var sheet = book.GetSheet("2D");
-            var models = sheet.Fetch2D<Header2, double?>("A6");
+            var models = sheet.Fetch2D<Model2, double?>("A6");
             Assert.Equal(21, models.Sum(x => x.Value));
+
+            var model = models.First(x => x.Value == 6);
+            Assert.Equal("Material 3", model.Material);
+            Assert.Equal("Product B", model.Product);
+            Assert.Equal("B", model.MaterialLevel);
+            Assert.Equal("A", model.ProductLevel);
         }
         {
             var sheet = book.GetSheet("2D");
-            var models = sheet.Fetch2D<Header3, double?>("A12", "B12");
+            var models = sheet.Fetch2D<Model3, double?>("A12", "B12");
             Assert.Equal(21, models.Sum(x => x.Value));
+
+            var model = models.First(x => x.Value == 2);
+            Assert.Equal("Product B", model.Product);
+            Assert.Equal("Material 2", model.Material);
+            Assert.Equal("A", model.MaterialLevel);
         }
     }
 
