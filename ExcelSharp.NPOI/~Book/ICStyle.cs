@@ -12,26 +12,26 @@ public interface ICStyle
 
     #region Border
     BorderStyle BorderLeft { get; set; }
-    IRgbaColor LeftBorderColor { get; set; }
+    RgbaColor LeftBorderColor { get; set; }
 
     BorderStyle BorderRight { get; set; }
-    IRgbaColor RightBorderColor { get; set; }
+    RgbaColor RightBorderColor { get; set; }
 
     BorderStyle BorderTop { get; set; }
-    IRgbaColor TopBorderColor { get; set; }
+    RgbaColor TopBorderColor { get; set; }
 
     BorderStyle BorderBottom { get; set; }
-    IRgbaColor BottomBorderColor { get; set; }
+    RgbaColor BottomBorderColor { get; set; }
 
     BorderStyle BorderDiagonalLineStyle { get; set; }
-    IRgbaColor BorderDiagonalColor { get; set; }
+    RgbaColor BorderDiagonalColor { get; set; }
     BorderDiagonal BorderDiagonal { get; set; }
     #endregion
 
     #region Fill
     FillPattern FillPattern { get; set; }
-    IRgbaColor FillBackgroundColor { get; set; }
-    IRgbaColor FillForegroundColor { get; set; }
+    RgbaColor FillBackgroundColor { get; set; }
+    RgbaColor FillForegroundColor { get; set; }
     #endregion
 
     #region Font

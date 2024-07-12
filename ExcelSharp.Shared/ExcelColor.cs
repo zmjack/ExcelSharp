@@ -8,56 +8,56 @@ public static class ExcelColor
 {
     public static readonly short AutomaticIndex = 64;
 
-    public static readonly IRgbaColor Black = new RgbaColor(0xff000000);
-    public static readonly IRgbaColor White = new RgbaColor(0xffffffff);
-    public static readonly IRgbaColor Red = new RgbaColor(0xffff0000);
-    public static readonly IRgbaColor BrightGreen = new RgbaColor(0xff00ff00);
-    public static readonly IRgbaColor Blue = new RgbaColor(0xff0000ff);
-    public static readonly IRgbaColor Yellow = new RgbaColor(0xffffff00);
-    public static readonly IRgbaColor Pink = new RgbaColor(0xffff00ff);
-    public static readonly IRgbaColor Turquoise = new RgbaColor(0xff00ffff);
-    public static readonly IRgbaColor DarkRed = new RgbaColor(0xff800000);
-    public static readonly IRgbaColor Green = new RgbaColor(0xff008000);
-    public static readonly IRgbaColor DarkBlue = new RgbaColor(0xff000080);
-    public static readonly IRgbaColor DarkYellow = new RgbaColor(0xff808000);
-    public static readonly IRgbaColor Violet = new RgbaColor(0xff800080);
-    public static readonly IRgbaColor Teal = new RgbaColor(0xff008080);
-    public static readonly IRgbaColor Grey25Percent = new RgbaColor(0xffc0c0c0);
-    public static readonly IRgbaColor Grey50Percent = new RgbaColor(0xff808080);
-    public static readonly IRgbaColor CornflowerBlue = new RgbaColor(0xff9999ff);
-    public static readonly IRgbaColor Maroon = new RgbaColor(0xff7f0000);
-    public static readonly IRgbaColor LemonChiffon = new RgbaColor(0xffffffcc);
-    public static readonly IRgbaColor Orchid = new RgbaColor(0xff660066);
-    public static readonly IRgbaColor Coral = new RgbaColor(0xffff8080);
-    public static readonly IRgbaColor RoyalBlue = new RgbaColor(0xff0066cc);
-    public static readonly IRgbaColor LightCornflowerBlue = new RgbaColor(0xffccccff);
-    public static readonly IRgbaColor SkyBlue = new RgbaColor(0xff00ccff);
-    public static readonly IRgbaColor LightTurquoise = new RgbaColor(0xffccffff);
-    public static readonly IRgbaColor LightGreen = new RgbaColor(0xffccffcc);
-    public static readonly IRgbaColor LightYellow = new RgbaColor(0xffffff99);
-    public static readonly IRgbaColor PaleBlue = new RgbaColor(0xff99ccff);
-    public static readonly IRgbaColor Rose = new RgbaColor(0xffff99cc);
-    public static readonly IRgbaColor Lavender = new RgbaColor(0xffcc99ff);
-    public static readonly IRgbaColor Tan = new RgbaColor(0xffffcc99);
-    public static readonly IRgbaColor LightBlue = new RgbaColor(0xff3366ff);
-    public static readonly IRgbaColor Aqua = new RgbaColor(0xff33cccc);
-    public static readonly IRgbaColor Lime = new RgbaColor(0xff99cc00);
-    public static readonly IRgbaColor Gold = new RgbaColor(0xffffcc00);
-    public static readonly IRgbaColor LightOrange = new RgbaColor(0xffff9900);
-    public static readonly IRgbaColor Orange = new RgbaColor(0xffff6600);
-    public static readonly IRgbaColor BlueGrey = new RgbaColor(0xff666699);
-    public static readonly IRgbaColor Grey40Percent = new RgbaColor(0xff969696);
-    public static readonly IRgbaColor DarkTeal = new RgbaColor(0xff003366);
-    public static readonly IRgbaColor SeaGreen = new RgbaColor(0xff339966);
-    public static readonly IRgbaColor DarkGreen = new RgbaColor(0xff003300);
-    public static readonly IRgbaColor OliveGreen = new RgbaColor(0xff333300);
-    public static readonly IRgbaColor Brown = new RgbaColor(0xff993300);
-    public static readonly IRgbaColor Plum = new RgbaColor(0xff993366);
-    public static readonly IRgbaColor Indigo = new RgbaColor(0xff333399);
-    public static readonly IRgbaColor Grey80Percent = new RgbaColor(0xff333333);
-    public static readonly IRgbaColor Automatic = new RgbaColor(0x00000000);
+    public static readonly RgbaColor Black = new RgbaColor(0xff000000);
+    public static readonly RgbaColor White = new RgbaColor(0xffffffff);
+    public static readonly RgbaColor Red = new RgbaColor(0xffff0000);
+    public static readonly RgbaColor BrightGreen = new RgbaColor(0xff00ff00);
+    public static readonly RgbaColor Blue = new RgbaColor(0xff0000ff);
+    public static readonly RgbaColor Yellow = new RgbaColor(0xffffff00);
+    public static readonly RgbaColor Pink = new RgbaColor(0xffff00ff);
+    public static readonly RgbaColor Turquoise = new RgbaColor(0xff00ffff);
+    public static readonly RgbaColor DarkRed = new RgbaColor(0xff800000);
+    public static readonly RgbaColor Green = new RgbaColor(0xff008000);
+    public static readonly RgbaColor DarkBlue = new RgbaColor(0xff000080);
+    public static readonly RgbaColor DarkYellow = new RgbaColor(0xff808000);
+    public static readonly RgbaColor Violet = new RgbaColor(0xff800080);
+    public static readonly RgbaColor Teal = new RgbaColor(0xff008080);
+    public static readonly RgbaColor Grey25Percent = new RgbaColor(0xffc0c0c0);
+    public static readonly RgbaColor Grey50Percent = new RgbaColor(0xff808080);
+    public static readonly RgbaColor CornflowerBlue = new RgbaColor(0xff9999ff);
+    public static readonly RgbaColor Maroon = new RgbaColor(0xff7f0000);
+    public static readonly RgbaColor LemonChiffon = new RgbaColor(0xffffffcc);
+    public static readonly RgbaColor Orchid = new RgbaColor(0xff660066);
+    public static readonly RgbaColor Coral = new RgbaColor(0xffff8080);
+    public static readonly RgbaColor RoyalBlue = new RgbaColor(0xff0066cc);
+    public static readonly RgbaColor LightCornflowerBlue = new RgbaColor(0xffccccff);
+    public static readonly RgbaColor SkyBlue = new RgbaColor(0xff00ccff);
+    public static readonly RgbaColor LightTurquoise = new RgbaColor(0xffccffff);
+    public static readonly RgbaColor LightGreen = new RgbaColor(0xffccffcc);
+    public static readonly RgbaColor LightYellow = new RgbaColor(0xffffff99);
+    public static readonly RgbaColor PaleBlue = new RgbaColor(0xff99ccff);
+    public static readonly RgbaColor Rose = new RgbaColor(0xffff99cc);
+    public static readonly RgbaColor Lavender = new RgbaColor(0xffcc99ff);
+    public static readonly RgbaColor Tan = new RgbaColor(0xffffcc99);
+    public static readonly RgbaColor LightBlue = new RgbaColor(0xff3366ff);
+    public static readonly RgbaColor Aqua = new RgbaColor(0xff33cccc);
+    public static readonly RgbaColor Lime = new RgbaColor(0xff99cc00);
+    public static readonly RgbaColor Gold = new RgbaColor(0xffffcc00);
+    public static readonly RgbaColor LightOrange = new RgbaColor(0xffff9900);
+    public static readonly RgbaColor Orange = new RgbaColor(0xffff6600);
+    public static readonly RgbaColor BlueGrey = new RgbaColor(0xff666699);
+    public static readonly RgbaColor Grey40Percent = new RgbaColor(0xff969696);
+    public static readonly RgbaColor DarkTeal = new RgbaColor(0xff003366);
+    public static readonly RgbaColor SeaGreen = new RgbaColor(0xff339966);
+    public static readonly RgbaColor DarkGreen = new RgbaColor(0xff003300);
+    public static readonly RgbaColor OliveGreen = new RgbaColor(0xff333300);
+    public static readonly RgbaColor Brown = new RgbaColor(0xff993300);
+    public static readonly RgbaColor Plum = new RgbaColor(0xff993366);
+    public static readonly RgbaColor Indigo = new RgbaColor(0xff333399);
+    public static readonly RgbaColor Grey80Percent = new RgbaColor(0xff333333);
+    public static readonly RgbaColor Automatic = new RgbaColor(0x00000000);
 
-    private static readonly Dictionary<short, IRgbaColor> _dict = new()
+    private static readonly Dictionary<short, RgbaColor> _dict = new()
     {
         [8] = Black,
         [9] = White,
@@ -109,8 +109,8 @@ public static class ExcelColor
         [64] = Automatic,
     };
 
-    public static IRgbaColor GetColor(short index) => _dict[index];
-    public static short GetIndex(IRgbaColor color) => _dict.FirstOrDefault(x => x.Value == color).Key;
+    public static RgbaColor GetColor(short index) => _dict[index];
+    public static short GetIndex(RgbaColor color) => _dict.FirstOrDefault(x => x.Value == color).Key;
 
     private static readonly RgbaColor[,] _themeColors = new RgbaColor[,]
     {

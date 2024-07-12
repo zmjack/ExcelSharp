@@ -14,7 +14,7 @@ public interface ICFont
     FontUnderlineType Underline { get; set; }
     FontSuperScript TypeOffset { get; set; }
 
-    IRgbaColor FontColor { get; set; }
+    RgbaColor FontColor { get; set; }
 
     //short Charset { get; set; }
     //short Index { get; }

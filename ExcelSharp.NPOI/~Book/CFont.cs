@@ -61,7 +61,7 @@ public class CFont : ICFont
         set => Font.TypeOffset = value;
     }
 
-    public IRgbaColor FontColor
+    public RgbaColor FontColor
     {
         get => Font.Color > 0 ? ExcelColor.GetColor(Font.Color)
             : (Font as XSSFFont)?.GetXSSFColor()?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;

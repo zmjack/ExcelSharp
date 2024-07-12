@@ -21,7 +21,7 @@ public class CFontApplier : ICFont
     public FontUnderlineType Underline { get; set; } = FontUnderlineType.None;
     public FontSuperScript TypeOffset { get; set; } = FontSuperScript.None;
 
-    public IRgbaColor FontColor { get; set; } = ExcelColor.Black;
+    public RgbaColor FontColor { get; set; } = ExcelColor.Black;
 
     public void Apply(CFont style)
     {

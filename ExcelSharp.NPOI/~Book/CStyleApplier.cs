@@ -23,26 +23,26 @@ public class CStyleApplier : ICStyle
 
     #region Border
     public BorderStyle BorderLeft { get; set; } = BorderStyle.None;
-    public IRgbaColor LeftBorderColor { get; set; } = ExcelColor.Black;
+    public RgbaColor LeftBorderColor { get; set; } = ExcelColor.Black;
 
     public BorderStyle BorderRight { get; set; } = BorderStyle.None;
-    public IRgbaColor RightBorderColor { get; set; } = ExcelColor.Black;
+    public RgbaColor RightBorderColor { get; set; } = ExcelColor.Black;
 
     public BorderStyle BorderTop { get; set; } = BorderStyle.None;
-    public IRgbaColor TopBorderColor { get; set; } = ExcelColor.Black;
+    public RgbaColor TopBorderColor { get; set; } = ExcelColor.Black;
 
     public BorderStyle BorderBottom { get; set; } = BorderStyle.None;
-    public IRgbaColor BottomBorderColor { get; set; } = ExcelColor.Black;
+    public RgbaColor BottomBorderColor { get; set; } = ExcelColor.Black;
 
     public BorderStyle BorderDiagonalLineStyle { get; set; } = BorderStyle.None;
-    public IRgbaColor BorderDiagonalColor { get; set; } = ExcelColor.Black;
+    public RgbaColor BorderDiagonalColor { get; set; } = ExcelColor.Black;
     public BorderDiagonal BorderDiagonal { get; set; } = BorderDiagonal.None;
     #endregion
 
     #region Fill
     public FillPattern FillPattern { get; set; } = FillPattern.NoFill;
-    public IRgbaColor FillBackgroundColor { get; set; } = ExcelColor.Automatic;
-    public IRgbaColor FillForegroundColor { get; set; } = ExcelColor.Automatic;
+    public RgbaColor FillBackgroundColor { get; set; } = ExcelColor.Automatic;
+    public RgbaColor FillForegroundColor { get; set; } = ExcelColor.Automatic;
     #endregion
 
     #region Font
@@ -83,8 +83,8 @@ public class CStyleApplier : ICStyle
     public CStyleApplier TopBorder(BorderStyle borderStyle = BorderStyle.Thin) { BorderTop = borderStyle; return this; }
     public CStyleApplier BottomBorder(BorderStyle borderStyle = BorderStyle.Thin) { BorderBottom = borderStyle; return this; }
 
-    public CStyleApplier CellColor(IRgbaColor foregroundColor) => CellColor(foregroundColor, ExcelColor.Automatic, FillPattern.SolidForeground);
-    public CStyleApplier CellColor(IRgbaColor foregroundColor, IRgbaColor backgroundColor, FillPattern pattern)
+    public CStyleApplier CellColor(RgbaColor foregroundColor) => CellColor(foregroundColor, ExcelColor.Automatic, FillPattern.SolidForeground);
+    public CStyleApplier CellColor(RgbaColor foregroundColor, RgbaColor backgroundColor, FillPattern pattern)
     {
         FillForegroundColor = foregroundColor;
         FillBackgroundColor = backgroundColor;
@@ -114,7 +114,7 @@ public class CStyleApplier : ICStyle
     public CStyleApplier TypeOffset(FontSuperScript value) { Font.TypeOffset = value; return this; }
 
     public CStyleApplier SetFont(string? fontName, short size) => SetFont(fontName, size, ExcelColor.Automatic);
-    public CStyleApplier SetFont(string? fontName, short size, IRgbaColor color)
+    public CStyleApplier SetFont(string? fontName, short size, RgbaColor color)
     {
         Font.FontName = fontName;
         Font.FontSize = size;

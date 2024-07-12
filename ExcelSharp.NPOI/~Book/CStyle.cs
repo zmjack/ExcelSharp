@@ -43,7 +43,7 @@ public class CStyle : ICStyle
         get => CellStyle.BorderLeft;
         set => CellStyle.BorderLeft = value;
     }
-    public IRgbaColor LeftBorderColor
+    public RgbaColor LeftBorderColor
     {
         get => CellStyle.LeftBorderColor > 0 ? ExcelColor.GetColor(CellStyle.LeftBorderColor)
             : (CellStyle as XSSFCellStyle)?.LeftBorderXSSFColor?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -63,7 +63,7 @@ public class CStyle : ICStyle
         get => CellStyle.BorderRight;
         set => CellStyle.BorderRight = value;
     }
-    public IRgbaColor RightBorderColor
+    public RgbaColor RightBorderColor
     {
         get => CellStyle.RightBorderColor > 0 ? ExcelColor.GetColor(CellStyle.RightBorderColor)
             : (CellStyle as XSSFCellStyle)?.RightBorderXSSFColor?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -83,7 +83,7 @@ public class CStyle : ICStyle
         get => CellStyle.BorderTop;
         set => CellStyle.BorderTop = value;
     }
-    public IRgbaColor TopBorderColor
+    public RgbaColor TopBorderColor
     {
         get => CellStyle.TopBorderColor > 0 ? ExcelColor.GetColor(CellStyle.TopBorderColor)
             : (CellStyle as XSSFCellStyle)?.TopBorderXSSFColor?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -103,7 +103,7 @@ public class CStyle : ICStyle
         get => CellStyle.BorderBottom;
         set => CellStyle.BorderBottom = value;
     }
-    public IRgbaColor BottomBorderColor
+    public RgbaColor BottomBorderColor
     {
         get => CellStyle.BottomBorderColor > 0 ? ExcelColor.GetColor(CellStyle.BottomBorderColor)
             : (CellStyle as XSSFCellStyle)?.BottomBorderXSSFColor?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -123,7 +123,7 @@ public class CStyle : ICStyle
         get => CellStyle.BorderDiagonalLineStyle;
         set => CellStyle.BorderDiagonalLineStyle = value;
     }
-    public IRgbaColor BorderDiagonalColor
+    public RgbaColor BorderDiagonalColor
     {
         get => CellStyle.BorderDiagonalColor > 0 ? ExcelColor.GetColor(CellStyle.BorderDiagonalColor)
             : (CellStyle as XSSFCellStyle)?.DiagonalBorderXSSFColor?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -151,7 +151,7 @@ public class CStyle : ICStyle
         set => CellStyle.FillPattern = value;
     }
 
-    public IRgbaColor FillBackgroundColor
+    public RgbaColor FillBackgroundColor
     {
         get => CellStyle.FillBackgroundColor > 0 ? ExcelColor.GetColor(CellStyle.FillBackgroundColor)
             : (CellStyle as XSSFCellStyle)?.FillBackgroundXSSFColor?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
@@ -166,7 +166,7 @@ public class CStyle : ICStyle
         }
     }
 
-    public IRgbaColor FillForegroundColor
+    public RgbaColor FillForegroundColor
     {
         get => CellStyle.FillForegroundColor > 0 ? ExcelColor.GetColor(CellStyle.FillForegroundColor)
             : (CellStyle as XSSFCellStyle)?.FillForegroundXSSFColor?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;

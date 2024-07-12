@@ -89,6 +89,7 @@ public class FetchTests
         {
             var sheet = book.GetSheet("2D");
             var models = sheet.Fetch2D<Model2, double?>("A6");
+
             Assert.Equal(21, models.Sum(x => x.Value));
 
             var model = models.First(x => x.Value == 6);

@@ -58,12 +58,8 @@ public partial class ExcelSheet
     {
         get
         {
-            var irow = GetRow(cursor.Row);
-            if (irow is null) irow = CreateRow(cursor.Row);
-
-            var icol = irow.GetCell(cursor.Col);
-            if (icol is null) icol = irow.CreateCell(cursor.Col);
-
+            var irow = GetRow(cursor.Row) ?? CreateRow(cursor.Row);
+            var icol = irow.GetCell(cursor.Col) ?? irow.CreateCell(cursor.Col);
             return new SheetCell(this, icol);
         }
     }
@@ -78,7 +74,7 @@ public partial class ExcelSheet
     private void RecalculateArea(Cursor start, Cursor end)
     {
         var recent = ExcelArea.Scopes.FirstOrDefault(x => x.Sheet == this);
-        if (recent is not null) recent.Update(start, end);
+        recent?.Update(start, end);
     }
 
     public void PrintSpreadSheet(ISpreadSheet sheet, Cursor cursor)
@@ -100,7 +96,7 @@ public partial class ExcelSheet
             {
                 style = Book.CStyle(x =>
                 {
-                    if (mungStyle.BackgroundColor is not null) x.CellColor(mungStyle.BackgroundColor);
+                    if (mungStyle.BackgroundColor is not null) x.CellColor(mungStyle.BackgroundColor.Value);
                     if (mungStyle.Color is not null || mungStyle.FontSize.HasValue || mungStyle.FontFamily is not null)
                     {
                         var fontFamily = mungStyle.FontFamily;
@@ -108,7 +104,7 @@ public partial class ExcelSheet
                         if (mungStyle.Color is not null)
                         {
                             var color = mungStyle.Color;
-                            x.SetFont(fontFamily, fontSize, color);
+                            x.SetFont(fontFamily, fontSize, color.Value);
                         }
                         else x.SetFont(fontFamily, fontSize);
                     }
