@@ -89,42 +89,42 @@ public partial class ExcelSheet
 
         foreach (var cells in cellsGroups)
         {
-            var mungStyle = cells.Key.Style;
+            var style = cells.Key.Style;
 
-            CStyle? style = null;
-            if (mungStyle is not null)
+            CStyle? cstyle = null;
+            if (style is not null)
             {
-                style = Book.CStyle(x =>
+                cstyle = Book.CStyle(x =>
                 {
-                    if (mungStyle.BackgroundColor is not null) x.CellColor(mungStyle.BackgroundColor.Value);
-                    if (mungStyle.Color is not null || mungStyle.FontSize.HasValue || mungStyle.FontFamily is not null)
+                    if (style.BackgroundColor is not null) x.CellColor(style.BackgroundColor.Value);
+                    if (style.Color is not null || style.FontSize.HasValue || style.FontFamily is not null)
                     {
-                        var fontFamily = mungStyle.FontFamily;
-                        var fontSize = (short)Math.Round((mungStyle.FontSize ?? 14) * 0.75, 0, MidpointRounding.AwayFromZero);
-                        if (mungStyle.Color is not null)
+                        var fontFamily = style.FontFamily;
+                        var fontSize = (short)Math.Round((style.FontSize ?? 14) * 0.75, 0, MidpointRounding.AwayFromZero);
+                        if (style.Color is not null)
                         {
-                            var color = mungStyle.Color;
+                            var color = style.Color;
                             x.SetFont(fontFamily, fontSize, color.Value);
                         }
                         else x.SetFont(fontFamily, fontSize);
                     }
-                    if (mungStyle.Bold.HasValue && mungStyle.Bold.Value) x.Bold();
-                    if (mungStyle.BorderTop.HasValue && mungStyle.BorderTop.Value) x.BorderTop = BorderStyle.Thin;
-                    if (mungStyle.BorderBottom.HasValue && mungStyle.BorderBottom.Value) x.BorderBottom = BorderStyle.Thin;
-                    if (mungStyle.BorderLeft.HasValue && mungStyle.BorderLeft.Value) x.BorderLeft = BorderStyle.Thin;
-                    if (mungStyle.BorderRight.HasValue && mungStyle.BorderRight.Value) x.BorderRight = BorderStyle.Thin;
-                    if (mungStyle.HoriAlign != HoriAlign.Preserve)
+                    if (style.Bold.HasValue && style.Bold.Value) x.Bold();
+                    if (style.BorderTop.HasValue && style.BorderTop.Value) x.BorderTop = BorderStyle.Thin;
+                    if (style.BorderBottom.HasValue && style.BorderBottom.Value) x.BorderBottom = BorderStyle.Thin;
+                    if (style.BorderLeft.HasValue && style.BorderLeft.Value) x.BorderLeft = BorderStyle.Thin;
+                    if (style.BorderRight.HasValue && style.BorderRight.Value) x.BorderRight = BorderStyle.Thin;
+                    if (style.HoriAlign != HoriAlign.Preserve)
                     {
-                        switch (mungStyle.HoriAlign)
+                        switch (style.HoriAlign)
                         {
                             case HoriAlign.Left: x.HLeft(); break;
                             case HoriAlign.Center: x.HCenter(); break;
                             case HoriAlign.Right: x.HRight(); break;
                         }
                     }
-                    if (mungStyle.VertAlign != VertAlign.Preserve)
+                    if (style.VertAlign != VertAlign.Preserve)
                     {
-                        switch (mungStyle.VertAlign)
+                        switch (style.VertAlign)
                         {
                             case VertAlign.Top: x.VTop(); break;
                             case VertAlign.Middle: x.VCenter(); break;
@@ -151,14 +151,14 @@ public partial class ExcelSheet
                         var endCol = ecell.ColumnIndex + cell.ColSpan - 1;
                         var range = new SheetRange(this, (ecell.RowIndex, ecell.ColumnIndex), (endRow, endCol));
 
-                        if (style is not null)
+                        if (cstyle is not null)
                         {
                             for (int row = ecell.RowIndex; row <= endRow; row++)
                             {
                                 for (int col = ecell.ColumnIndex; col <= endCol; col++)
                                 {
                                     var _ecell = this[(row, col)];
-                                    _ecell.SetCStyle(style);
+                                    _ecell.SetCStyle(cstyle);
                                 }
                             }
                         }
@@ -167,9 +167,9 @@ public partial class ExcelSheet
                     }
                     else
                     {
-                        if (style is not null)
+                        if (cstyle is not null)
                         {
-                            ecell.SetCStyle(style);
+                            ecell.SetCStyle(cstyle);
                         }
                     }
                 }
