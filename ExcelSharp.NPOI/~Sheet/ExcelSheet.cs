@@ -85,11 +85,16 @@ public partial class ExcelSheet
 
     public void PrintSpreadSheet(ISpreadSheet sheet)
     {
-        var cellsGroups = sheet.Rows.SelectMany(x => x.Cells).GroupBy(x => new { x.Style, x.Style?.Format });
+        var widthDict = new Dictionary<int, float>();
 
+        var cellsGroups = sheet.Rows.SelectMany(x => x.Cells).GroupBy(x => new { x.Style, x.Style?.Format });
         foreach (var cells in cellsGroups)
         {
             var style = cells.Key.Style;
+            var fontSize = (short)Math.Round((style?.FontSize ?? 14) * 0.75, 0, MidpointRounding.AwayFromZero);
+
+            var fontName = style?.FontFamily;
+            using SkiaUtil? skia = fontName is not null ? new(fontName, fontSize) : null;
 
             CStyle? cstyle = null;
             if (style is not null)
@@ -100,7 +105,6 @@ public partial class ExcelSheet
                     if (style.Color is not null || style.FontSize.HasValue || style.FontFamily is not null)
                     {
                         var fontFamily = style.FontFamily;
-                        var fontSize = (short)Math.Round((style.FontSize ?? 14) * 0.75, 0, MidpointRounding.AwayFromZero);
                         if (style.Color is not null)
                         {
                             var color = style.Color;
@@ -145,6 +149,15 @@ public partial class ExcelSheet
                 {
                     ecell.SetValue(cell.Value);
 
+                    if (skia is not null)
+                    {
+                        var width = skia.GetPaintWidth(cell?.Value?.ToString());
+                        if (width > widthDict.GetValueOrDefault(cell!.ColIndex))
+                        {
+                            widthDict[cell!.ColIndex] = width;
+                        }
+                    }
+
                     if (cell.RowSpan > 1 || cell.ColSpan > 1)
                     {
                         var endRow = ecell.RowIndex + cell.RowSpan - 1;
@@ -174,6 +187,14 @@ public partial class ExcelSheet
                     }
                 }
             }
+        }
+
+        foreach (var pair in widthDict)
+        {
+            var col = pair.Key;
+            var width = pair.Value;
+            var targetWidth = (int)((COLUMN_BORDER_PX + AUTO_SIZE_PADDING_PX + width) / EXCEL_WIDTH_PER_PX);
+            SetWidth(col, targetWidth);
         }
 
         Cursor.Row += sheet.RowLength;
@@ -736,27 +757,18 @@ public partial class ExcelSheet
 
                 stringSet.Add(valueString);
 
-                using (var face = SKTypeface.FromFamilyName(cstyle.Font.FontName))
-                using (var paint = new SKPaint(new SKFont(face, FontSizeUtil.GetSKSize(cstyle.Font.FontSize))))
+                using var skia = new SkiaUtil(cstyle.Font.FontName!, cstyle.Font.FontSize);
+
+                float width = skia.GetPaintWidth(valueString);
+                var targetWidth = width > 0 ? (int)((COLUMN_BORDER_PX + AUTO_SIZE_PADDING_PX + width) / EXCEL_WIDTH_PER_PX) : 0;
+
+                if (targetWidth >= maxWidth)
                 {
-                    var rect = new SKRect();
-                    float width = 0;
-                    foreach (var valueRow in valueString.NormalizeNewLine().Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        paint.MeasureText(valueRow, ref rect);
-                        if (rect.Width > width) width = rect.Width;
-                    }
-
-                    var targetWidth = width > 0 ? (int)((COLUMN_BORDER_PX + AUTO_SIZE_PADDING_PX + width) / EXCEL_WIDTH_PER_PX) : 0;
-
-                    if (targetWidth >= maxWidth)
-                    {
-                        excelWidth = maxWidth;
-                        break;
-                    }
-
-                    if (targetWidth > excelWidth) excelWidth = targetWidth;
+                    excelWidth = maxWidth;
+                    break;
                 }
+
+                if (targetWidth > excelWidth) excelWidth = targetWidth;
             }
 
             SetWidth(col, excelWidth);

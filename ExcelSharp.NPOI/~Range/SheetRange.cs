@@ -99,6 +99,9 @@ public partial class SheetRange : IEnumerable<SheetCell>, IStylizable
         Sheet.AddMergedRegion(region);
     }
 
+    [GeneratedRegex("^\\[\\[.+?\\]\\](.*)$")]
+    private static partial Regex SmartMergeRegex();
+
     /// <summary>
     /// Merge cells that has same value.
     ///     You can use [[ ]] to identifier cells, the result of merged cell will ignore the value which is in [[ ]].
@@ -219,6 +222,5 @@ public partial class SheetRange : IEnumerable<SheetCell>, IStylizable
                 yield return new SheetCell(Sheet, Sheet[(row, col)]);
     }
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    [GeneratedRegex("^\\[\\[.+?\\]\\](.*)$")]
-    private static partial Regex SmartMergeRegex();
+
 }
