@@ -51,7 +51,7 @@ public class ExcelBook : IDisposable
         SharedStringTablePart.SharedStringTable ??= new SharedStringTable();
 
         int i = 0;
-        foreach (SharedStringItem item in SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>())
+        foreach (var item in SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>())
         {
             if (item.InnerText == text) return i;
             i++;

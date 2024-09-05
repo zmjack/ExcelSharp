@@ -1,8 +1,6 @@
 ﻿using ExcelSharp.NPOI.Utils;
-using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NStandard;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -194,6 +192,7 @@ public partial class ExcelSheet
             var col = pair.Key;
             var width = pair.Value;
             var targetWidth = (int)((COLUMN_BORDER_PX + AUTO_SIZE_PADDING_PX + width) / EXCEL_WIDTH_PER_PX);
+            if (targetWidth > 200) targetWidth = 200;
             SetWidth(col, targetWidth);
         }
 
