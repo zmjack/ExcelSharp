@@ -7,7 +7,7 @@ namespace ExcelSharp.NPOI;
 internal class HeaderProvider<TModel, TValue> where TModel : IFetchModel<TValue>, new()
 {
     public delegate TModel GetHeaderDelagate(string[] rowNames, string[] colNames);
-    public GetHeaderDelagate GetModel { get; }
+    public GetHeaderDelagate GetHeader { get; }
 
     public HeaderProvider()
     {
@@ -36,7 +36,6 @@ internal class HeaderProvider<TModel, TValue> where TModel : IFetchModel<TValue>
                         Expression.ArrayAccess(rowNames, Expression.Constant(rowIndex, typeof(int)))
                     )
                 );
-
                 continue;
             }
 
@@ -62,6 +61,6 @@ internal class HeaderProvider<TModel, TValue> where TModel : IFetchModel<TValue>
 
         var body = Expression.Block([header], codes);
         var lambda = Expression.Lambda<GetHeaderDelagate>(body, [rowNames, colNames]);
-        GetModel = lambda.Compile();
+        GetHeader = lambda.Compile();
     }
 }

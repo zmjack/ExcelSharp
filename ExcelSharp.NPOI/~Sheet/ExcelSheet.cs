@@ -85,7 +85,13 @@ public partial class ExcelSheet
     {
         var widthDict = new Dictionary<int, float>();
 
-        var cellsGroups = sheet.Rows.SelectMany(x => x.Cells).GroupBy(x => new { x.Style, x.Style?.Format });
+        var cellsGroups =
+            from c in sheet.Rows.SelectMany(x => x.Cells)
+            group c by new
+            {
+                c.Style,
+                c.Style?.Format
+            };
         foreach (var cells in cellsGroups)
         {
             var style = cells.Key.Style;
@@ -379,7 +385,7 @@ public partial class ExcelSheet
         {
             var cell = this[(row, col + i)];
             var value = GetCellValue(cell, typeof(string));
-            var svalue = value?.ToString().Unique() ?? string.Empty;
+            var svalue = value?.ToString()?.Unique() ?? string.Empty;
             if (!svalue.IsNullOrWhiteSpace())
             {
                 var prop = props.FirstOrDefault(x => x.Value.Contains(svalue));
@@ -408,7 +414,7 @@ public partial class ExcelSheet
         {
             var cell = this[(row, col + i)];
             var value = GetCellValue(cell, typeof(string));
-            var svalue = value?.ToString().Unique() ?? string.Empty;
+            var svalue = value?.ToString()?.Unique() ?? string.Empty;
             if (!svalue.IsNullOrWhiteSpace())
             {
                 var prop = props.FirstOrDefault(x => x.Value.Contains(svalue));
@@ -421,6 +427,9 @@ public partial class ExcelSheet
 
         return Fetch<TModel>((startCell.Row + 1, startCell.Col), [.. propNames]);
     }
+
+    public const int FetchMaxRows = 20000;
+    public const int FetchMaxColumns = 200;
 
     public IReadOnlyCollection<TModel> Fetch2D<TModel, TValue>(Cursor archer)
         where TModel : IFetchModel<TValue>, new()
@@ -436,7 +445,7 @@ public partial class ExcelSheet
         var archerColLength = archerEnd.Col - archerStart.Col + 1;
 
         var colList = new List<string?[]>();
-        for (int col = archerColLength; col < 200; col++)
+        for (int col = archerColLength; col < FetchMaxColumns; col++)
         {
             var values = new List<string?>();
             var valid = false;
@@ -445,7 +454,7 @@ public partial class ExcelSheet
             {
                 var cell = this[(archerStart.Row + i, archerStart.Col + col)];
                 var value = GetCellValue(cell, typeof(string));
-                var svalue = value?.ToString().Unique() ?? string.Empty;
+                var svalue = value?.ToString()?.Unique() ?? string.Empty;
                 if (!svalue.IsNullOrWhiteSpace())
                 {
                     valid = true;
@@ -462,7 +471,7 @@ public partial class ExcelSheet
         }
 
         var rowList = new List<string?[]>();
-        for (int row = archerRowLength; row < 20000; row++)
+        for (int row = archerRowLength; row < FetchMaxRows; row++)
         {
             var values = new List<string?>();
             var valid = false;
@@ -471,7 +480,7 @@ public partial class ExcelSheet
             {
                 var cell = this[(archerStart.Row + row, archerStart.Col + i)];
                 var value = GetCellValue(cell, typeof(string));
-                var svalue = value?.ToString().Unique() ?? string.Empty;
+                var svalue = value?.ToString()?.Unique() ?? string.Empty;
 
                 if (!svalue.IsNullOrWhiteSpace())
                 {
@@ -498,7 +507,7 @@ public partial class ExcelSheet
         {
             foreach (var (colIndex, colNames) in colList.Pairs())
             {
-                var model = provider.GetModel(rowNames, colNames)!;
+                var model = provider.GetHeader(rowNames, colNames)!;
 
                 var cell = this[(start.Row + rowIndex, start.Col + colIndex)];
                 var cellType = cell.IsMergedCell ? cell.MergedRange!.Cell.CellType : cell.CellType;
