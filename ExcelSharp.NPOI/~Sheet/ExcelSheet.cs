@@ -90,7 +90,7 @@ public partial class ExcelSheet
             group c by new
             {
                 c.Style,
-                c.Style?.Format
+                c.Format,
             };
         foreach (var cells in cellsGroups)
         {
@@ -151,11 +151,12 @@ public partial class ExcelSheet
 
                 if (!cell.Ignored)
                 {
-                    ecell.SetValue(cell.Value);
+                    var value = cell.StyledValue;
+                    ecell.SetValue(value);
 
                     if (skia is not null)
                     {
-                        var width = skia.GetPaintWidth(cell?.Value?.ToString());
+                        var width = skia.GetPaintWidth(value?.ToString());
                         if (width > widthDict.GetValueOrDefault(cell!.ColIndex))
                         {
                             widthDict[cell!.ColIndex] = width;

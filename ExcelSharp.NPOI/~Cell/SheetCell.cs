@@ -196,11 +196,9 @@ public partial class SheetCell
     {
         get
         {
-            if (IsMergedCell)
-            {
-                return MergedRange!.End.Row - MergedRange.Start.Row + 1;
-            }
-            else return 1;
+            if (!IsMergedCell) return 1;
+
+            return MergedRange!.End.Row - MergedRange.Start.Row + 1;
         }
     }
 
@@ -208,11 +206,9 @@ public partial class SheetCell
     {
         get
         {
-            if (IsMergedCell)
-            {
-                return MergedRange!.End.Col - MergedRange.Start.Col + 1;
-            }
-            else return 1;
+            if (!IsMergedCell) return 1;
+
+            return MergedRange!.End.Col - MergedRange.Start.Col + 1;
         }
     }
 
