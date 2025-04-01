@@ -1,6 +1,8 @@
 ﻿using ExcelSharp.NPOI.Utils;
 using NPOI.SS.UserModel;
 using NStandard;
+using NStandard.Static;
+using NStandard.Static.Collections.Generic;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -345,7 +347,7 @@ public partial class ExcelSheet
         {
             if (cell.CellType == CellType.Blank)
             {
-                if (type.IsNullable()) return ConvertEx.ChangeType(null, type);
+                if (type.IsNullableValue()) return ConvertEx.ChangeType(null, type);
                 else return type.CreateDefault();
             }
             else if (type == typeof(DateTime) || type == typeof(DateTime?))

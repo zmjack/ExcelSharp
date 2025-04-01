@@ -1,4 +1,5 @@
 ﻿using NStandard;
+using NStandard.Static;
 using System;
 
 namespace ExcelSharp.NPOI.Utils;
