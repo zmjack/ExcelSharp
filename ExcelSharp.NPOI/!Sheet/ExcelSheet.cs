@@ -65,6 +65,11 @@ public partial class ExcelSheet
     }
     public SheetRange this[Cursor start, Cursor end] => new(this, start, end);
 
+    public static string GetColName(int index) => ColumnIndex.GetName(index);
+    public static int GetCol(string name) => ColumnIndex.GetIndex(name);
+    public static string GetRowName(int row) => (row + 1).ToString();
+    public static int GetRow(string name) => int.Parse(name) - 1;
+
     public void ResetCursorColumn()
     {
         var recent = ExcelArea.Scopes.FirstOrDefault(x => x.Sheet == this);
