@@ -35,7 +35,7 @@ public partial class SheetCell
     public CStyle GetCStyle() => new(Sheet.Book, CellStyle);
     public void UpdateCStyle(Action<CStyleApplier> initApplier)
     {
-        var applier = GetCStyle().GetApplier().Pipe(x => initApplier(x));
+        var applier = GetCStyle().GetApplier().Pipe(initApplier);
         SetCellStyle(Sheet.Book.CStyle(applier).CellStyle);
     }
 

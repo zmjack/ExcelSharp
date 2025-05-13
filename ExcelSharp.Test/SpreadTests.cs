@@ -110,4 +110,24 @@ public class SpreadTests
         ebook.SaveAs(file);
     }
 
+    [Fact]
+    public void Test2()
+    {
+        var sheet = new SpreadSheet("Sheet1")
+        {
+            new Vert
+            {
+                "",
+            }
+        };
+
+        var book = new SpreadBook
+        {
+            sheet
+        };
+        var ebook = book.ToExcelBook();
+        var file = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\excelsharp2.xlsx";
+        ebook.SaveAs(file);
+    }
+
 }

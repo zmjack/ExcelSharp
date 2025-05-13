@@ -91,7 +91,9 @@ public class CStyleApplier : ICStyle
 
         if (ExcelColor.GetIndex(foregroundColor) == ExcelColor.AutomaticIndex
             && ExcelColor.GetIndex(backgroundColor) == ExcelColor.AutomaticIndex)
+        {
             FillPattern = FillPattern.NoFill;
+        }
         else FillPattern = pattern;
 
         return this;

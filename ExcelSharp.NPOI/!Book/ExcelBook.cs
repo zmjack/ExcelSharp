@@ -72,7 +72,7 @@ public partial class ExcelBook
         var find = CStyles.FirstOrDefault(x => x.InterfaceValuesEqual(applier));
         if (find is null)
         {
-            return new CStyle(this).Pipe(x => applier.Apply(x));
+            return new CStyle(this).Pipe(applier.Apply);
         }
         else return find;
     }
@@ -87,7 +87,7 @@ public partial class ExcelBook
         var find = CFonts.FirstOrDefault(x => x.InterfaceValuesEqual(applier));
         if (find is null)
         {
-            return new CFont(this).Pipe(x => applier.Apply(x));
+            return new CFont(this).Pipe(applier.Apply);
         }
         else return find;
     }

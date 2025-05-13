@@ -153,8 +153,18 @@ public class CStyle : ICStyle
 
     public RgbaColor FillBackgroundColor
     {
-        get => CellStyle.FillBackgroundColor > 0 ? ExcelColor.GetColor(CellStyle.FillBackgroundColor)
-            : (CellStyle as XSSFCellStyle)?.FillBackgroundXSSFColor?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
+        get
+        {
+            if (CellStyle.FillBackgroundColor > 0)
+            {
+                return ExcelColor.GetColor(CellStyle.FillBackgroundColor);
+            }
+            else
+            {
+                var xss = (CellStyle as XSSFCellStyle)?.FillBackgroundXSSFColor;
+                return xss?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
+            }
+        }
         set
         {
             var index = ExcelColor.GetIndex(value);
@@ -168,8 +178,18 @@ public class CStyle : ICStyle
 
     public RgbaColor FillForegroundColor
     {
-        get => CellStyle.FillForegroundColor > 0 ? ExcelColor.GetColor(CellStyle.FillForegroundColor)
-            : (CellStyle as XSSFCellStyle)?.FillForegroundXSSFColor?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
+        get
+        {
+            if (CellStyle.FillForegroundColor > 0)
+            {
+                return ExcelColor.GetColor(CellStyle.FillForegroundColor);
+            }
+            else
+            {
+                var xss = (CellStyle as XSSFCellStyle)?.FillForegroundXSSFColor;
+                return xss?.Pipe(XSSFColorUtil.GetRgbColor) ?? ExcelColor.Automatic;
+            }
+        }
         set
         {
             var index = (short)ExcelColor.GetIndex(value);
